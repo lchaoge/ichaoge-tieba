@@ -10,10 +10,10 @@ export default {
 }
 </script>
 <style>
+	@import 'reset-css';
 	@import url("./assets/css/iconfont.css");
-	body,#app{
-		margin: 0;
-		padding: 0;
-		background: #f5f5f5 !important;
+	@import url("./assets/css/base.css");
+	body{
+		background-color: #efeff4;
 	}
 </style>

@@ -8,6 +8,9 @@
 			<i slot="icon" class="icon iconfont icon-zonghe"></i>
 	        <span slot="label">进吧</span>
 	    </tabbar-item>
+	    <tabbar-item link='/menu' class="tabbar-add">
+			<i slot="icon" class="icon iconfont icon-roundadd"></i>
+	    </tabbar-item>
 	    <tabbar-item link='/news' badge="2">
 	    	<i slot="icon" class="icon iconfont icon-tixing"></i>
 	        <span slot="label">消息</span>
@@ -38,5 +41,16 @@ export default {
 	}
 	.weui-tabbar__label{
 		margin-top: 0;
+	}
+	.tabbar-add{
+		padding-top: 10px !important;
+	}
+	.tabbar-add .weui-tabbar__icon > i{
+		font-size: 36px !important;
+		color: #09BB07 !important;
+	}
+	.tabbar-add .weui-tabbar__icon{
+		width: auto !important;
+		height: auto !important;	
 	}
 </style>

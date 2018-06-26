@@ -1,11 +1,14 @@
 <template>
   <div class="home">
-  	<router-view></router-view>
-		<tabbar></tabbar>
+   <view-box ref="viewBox">
+   		<router-view></router-view>
+			<tabbar></tabbar>
+   </view-box>
   </div>
 </template>
 
 <script>
+import { ViewBox } from 'vux'
 import tabbar from './tabbar/tabbar'
 export default {
   name: 'home',
@@ -14,6 +17,7 @@ export default {
     }
   },
   components:{
+  	ViewBox,
   	tabbar
   }
 }

@@ -1,7 +1,7 @@
 <template>
 	<div class="index">
 		<x-header :left-options="{showBack: false}" slot="header">
-			<a slot="overwrite-left">
+			<a slot="overwrite-left" @click="searchEvt">
 				<i class="icon iconfont icon-sousuo"></i>
 			</a>
 			<tab :line-width=2 active-color='#09BB07' v-model="pageData.headerIndex">
@@ -9,52 +9,7 @@
 	      	</tab>
 	    </x-header>
 	    <swiper v-model="pageData.headerIndex" :height="pageData.swiperHeight" :show-dots="false">
-	        <swiper-item>
-				<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
-			      <div>
-			      	<div class="panel" v-for="item in n" :key="item">
-					<div class="panel-user">
-						<div class="panel-user-photo">
-							<img src="../../../build/logo.png" />
-						</div>
-						<div class="panel-user-right">
-							<div class="panel-user-name">
-								落叶在风中起舞
-							</div>
-							<div class="panel-user-more">
-								<span>孔雀鱼</span> | 
-								<span>06-11</span>
-							</div>	
-						</div>
-					</div>
-					<div class="panel-content">
-						<p class="panel-content-text">他按了内部对讲机上的一个按钮。“有什么事吗？”一个声音问道。</p>
-						<img style="width: 100%; height: 100px;" src="../../../build/logo.png"/>
-					</div>
-					<div class="panel-button">
-						<flexbox :gutter="0">
-					        <flexbox-item><div class="panel-flex-button">
-					        	<i class="icon iconfont icon-fenxiang"></i>
-					        	<span>11</span>
-					        </div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-bianji"></i>
-					        	<span>29</span>
-					      	</div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-buxing"></i>
-					        	<span>3245</span>
-					      	</div></flexbox-item>
-					    </flexbox>
-					</div>
-				</div>
-			      </div>
-			      <!--pullup slot-->
-			      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
-			        <span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner>正在加载....</span>
-			      </div>
-			    </scroller>
-	        </swiper-item>
+	        
 	        <swiper-item>
 	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 			      <div>
@@ -101,52 +56,12 @@
 			      </div>
 			    </scroller>
 	        </swiper-item>
-	        <swiper-item>
-	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
-			      <div>
-			      	<div class="panel" v-for="item in n" :key="item">
-					<div class="panel-user">
-						<div class="panel-user-photo">
-							<img src="../../../build/logo.png" />
-						</div>
-						<div class="panel-user-right">
-							<div class="panel-user-name">
-								落叶在风中起舞
-							</div>
-							<div class="panel-user-more">
-								<span>孔雀鱼</span> | 
-								<span>06-11</span>
-							</div>	
-						</div>
-					</div>
-					<div class="panel-content">
-						<p class="panel-content-text">他按了内部对讲机上的一个按钮。“有什么事吗？”一个声音问道。</p>
-						<img style="width: 100%; height: 100px;" src="../../../build/logo.png"/>
-					</div>
-					<div class="panel-button">
-						<flexbox :gutter="0">
-					        <flexbox-item><div class="panel-flex-button">
-					        	<i class="icon iconfont icon-fenxiang"></i>
-					        	<span>11</span>
-					        </div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-bianji"></i>
-					        	<span>29</span>
-					      	</div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-buxing"></i>
-					        	<span>3245</span>
-					      	</div></flexbox-item>
-					    </flexbox>
-					</div>
-				</div>
-			      </div>
-			      <!--pullup slot-->
-			      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
-			        <span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner>正在加载....</span>
-			      </div>
-			    </scroller>
+	        <!--<swiper-item>
+				swiper2
 	        </swiper-item>
+	        <swiper-item>
+	        	swiper3
+	        </swiper-item>-->
       	</swiper>
 	</div>
 </template>
@@ -179,7 +94,7 @@ export default {
   },
   data () {
     return {
-    	n: 10,
+      n: 10,
       n1: 10,
       pullupEnabled: true,
       status: {
@@ -187,7 +102,7 @@ export default {
         pulldownStatus: 'default'
       },
     	pageData:{
-			headerNav: ['关注', '首页', '视频'],
+			headerNav: ['首页'],
 	      	headerIndex: 0,
 	      	selected:{},
 	      	swiperHeight:'0'
@@ -196,9 +111,14 @@ export default {
     }
   },
   created() {
-		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-60)+"px"
+		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
 	},
 	methods:{
+		searchEvt(){
+			this.$router.push({
+				name:'searchLink'
+			})
+		},
 		loadMore () {
 	      setTimeout(() => {
 	        this.n += 10
@@ -228,6 +148,11 @@ export default {
 <style>
 	.vux-header{
 		background-color: #fff !important;
+		position: fixed !important;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 999;
 	}
 	.vux-header:after {
 	    content: " ";
@@ -254,6 +179,13 @@ export default {
     }
     .vux-tab{
     	height: 41px !important;
+    }
+    .vux-slider{
+    	margin-top: 46px;
+    }
+    .weui-tabbar{
+    	position: fixed !important;
+    	left: 0;
     }
     .panel{
     	background: #fff;

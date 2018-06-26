@@ -8,10 +8,11 @@
 export default class UrlMapping {
 	constructor(){
 		this.isLocalHost = window.location.host.toLowerCase() == 'http://localhost:8080';
+		this.isLocalHost = true
 		this.origin = window.location.origin;
 		
-		this.POST_QUERYCOMMONINFO = (this.isLocalHost?'/apis':this.origin)+'/wumart/partner/queryCommonInfo';                 
-		this.POST_QUERYSUBJECTTYPE = (this.isLocalHost?'/apis':this.origin)+'/wumart/partner/querySubjectType';              
+		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
+		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
 		
 	}
 	

@@ -13,6 +13,13 @@ import news from './../components/news/news'
 // 我的
 import userinfo from './../components/userinfo/userinfo'
 
+// 搜索
+import search from './../components/search/search'
+
+// 登录
+import login from './../components/login/login'
+import register from './../components/login/register'
+
 
 export const routes = [
 	{path:'/',name:'homeLink',component:home,redirect:'/index',children:[
@@ -29,7 +36,9 @@ export const routes = [
 			
 		]}	
 	]},
-	{path:'/demo',name:'demoLink',component:demo},
+	{path:'/search',name:'searchLink',component:search},
+	{path:'/login',name:'loginLink',component:login},
+	{path:'/register',name:'registerLink',component:register},
 	{path:'*',redirect:'/'}
 	
 	

@@ -71,8 +71,8 @@ axios.interceptors.response.use(response => {
     } else {
       err.message = "连接到服务器失败"
     }
-    message.err(err.message)
-      return Promise.resolve(err.response)
+//  message.err(err.message)
+    return Promise.resolve(err.response)
 })
 
 //axios.defaults.baseURL = '/api'
