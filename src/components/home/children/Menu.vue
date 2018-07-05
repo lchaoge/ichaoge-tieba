@@ -12,15 +12,15 @@
 			        <i slot="label" style="padding-right:10px;display:block;" class="icon iconfont icon-sousuo"></i>
 			    </x-input>
 			</div>	
-			<div class="lately">
+			<div class="lately" v-if="isLogin">
 				<div class="title">
 					<h2>最近逛的吧</h2>
 				</div>
 				<div class="content">
 					<scroller lock-y :scrollbar-x=false>
 						<div class="box">
-							<div class="item" v-for="item in 10" :key="item">
-								<img src="../../../build/logo.png" />
+							<div class="item" v-for="item in 10" :key="item.sort_article_id">
+								<img src="../../../assets/images/logo.png" />
 								<h3>漫画bar</h3>
 							</div>	
 						</div>
@@ -28,12 +28,11 @@
 					
 				</div>
 			</div>
-			<grid :cols="2" :show-lr-borders="false">
+			<grid :cols="2" :show-lr-borders="false" v-if="isLogin">
 				<h2>我关注的吧</h2>
-				  <grid-item v-for="i in 9" :key="i">
+				  <grid-item v-for="item in followList" :key="item.sort_article_id">
 				  	<div class="grid-center">
-				  		<span>贴吧名称--{{i}}</span>
-				  		<badge :text="i"></badge>
+				  		<span>{{item.sort_article_name}}</span>
 				  	</div>
 				  </grid-item>
 			</grid>
@@ -47,119 +46,118 @@
 import {Scroller, Badge,Grid, GridItem,XHeader,XInput,Search, Group, Cell, XButton } from 'vux'
 
 export default {
-  components: {
-  	Scroller,
-  	Badge,
-  	Grid,
-    GridItem,
-  	XHeader,
-  	XInput,
-    Search,
-    Group,
-    Cell,
-    XButton
-  },
-  created() {
-		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
+	components: {
+	  	Scroller,
+	  	Badge,
+	  	Grid,
+	    GridItem,
+	  	XHeader,
+	  	XInput,
+	    Search,
+	    Group,
+	    Cell,
+	    XButton
 	},
-  methods: {
-    setFocus () {
-      this.$refs.search.setFocus()
-    },
-    resultClick (item) {
-      window.alert('you click the result item: ' + JSON.stringify(item))
-    },
-    getResult (val) {
-      console.log('on-change', val)
-      this.results = val ? getResult(this.value) : []
-    },
-    onSubmit () {
-      this.$refs.search.setBlur()
-      this.$vux.toast.show({
-        type: 'text',
-        position: 'top',
-        text: 'on submit'
-      })
-    },
-    onFocus () {
-      console.log('on focus')
-    },
-    onCancel () {
-    	this.$router.go(-1)
-    }
-  },
-  data () {
-    return {
-    	pageData:{
-	      	headerIndex: 1,
-	      	selected:{},
-	      	swiperHeight:'0'
-    	},
-      results: [],
-      value: ''
-    }
-  }
+	data () {
+	    return {
+	    	pageData:{
+		      	headerIndex: 1,
+		      	selected:{},
+		      	swiperHeight:'0'
+	    	},
+	      	results: [],
+	      	value: '',
+	      	followList:[],
+	      	isLogin:false
+	    }
+	},
+	created() {
+		this.isLogin = this.$store.getters.isLogin
+		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
+		if(this.isLogin){
+			this.queryAllByUserIdEvt()	
+		}
+	},
+	methods: {
+		// 关注的吧
+		queryAllByUserIdEvt(){
+			let user = this.$store.getters.currentUser
+			let params = {
+				userId:user.user_id
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLESORT_QUERYALLBYUSERID,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.followList = res.data
+					}else{
+						console.log('暂无更多数据')
+					}
+				}
+			})
+		}
+	},
+	
 }
 
 </script>
 
 <style>
-	.lately{
+	.search .lately{
 		background: #fff;
 		margin-bottom: 10px;
 	}
-	.lately .title h2 {
+	.search .lately .title h2 {
 	    padding: 10px;
 	    color: #999;
 	    position: relative;
 	}
-	.lately .content {
+	.search .lately .content {
 		padding: 10px;
 		height: 100px;
 		overflow: hidden;
 	}
-	.lately .content .box{
+	.search .lately .content .box{
 	    height: 100%;
 	    position: relative;
 	    width: 9999px;
 	}
-	.lately .content .item{
+	.search .lately .content .item{
 		width: 80px;
 		margin-right: 10px;
 		float: left;
 		position: relative;
 		display: inline-block;
 	}
-	.lately .content .item img{
+	.search .lately .content .item img{
 		width: 80px;
 		height: 80px;
 	}
-	.lately .content .item h3{
+	.search .lately .content .item h3{
 		text-align: center;
 		font-size: 14px;
 	}
-	.lately .content:after{
+	.search .lately .content:after{
 		height: 0;
 		width: 0;
 		clear: both;
 		overflow: hidden;
 		content: ' ';		
 	}
-	.weui-search-bar__label{
+	.search .weui-search-bar__label{
 		top: 5px !important;
 	}
-	.vux-scroller{
+	.search .vux-scroller{
 		margin-top: 46px;
 	}
-	.weui-grids{
+	.search .weui-grids{
 		background: #fff;
 	}
-	.weui-grids h2{
+	.search .weui-grids h2{
 		padding: 10px;
 		color: #999;
 		position: relative;
 	}
-	.weui-grids h2:after{
+	.search .weui-grids h2:after{
 		content: " ";
 	    position: absolute;
 	    left: 0;
@@ -173,12 +171,12 @@ export default {
 	    -webkit-transform: scaleY(0.5);
 	    transform: scaleY(0.5);
 	}
-	.weui-grid{
+	.search .weui-grid{
 		padding: 10px !important;
 		text-decoration: none;
 		color: #000;	
 	}
-	.weui-grid .grid-center .vux-badge{
+	.search .weui-grid .grid-center .vux-badge{
 		float: right;
 	}
 </style>

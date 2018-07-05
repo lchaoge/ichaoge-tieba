@@ -7,13 +7,10 @@
 import state from './state.js'
 
 export default {
-  mandt (state) {
-		return state.mandt;
+	currentUser (state) {
+		return state.currentUser;
 	},
-  indu (state) {
-		return state.indu;
-	},
-  siteNo (state) {
-		return state.siteNo;
+  	isLogin (state) {
+		return state.isLogin;
 	}
 }

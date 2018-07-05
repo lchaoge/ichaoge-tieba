@@ -146,4 +146,17 @@ export default class Apis {
 	  return ((new Date(startTime.replace(/-/g,"\/"))) > (new Date(endTime.replace(/-/g,"\/"))));
 	}
 	
+	/**
+	 * 获取网络IP
+	 * return returnCitySN
+	 * cip
+	 * cid
+	 * cname
+	 */
+	getIntnetIP() {
+	    let script = document.createElement('script')
+		script.src = "http://pv.sohu.com/cityjson?ie=utf-8"
+		document.getElementsByTagName('head')[0].appendChild(script)
+	}
+	
 }

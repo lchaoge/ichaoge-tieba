@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 
+import store from './store/index'
+
 import VueRouter from 'vue-router'
 import {routes} from './router/index'
 Vue.use(VueRouter)
@@ -16,6 +18,8 @@ Vue.prototype.$Axios = Axios
 import Apis from './assets/js/Apis'
 Vue.prototype.$Apis = new Apis()
 
+window.vueEvent = new Vue(); // 专门用作单一事件管理而初始化的全局Vue对象
+
 let router = new VueRouter({
 	mode:'history',
 	routes
@@ -28,5 +32,6 @@ new Vue({
   el: '#app',
   components: { App },
   router,
+  store,
   template: '<App/>'
 })

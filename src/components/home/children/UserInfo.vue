@@ -15,7 +15,7 @@
 	    <scroller lock-x scrollbar-y :height="pageData.swiperHeight" class="vux-scroller">
 	    	<cell-box is-link class="user">
 	    		<div class="user-img">
-	    			<img src="../../../build/logo.png" />
+	    			<img src="../../../assets/images/logo.png" />
 	    		</div>
 	    		<div class="user-right">
 	    			<h4>京城朝歌</h4>
@@ -85,40 +85,54 @@ import { CellBox ,Card,Group,XHeader, Actionsheet, TransferDom, ButtonTab, Butto
 import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
 
 export default {
+	data () {
+	    return {
+	    	pageData:{
+		      	headerIndex: 1,
+		      	selected:{},
+		      	swiperHeight:'0'
+	    	},
+	    	
+	    }
+	},
+	beforeRouteEnter:(to,from ,next)=>{
+		next((vm)=>{
+			let isLogin = vm.$store.getters.isLogin
+			if(!isLogin){
+				vm.$router.push({name:'loginLink'})
+			}
+		})
+	},
 	created() {
 		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
 	},
-	  data () {
-    return {
-    	pageData:{
-	      	headerIndex: 1,
-	      	selected:{},
-	      	swiperHeight:'0'
-    	},
-    	
-    }
-  },
-  components: {
-  	CellBox,
-  	Group,
-    Card,
-    Spinner,
-  	Scroller,
-  	Flexbox,
-    FlexboxItem,
-    XHeader,
-    Actionsheet,
-    ButtonTab,
-    ButtonTabItem,
-    Tab,
-    TabItem,
-    Sticky,
-    Divider,
-    XButton,
-    Swiper,
-    Panel,
-    SwiperItem
-  }
+	mounted(){
+		
+	},
+	computed:{
+		
+	},
+	components: {
+	  	CellBox,
+	  	Group,
+	    Card,
+	    Spinner,
+	  	Scroller,
+	  	Flexbox,
+	    FlexboxItem,
+	    XHeader,
+	    Actionsheet,
+	    ButtonTab,
+	    ButtonTabItem,
+	    Tab,
+	    TabItem,
+	    Sticky,
+	    Divider,
+	    XButton,
+	    Swiper,
+	    Panel,
+	    SwiperItem
+	}
 }
 </script>
 

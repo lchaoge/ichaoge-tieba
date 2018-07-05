@@ -8,7 +8,7 @@
 			<i slot="icon" class="icon iconfont icon-zonghe"></i>
 	        <span slot="label">进吧</span>
 	    </tabbar-item>
-	    <tabbar-item link='/menu' class="tabbar-add">
+	    <tabbar-item link='/article/insert' class="tabbar-add">
 			<i slot="icon" class="icon iconfont icon-roundadd"></i>
 	    </tabbar-item>
 	    <tabbar-item link='/news' badge="2">

@@ -16,7 +16,7 @@
 			      	<div class="panel" v-for="item in n" :key="item">
 					<div class="panel-user">
 						<div class="panel-user-photo">
-							<img src="../../../build/logo.png" />
+							<img src="../../../assets/images/logo.png" />
 						</div>
 						<div class="panel-user-right">
 							<div class="panel-user-name">
@@ -30,7 +30,7 @@
 					</div>
 					<div class="panel-content">
 						<p class="panel-content-text">他按了内部对讲机上的一个按钮。“有什么事吗？”一个声音问道。</p>
-						<img style="width: 100%; height: 100px;" src="../../../build/logo.png"/>
+						<img style="width: 100%; height: 100px;" src="../../../assets/images/logo.png"/>
 					</div>
 					<div class="panel-button">
 						<flexbox :gutter="0">

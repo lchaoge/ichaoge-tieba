@@ -1,15 +1,13 @@
 <template>
-  <div class="home">
-   <view-box ref="viewBox">
-   		<router-view></router-view>
-			<tabbar></tabbar>
-   </view-box>
-  </div>
+  <view-box ref="viewBox" class="home">
+		<router-view></router-view>
+		<tabbar></tabbar>
+  </view-box>
 </template>
 
 <script>
 import { ViewBox } from 'vux'
-import tabbar from './tabbar/tabbar'
+import tabbar from '../common/tabbar'
 export default {
   name: 'home',
   data () {

@@ -7,14 +7,16 @@ const app = express();
 
 const userApi = require('./api/userApi');
 const articleApi = require('./api/articleApi');
+const articleSortApi = require('./api/articleSortApi');
 
 
-app.use(bodyParser.json()); // 用来接收post提交的json数据
-app.use(bodyParser.urlencoded({extended:true})); // 也可以接收任何数据类型的数据，包括文本、视频、图片等
+app.use(bodyParser.json({limit: '50mb'})); // 用来接收post提交的json数据
+app.use(bodyParser.urlencoded({limit: '50mb',extended:true})); // 也可以接收任何数据类型的数据，包括文本、视频、图片等
 
 // 后端api路由
 app.use('/wm/user', userApi);
 app.use('/wm/article', articleApi);
+app.use('/wm/articleSort', articleSortApi);
 
 // 监听端口
 app.listen(3000);

@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var $sql = require('../sqlMapping');
+const multer = require('../multer');
 
 // 连接数据库
 var conn = mysql.createConnection(models.mysql);
@@ -25,8 +26,8 @@ var jsonWrite = function(res, ret) {
 
 
 // 分页
-router.post('/queryAllUser',(req,res)=>{
-	let sql = $sql.user.queryAllUser;
+router.post('/queryAllArticle',(req,res)=>{
+	let sql = $sql.article.queryAllArticle;
 	let params = req.body;
 	console.log("==========")
 	console.log(params);
@@ -43,6 +44,43 @@ router.post('/queryAllUser',(req,res)=>{
 			jsonWrite(res,result)
 		}
 	})
+});
+
+// 插入
+router.post('/insert', multer.array('headpic'),(req,res,next)=>{
+	let articleInsertSql = $sql.article.insert;
+	let articleImagesInsertSql = 'insert into article_image (article_id,article_image_url)values';
+	let params = req.body;
+	console.log(params);
+	params.article_up = 0
+	params.article_support = 0
+	// 主表
+	let p = new Promise((resolve, reject)=>{
+		conn.query(articleInsertSql,[params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {
+			result ? resolve(result) : reject(error);
+		})
+	})
+	// 主表查询用户插入的最后一条ID 插入子表
+	p.then((result)=>{
+//		((select a.article_id from article as a where a.user_id = ? order by a.article_id desc limit 1),?)
+		params.images.forEach((item)=>{
+			console.log(item)
+			const filePath = '../../static/uploads/images/' + item.name;
+			articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'")'
+		})
+		console.log(articleImagesInsertSql)
+		conn.query(articleImagesInsertSql,[],(err,result) => {
+			if(err){
+				console.log('子表插入错误：'+err)
+			}
+			if(result){
+				jsonWrite(res,result)
+			}
+		})		
+	}).catch(err=>{
+		console.log('主表插入错误：'+err)
+	})
+	
 });
 
 module.exports = router;

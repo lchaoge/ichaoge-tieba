@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var $sql = require('../sqlMapping');
+var crypto = require('crypto');
 
 // 连接数据库
 var conn = mysql.createConnection(models.mysql);
@@ -29,28 +30,39 @@ router.post('/register', (req, res) => {
     let addSql = $sql.user.add;
     let loginSql = $sql.user.login;
     let params = req.body;
-    console.log(params);
     params.userPwd = md5.update(params.userPwd).digest('hex');
+    console.log(params);
     conn.query(loginSql, [params.userPhone, params.userPwd], (err, result) => {
         if (err) {
             console.log("错误："+err);
         }
-        if (result) {
-            jsonWrite(res, result);
+        if (result.length == 0) {
+			conn.query(addSql,[params.userPhone, params.userPwd], (err, result) => {
+				if(err){
+					console.log('错误：'+err)
+				}
+				if(result){
+					jsonWrite(res,0)
+				}
+			})	
+        }else{
+        	// 已经注册
+        	jsonWrite(res,1)
         }
     })
+    
+	
 });
 
 // 登录
 router.post('/login',(req,res)=>{
+	const md5 = crypto.createHash('md5');
 	let sql = $sql.user.login;
 	let params = req.body;
-	console.log("==========")
-	console.log(params);
-	console.log("==========")
+	params.userPwd = md5.update(params.userPwd).digest('hex');
 	conn.query(sql,[params.userPhone,params.userPwd],(err,result) => {
 		if(err){
-			console.log('错误：'+err)
+			console.log('登录错误：'+err)
 		}
 		if(result){
 			jsonWrite(res,result)

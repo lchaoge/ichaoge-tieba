@@ -11,8 +11,15 @@ export default class UrlMapping {
 		this.isLocalHost = true
 		this.origin = window.location.origin;
 		
+		// 用户
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
 		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
+		
+		// 文章类型
+		this.POST_ARTICLESORT_QUERYALLBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/queryAllByUserId';   // 根据用户查询文章分类
+		
+		// 文章
+		this.POST_ARTICLE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/article/insert';   // 插入
 		
 	}
 	
