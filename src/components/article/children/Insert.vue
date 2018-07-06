@@ -23,6 +23,7 @@
   	</view-box>
 </template>
 <script>
+import axios from 'axios'
 import { Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast } from 'vux'
 import Uploader from 'vux-uploader'
 export default {
@@ -61,7 +62,7 @@ export default {
 	    		article_content:"", // 文章内容
 	    		article_type:"1", // 文章的模式:0:仅自己可见，1:所有人可见，2:仅好友可见
 	    		type_id:"", // 文章分类ID 0：贴吧 1：个人主页
-	    		images:[]
+	    		images:null
 	    	}
 	    	
 	    }
@@ -98,46 +99,55 @@ export default {
 		        _this.uploader.images.push({url:base64Url})
 		    };
 		    reader.readAsDataURL(formData.get(this.uploader.imgName));
-		    
-		    this.article.images.push(formData.get(this.uploader.imgName));
+		    if(this.article.images == null){
+  				this.article.images = new FormData()
+  			}
+  			this.article.images.append('img',formData.get(this.uploader.imgName))
   		},
   		goBack(){
   			this.$router.go(-1)
   		},
   		// 发布文章
   		insertEvt(){
-  			let user = this.$store.getters.currentUser
-  			let params = {
-	    		article_name:this.article.article_name, // 文章名称
-	    		article_ip:returnCitySN.cip, // 发布IP
-	    		user_id:user.user_id, // 所属用户ID
-	    		article_content:this.article.article_content, // 文章内容
-	    		article_type:this.article.article_type, // 文章的模式:0:仅自己可见，1:所有人可见，2:仅好友可见
-	    		images:this.article.images, // 上传的图片
-	    		type_id:"1" 
-	    	}
-  			if(params.article_name =="" || params.article_name ==null ){
-  				this.pageData.toast.text = "文章名称不能为空"
+  			let user = this.$store.getters.currentUser;
+  			let params = new FormData(); 
+  			params.append("article_name",this.article.article_name);
+  			params.append("article_ip",returnCitySN.cip);
+  			params.append("user_id",user.user_id);
+  			params.append("article_content",this.article.article_content);
+  			params.append("article_type",this.article.article_type);
+  			this.article.images.forEach((item)=>{
+  				params.append("img",item);
+  			})
+  			params.append("type_id","1");
+  			
+			if(params.get('article_name') =="" || params.get('article_name') ==null ){
+				this.pageData.toast.text = "文章名称不能为空"
 	  			this.pageData.toast.showPositionValue = true
 	  			return false
-  			}
-  			if(params.article_name.length>30){
-  				this.pageData.toast.text = "文章名称不能超过30字"
+			}
+			if(params.get('article_name').length>30){
+				this.pageData.toast.text = "文章名称不能超过30字"
 	  			this.pageData.toast.showPositionValue = true
 	  			return false
-  			}
-  			if(params.article_content =="" || params.article_content ==null){
-  				this.pageData.toast.text = "文章名称不能为空"
+			}
+			if(params.get('article_content') =="" || params.get('article_content') ==null){
+				this.pageData.toast.text = "文章名称不能为空"
 	  			this.pageData.toast.showPositionValue = true
 	  			return false
-  			}
-  			if(params.article_content.length>300){
-  				this.pageData.toast.text = "文章名称不能超过30字"
+			}
+			if(params.get('article_content').length>300){
+				this.pageData.toast.text = "文章名称不能超过30字"
 	  			this.pageData.toast.showPositionValue = true
 	  			return false
-  			}
-			this.$Axios.post(this.$Urls.POST_ARTICLE_INSERT,params).then(res=>res.data).then((res)=>{
-				if(res.code == '0000'){
+			}
+  			
+		    let config = {
+		        headers: {'Content-Type': 'multipart/form-data'}
+		    }
+		     // 添加请求头
+		    axios.post(this.$Urls.POST_ARTICLE_INSERT, params, config).then(res => res.data).then(res=>{
+		    	if(res.code == '0000'){
 					this.$vux.alert.show({
 				        title: '提示',
 				        content: '发布成功',
@@ -149,11 +159,10 @@ export default {
 				        }
 				    })
 				}else{
-					console.log(err)
 					this.pageData.toast.text = "系统错误："+err
 		  			this.pageData.toast.showPositionValue = true	
 				}
-			})
+		    })
   		},
   		// 切换文章模式
   		articleTypeEvt(){

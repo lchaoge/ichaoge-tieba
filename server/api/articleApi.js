@@ -47,7 +47,7 @@ router.post('/queryAllArticle',(req,res)=>{
 });
 
 // 插入
-router.post('/insert', multer.array('headpic'),(req,res,next)=>{
+router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let articleInsertSql = $sql.article.insert;
 	let articleImagesInsertSql = 'insert into article_image (article_id,article_image_url)values';
 	let params = req.body;
@@ -63,13 +63,13 @@ router.post('/insert', multer.array('headpic'),(req,res,next)=>{
 	// 主表查询用户插入的最后一条ID 插入子表
 	p.then((result)=>{
 //		((select a.article_id from article as a where a.user_id = ? order by a.article_id desc limit 1),?)
-		params.images.forEach((item)=>{
-			console.log(item)
-			const filePath = '../../static/uploads/images/' + item.name;
-			articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'")'
+		req.files.forEach((item)=>{
+			let filePath = '../../static/uploads/images/' + item.filename;
+			articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'"),'
 		})
-		console.log(articleImagesInsertSql)
-		conn.query(articleImagesInsertSql,[],(err,result) => {
+		let imagesInsertSql = articleImagesInsertSql.substring(0,articleImagesInsertSql.length-1)
+		console.log(imagesInsertSql)
+		conn.query(imagesInsertSql,[],(err,result) => {
 			if(err){
 				console.log('子表插入错误：'+err)
 			}
