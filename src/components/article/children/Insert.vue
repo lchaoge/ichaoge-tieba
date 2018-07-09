@@ -20,11 +20,12 @@
 	    	<span class="vux-badge" @click="articleTypeEvt">{{articleTypeName}}</span>
 	    </div>
 	    <toast v-model="pageData.toast.showPositionValue" type="text" :time="800" is-show-mask :text="pageData.toast.text" position="bottom"></toast>
+	    <alert v-model="pageData.alert.show" :title="pageData.alert.title" @on-show="onAlertShow" @on-hide="onAlertHide">{{pageData.alert.content}}</alert>
   	</view-box>
 </template>
 <script>
 import axios from 'axios'
-import { Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast } from 'vux'
+import { Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,AlertPlugin } from 'vux'
 import Uploader from 'vux-uploader'
 export default {
   	name: 'articleInsert',
@@ -37,6 +38,7 @@ export default {
 	  	Group,
 	  	Badge,
 	  	Alert,
+	  	AlertPlugin,
 	  	Toast
   	},
   	data () {
@@ -45,6 +47,11 @@ export default {
 	    		toast:{
 	    			showPositionValue:false,
 	    			text:""
+	    		},
+	    		alert:{
+	    			show:false,
+	    			title:"提示",
+	    			content:""
 	    		}
 	    	},
 	    	articleTypeName:"所有人可见",
@@ -116,9 +123,12 @@ export default {
   			params.append("user_id",user.user_id);
   			params.append("article_content",this.article.article_content);
   			params.append("article_type",this.article.article_type);
-  			this.article.images.forEach((item)=>{
-  				params.append("img",item);
-  			})
+  			if(this.article.images!=null){
+	  			this.article.images.forEach((item)=>{
+	  				params.append("img",item);
+	  			})	
+  			}
+  			
   			params.append("type_id","1");
   			
 			if(params.get('article_name') =="" || params.get('article_name') ==null ){
@@ -148,16 +158,8 @@ export default {
 		     // 添加请求头
 		    axios.post(this.$Urls.POST_ARTICLE_INSERT, params, config).then(res => res.data).then(res=>{
 		    	if(res.code == '0000'){
-					this.$vux.alert.show({
-				        title: '提示',
-				        content: '发布成功',
-				        onShow () {
-				          	alert('111')
-				        },
-				        onHide () {
-				          	alert('2222')
-				        }
-				    })
+					this.pageData.alert.content = "添加成功"
+		  			this.pageData.alert.show = true	
 				}else{
 					this.pageData.toast.text = "系统错误："+err
 		  			this.pageData.toast.showPositionValue = true	
@@ -177,7 +179,13 @@ export default {
   			} else if(this.article.article_type == 2){
   				this.articleTypeName = "仅好友可见"
   			}  
-  		}
+  		},
+  		onAlertShow(){
+  			
+  		},
+  		onAlertHide(){
+  			this.$router.push({name:'homeLink'})
+  		},
   	},
   	
 }
