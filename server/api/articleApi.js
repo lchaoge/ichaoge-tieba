@@ -74,6 +74,23 @@ router.post('/queryAllArticle',(req,res)=>{
 	})
 });
 
+// 详情
+router.post('/detail',(req,res)=>{
+	let sql = $sql.article.queryByArticleId;
+	let params = req.body;
+	console.log(params);
+	// 获取前台页面传过来的参数
+	conn.query(sql,[params.article_id],(err,result) => {
+		if(err){
+			console.log('错误：'+err)
+		}
+		if(result){
+			console.log(result)
+			jsonWrite(res,result)
+		}
+	})
+});
+
 // 插入
 router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let articleInsertSql = $sql.article.insert;
@@ -83,8 +100,6 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	params.article_support = 0
 	params.article_click = 0
 	params.article_time = getDateFunc('all')
-	
-	console.log(params);
 	// 主表
 	let p = new Promise((resolve, reject)=>{
 		conn.query(articleInsertSql,[params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {
@@ -124,8 +139,6 @@ router.post('/index',(req,res)=>{
 	let queryByArticleId = '' //SELECT article_image_id,article_id,article_image_url FROM article_image where article_id=? UNION ALL
 	let params = req.body;
 	getCount((c)=>{
-		console.log('===')
-		console.log(c[0].count);
 		// 获取前台页面传过来的参数
 	    let currentPage = parseInt(params.currentPage || 1);// 页码
 	    let end = parseInt(params.pageSize || 10); // 默认页数
@@ -154,13 +167,6 @@ router.post('/index',(req,res)=>{
 							}
 						})
 					})	
-					console.log({
-						currentPage:params.currentPage,
-						pageSize:params.pageSize,
-						count:c[0].count,
-						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
-						list:result
-					})
 					jsonWrite(res,{
 						currentPage:params.currentPage,
 						pageSize:params.pageSize,

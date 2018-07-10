@@ -10,7 +10,8 @@ module.exports = {
 		queryAllArticle : 'select * from article order by article_id desc limit ?, ?', // 分页
 		insert : 'insert into article(article_name,article_time,article_ip,article_click,sort_article_id,user_id,article_type,article_content,article_up,article_support) values (?,?,?,?,?,?,?,?,?,?)', // 插入文章
 		index : 'SELECT art.article_id,art.article_name,art.article_content,art.article_time,art.article_click,art_s.sort_article_name,u.user_image_url,u.user_name	FROM article AS art left JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id left JOIN USER AS u ON u.user_id = art.user_id ORDER BY art.article_time desc limit ?,?',
-		count : 'select count(*) as count from article'
+		count : 'select count(*) as count from article',
+		queryByArticleId : 'select * from article where article_id = ?'
 	},
 	// 文章分类表
 	articleSort:{

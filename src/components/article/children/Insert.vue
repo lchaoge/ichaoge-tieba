@@ -19,13 +19,11 @@
 	    <div class="footer">
 	    	<span class="vux-badge" @click="articleTypeEvt">{{articleTypeName}}</span>
 	    </div>
-	    <toast v-model="pageData.toast.showPositionValue" type="text" :time="800" is-show-mask :text="pageData.toast.text" position="bottom"></toast>
-	    <alert v-model="pageData.alert.show" :title="pageData.alert.title" @on-show="onAlertShow" @on-hide="onAlertHide">{{pageData.alert.content}}</alert>
   	</view-box>
 </template>
 <script>
 import axios from 'axios'
-import { Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,AlertPlugin } from 'vux'
+import { Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast } from 'vux'
 import Uploader from 'vux-uploader'
 export default {
   	name: 'articleInsert',
@@ -38,21 +36,12 @@ export default {
 	  	Group,
 	  	Badge,
 	  	Alert,
-	  	AlertPlugin,
 	  	Toast
   	},
   	data () {
 	    return {
 	    	pageData:{
-	    		toast:{
-	    			showPositionValue:false,
-	    			text:""
-	    		},
-	    		alert:{
-	    			show:false,
-	    			title:"提示",
-	    			content:""
-	    		}
+	    		
 	    	},
 	    	articleTypeName:"所有人可见",
 	    	uploader:{
@@ -132,37 +121,38 @@ export default {
   			params.append("type_id","1");
   			
 			if(params.get('article_name') =="" || params.get('article_name') ==null ){
-				this.pageData.toast.text = "文章名称不能为空"
-	  			this.pageData.toast.showPositionValue = true
+				this.$vux.toast.text('文章名称不能为空', 'bottom')
 	  			return false
 			}
 			if(params.get('article_name').length>30){
-				this.pageData.toast.text = "文章名称不能超过30字"
-	  			this.pageData.toast.showPositionValue = true
+				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
 	  			return false
 			}
 			if(params.get('article_content') =="" || params.get('article_content') ==null){
-				this.pageData.toast.text = "文章名称不能为空"
-	  			this.pageData.toast.showPositionValue = true
+				this.$vux.toast.text('文章名称不能为空', 'bottom')
 	  			return false
 			}
 			if(params.get('article_content').length>300){
-				this.pageData.toast.text = "文章名称不能超过30字"
-	  			this.pageData.toast.showPositionValue = true
+				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
 	  			return false
 			}
   			
 		    let config = {
 		        headers: {'Content-Type': 'multipart/form-data'}
 		    }
-		     // 添加请求头
-		    axios.post(this.$Urls.POST_ARTICLE_INSERT, params, config).then(res => res.data).then(res=>{
+		    // 添加请求头
+		    axios.post(this.$Urls.POST_ARTICLE_INSERT, params, config).then(res => res.data).then((res)=>{
 		    	if(res.code == '0000'){
-					this.pageData.alert.content = "添加成功"
-		  			this.pageData.alert.show = true	
+		    		// 显示
+					this.$vux.alert.show({
+					  	title: '提示',
+					  	content: '添加成功',
+					  	onHide:()=>{
+					   		this.$router.push({name:'homeLink'})
+					  	}
+					})
 				}else{
-					this.pageData.toast.text = "系统错误："+err
-		  			this.pageData.toast.showPositionValue = true	
+					this.$vux.toast.text('系统错误', 'bottom')
 				}
 		    })
   		},
@@ -179,12 +169,6 @@ export default {
   			} else if(this.article.article_type == 2){
   				this.articleTypeName = "仅好友可见"
   			}  
-  		},
-  		onAlertShow(){
-  			
-  		},
-  		onAlertHide(){
-  			this.$router.push({name:'homeLink'})
   		},
   	},
   	

@@ -9,7 +9,6 @@
 	      	</tab>
 	    </x-header>
 	    <swiper v-model="pageData.headerIndex" :height="pageData.swiperHeight" :show-dots="false">
-	        
 	        <swiper-item>
 	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 			      <div>
@@ -23,12 +22,12 @@
 									{{item.user_name}}
 								</div>
 								<div class="panel-user-more">
-									<span>{{item.sort_article_name}}</span> | 
+									<span>{{item.sort_article_name}}吧</span> | 
 									<span>{{item.article_time}}</span>
 								</div>	
 							</div>
 						</div>
-						<div class="panel-content">
+						<div class="panel-content" @click="detailEvt(item.article_id)">
 							<p class="panel-content-text">{{item.article_name}}</p>
 							<flexbox :gutter="0" class="mb10">
 						      	<flexbox-item v-for="(img, index) in item.images" :key="index"><img :src="img.article_image_url" style="width:100%"/></flexbox-item>
@@ -159,6 +158,7 @@ export default {
     		this.$Axios.post(this.$Urls.POST_ARTICLE_INDEX,params).then(res=>res.data).then((res)=>{
 	  			if(res.code === '0000'){
 	  				res.data.list.forEach(el=>{
+	  					el.article_time = this.$Apis.dateFormat("MM-dd",new Date(el.article_time).getTime())
 	  					this.queryObj.list.push(el)	
 	  				})
 	  				this.queryObj.currentPage = res.data.currentPage
@@ -166,9 +166,17 @@ export default {
 					this.queryObj.count = res.data.count
 					this.queryObj.pageCount = res.data.pageCount
 	  			}else{
-	  				
+	  				this.$vux.toast.text('系统错误', 'bottom')
 	  			}
 	  		}).catch(err=>console.log("系统错误："+err))
+	    },
+	    detailEvt(id){
+	    	this.$router.push({
+	    		name:'articleIndexLink',
+	    		query:{
+		    		article_id:id
+		    	}
+	    	})
 	    }
 	
 	}
