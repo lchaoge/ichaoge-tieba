@@ -9,7 +9,7 @@ const multer = require('../multer');
 var conn = mysql.createConnection(models.mysql);
 
 conn.connect();
-var jsonWrite = function(res, ret) {
+let jsonWrite = function(res, ret) {
     if(typeof ret === 'undefined') {
         res.json({
             code: '9999',
@@ -23,7 +23,35 @@ var jsonWrite = function(res, ret) {
         });
     }
 };
-
+let getDateFunc = function(allFlag, times) {
+    var date = new Date();
+    if (undefined !== times && /^[0-9]*$/.test(times)) {
+      date = new Date(times);
+    }
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month > 9 ? month : '0' + month);
+    var day = date.getDate();
+    day = (day > 9 ? day : '0' + day);
+    var hours = date.getHours();
+    hours = (hours > 9 ? hours : '0' + hours);
+    var minutes = date.getMinutes();
+    minutes = (minutes > 9 ? minutes : '0' + minutes);
+    var seconds = date.getSeconds();
+    seconds = (seconds > 9 ? seconds : '0' + seconds);
+    return allFlag == 'all' ? (year + '-' + month + "-" + day + " " + hours + ':' + minutes + ':' + seconds) : (year + '-' + month + "-" + day);
+}
+let getCount = function(callback){
+	let sql = $sql.article.count;
+	conn.query(sql,[],(err,result) => {
+		if(err){
+			console.log('查询总行数错误：'+err)
+		}
+		if(result){
+			callback(result)
+		}
+	})
+}
 
 // 分页
 router.post('/queryAllArticle',(req,res)=>{
@@ -45,24 +73,7 @@ router.post('/queryAllArticle',(req,res)=>{
 		}
 	})
 });
-function getDateFunc(allFlag, times) {
-    var date = new Date();
-    if (undefined !== times && /^[0-9]*$/.test(times)) {
-      date = new Date(times);
-    }
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    month = (month > 9 ? month : '0' + month);
-    var day = date.getDate();
-    day = (day > 9 ? day : '0' + day);
-    var hours = date.getHours();
-    hours = (hours > 9 ? hours : '0' + hours);
-    var minutes = date.getMinutes();
-    minutes = (minutes > 9 ? minutes : '0' + minutes);
-    var seconds = date.getSeconds();
-    seconds = (seconds > 9 ? seconds : '0' + seconds);
-    return allFlag == 'all' ? (year + '-' + month + "-" + day + " " + hours + ':' + minutes + ':' + seconds) : (year + '-' + month + "-" + day);
-}
+
 // 插入
 router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let articleInsertSql = $sql.article.insert;
@@ -70,6 +81,7 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let params = req.body;
 	params.article_up = 0
 	params.article_support = 0
+	params.article_click = 0
 	params.article_time = getDateFunc('all')
 	
 	console.log(params);
@@ -82,13 +94,11 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	// 主表查询用户插入的最后一条ID 插入子表
 	p.then((result)=>{
 		if(req.files.length>0){
-			console.log("===============================")
 			req.files.forEach((item)=>{
 				let filePath = '../../static/uploads/images/' + item.filename;
 				articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'"),'
 			})
 			let imagesInsertSql = articleImagesInsertSql.substring(0,articleImagesInsertSql.length-1)
-			console.log(imagesInsertSql)
 			conn.query(imagesInsertSql,[],(err,result) => {
 				if(err){
 					console.log('子表插入错误：'+err)
@@ -110,23 +120,67 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 
 // 首页
 router.post('/index',(req,res)=>{
-	let sql = $sql.article.queryAllArticle;
+	let indexSql = $sql.article.index;
+	let queryByArticleId = '' //SELECT article_image_id,article_id,article_image_url FROM article_image where article_id=? UNION ALL
 	let params = req.body;
-	console.log("==========")
-	console.log(params);
-	console.log("==========")
-	// 获取前台页面传过来的参数
-    let currentPage = parseInt(params.currentPage || 1);// 页码
-    let end = parseInt(params.pageSize || 10); // 默认页数
-    let start = (currentPage - 1) * end;
-	conn.query(sql,[start,end],(err,result) => {
-		if(err){
-			console.log('错误：'+err)
-		}
-		if(result){
-			jsonWrite(res,result)
-		}
+	getCount((c)=>{
+		console.log('===')
+		console.log(c[0].count);
+		// 获取前台页面传过来的参数
+	    let currentPage = parseInt(params.currentPage || 1);// 页码
+	    let end = parseInt(params.pageSize || 10); // 默认页数
+	    let start = (currentPage - 1) * end;
+	    // 主表
+		conn.query(indexSql,[start,end],(err,result) => {
+			if(err){
+				console.log('主表查询错误：'+err)
+			}
+			if(result){
+				result.forEach(item=>{
+					queryByArticleId+=' SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+' UNION ALL'
+				})
+				queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
+				let p = new Promise((resolve, reject)=>{
+					conn.query(queryByArticleId,[],(err,data) => {
+						data ? resolve(data) : reject(error);
+					})
+				})
+				p.then((data)=>{
+					result.forEach(item=>{
+						item.images = []
+						data.forEach(el=>{
+							if(el.article_id == item.article_id){
+								item.images.push(el)
+							}
+						})
+					})	
+					console.log({
+						currentPage:params.currentPage,
+						pageSize:params.pageSize,
+						count:c[0].count,
+						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+						list:result
+					})
+					jsonWrite(res,{
+						currentPage:params.currentPage,
+						pageSize:params.pageSize,
+						count:c[0].count,
+						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+						list:result
+					})
+				}).catch(err=>{
+					console.log('子表查询错误：'+err)
+				})
+				
+			}
+		})
+		
 	})
+	
+	
+	
+	
+	
 });
 
 

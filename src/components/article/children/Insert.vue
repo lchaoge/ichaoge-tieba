@@ -88,7 +88,6 @@ export default {
   	methods:{
   		previewMethod(item){
   			console.log(item)
-  			
   		},
   		addImageMethod(){
   			console.log(this.uploadUrl)
@@ -123,6 +122,7 @@ export default {
   			params.append("user_id",user.user_id);
   			params.append("article_content",this.article.article_content);
   			params.append("article_type",this.article.article_type);
+  			params.append("sort_article_id",1)
   			if(this.article.images!=null){
 	  			this.article.images.forEach((item)=>{
 	  				params.append("img",item);

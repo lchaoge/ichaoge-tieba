@@ -20,6 +20,7 @@ export default class UrlMapping {
 		
 		// 文章
 		this.POST_ARTICLE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/article/insert';   // 插入
+		this.POST_ARTICLE_INDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/article/index';   // 首页
 		
 	}
 	

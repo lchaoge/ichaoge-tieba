@@ -13,42 +13,44 @@
 	        <swiper-item>
 	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 			      <div>
-			      	<div class="panel" v-for="item in n" :key="item">
-					<div class="panel-user">
-						<div class="panel-user-photo">
-							<img src="../../../assets/images/logo.png" />
-						</div>
-						<div class="panel-user-right">
-							<div class="panel-user-name">
-								落叶在风中起舞
+			      	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
+						<div class="panel-user">
+							<div class="panel-user-photo">
+								<img :src="item.user_image_url" />
 							</div>
-							<div class="panel-user-more">
-								<span>孔雀鱼</span> | 
-								<span>06-11</span>
-							</div>	
+							<div class="panel-user-right">
+								<div class="panel-user-name">
+									{{item.user_name}}
+								</div>
+								<div class="panel-user-more">
+									<span>{{item.sort_article_name}}</span> | 
+									<span>{{item.article_time}}</span>
+								</div>	
+							</div>
+						</div>
+						<div class="panel-content">
+							<p class="panel-content-text">{{item.article_name}}</p>
+							<flexbox :gutter="0" class="mb10">
+						      	<flexbox-item v-for="(img, index) in item.images" :key="index"><img :src="img.article_image_url" style="width:100%"/></flexbox-item>
+						    </flexbox>
+						</div>
+						<div class="panel-button">
+							<flexbox :gutter="0">
+						        <flexbox-item><div class="panel-flex-button">
+						        	<i class="icon iconfont icon-fenxiang"></i>
+						        	<span>11</span>
+						        </div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-bianji"></i>
+						        	<span>29</span>
+						      	</div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-buxing"></i>
+						        	<span>{{item.article_click}}</span>
+						      	</div></flexbox-item>
+						    </flexbox>
 						</div>
 					</div>
-					<div class="panel-content">
-						<p class="panel-content-text">他按了内部对讲机上的一个按钮。“有什么事吗？”一个声音问道。</p>
-						<img style="width: 100%; height: 100px;" src="../../../assets/images/logo.png"/>
-					</div>
-					<div class="panel-button">
-						<flexbox :gutter="0">
-					        <flexbox-item><div class="panel-flex-button">
-					        	<i class="icon iconfont icon-fenxiang"></i>
-					        	<span>11</span>
-					        </div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-bianji"></i>
-					        	<span>29</span>
-					      	</div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-buxing"></i>
-					        	<span>3245</span>
-					      	</div></flexbox-item>
-					    </flexbox>
-					</div>
-				</div>
 			      </div>
 			      <!--pullup slot-->
 			      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
@@ -71,47 +73,53 @@ import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux
 import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
 
 export default {
-  directives: {
-    TransferDom
-  },
-  components: {
-  	Spinner,
-  	Scroller,
-  	Flexbox,
-    FlexboxItem,
-    XHeader,
-    Actionsheet,
-    ButtonTab,
-    ButtonTabItem,
-    Tab,
-    TabItem,
-    Sticky,
-    Divider,
-    XButton,
-    Swiper,
-    Panel,
-    SwiperItem
-  },
-  data () {
-    return {
-      n: 10,
-      n1: 10,
-      pullupEnabled: true,
-      status: {
-        pullupStatus: 'default',
-        pulldownStatus: 'default'
-      },
-    	pageData:{
-			headerNav: ['首页'],
-	      	headerIndex: 0,
-	      	selected:{},
-	      	swiperHeight:'0'
-    	},
-    	
-    }
-  },
-  created() {
+  	directives: {
+    	TransferDom
+  	},
+  	components: {
+	  	Spinner,
+	  	Scroller,
+	  	Flexbox,
+	    FlexboxItem,
+	    XHeader,
+	    Actionsheet,
+	    ButtonTab,
+	    ButtonTabItem,
+	    Tab,
+	    TabItem,
+	    Sticky,
+	    Divider,
+	    XButton,
+	    Swiper,
+	    Panel,
+	    SwiperItem
+  	},
+  	data () {
+	    return {
+	    	queryObj:{
+	    		currentPage:1,
+	    		pageSize:10,
+	    		count:0,
+	    		pageCount:0,
+	    		list:[]
+	    	},
+	      	pullupEnabled: true,
+	      	status: {
+		        pullupStatus: 'default',
+		        pulldownStatus: 'default'
+	      	},
+	    	pageData:{
+				headerNav: ['首页'],
+		      	headerIndex: 0,
+		      	selected:{},
+		      	swiperHeight:'0'
+	    	},
+	    	
+	    }
+  	},
+  	created() {
 		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
+		this.queryEvt()
 	},
 	methods:{
 		searchEvt(){
@@ -121,7 +129,10 @@ export default {
 		},
 		loadMore () {
 	      setTimeout(() => {
-	        this.n += 10
+	        this.queryObj.currentPage++
+	        if(this.queryObj.currentPage<=this.queryObj.pageCount){
+	        	this.queryEvt()
+	        }
 	        setTimeout(() => {
 	          this.$refs.scroller.donePullup()
 	        }, 10)
@@ -129,7 +140,9 @@ export default {
 	    },
 	    refresh () {
 	      setTimeout(() => {
-	        this.n = 10
+	        this.queryObj.currentPage = 1
+	        this.queryObj.list = []
+	        this.queryEvt()
 	        this.$nextTick(() => {
 	          setTimeout(() => {
 	            this.$refs.scroller.donePulldown()
@@ -138,6 +151,25 @@ export default {
 	        })
 	      }, 2000)
 	    },
+	    queryEvt(){
+	    	let params = {
+	    		currentPage:this.queryObj.currentPage,
+    			pageSize:this.queryObj.pageSize
+	    	}
+    		this.$Axios.post(this.$Urls.POST_ARTICLE_INDEX,params).then(res=>res.data).then((res)=>{
+	  			if(res.code === '0000'){
+	  				res.data.list.forEach(el=>{
+	  					this.queryObj.list.push(el)	
+	  				})
+	  				this.queryObj.currentPage = res.data.currentPage
+					this.queryObj.pageSize = res.data.pageSize
+					this.queryObj.count = res.data.count
+					this.queryObj.pageCount = res.data.pageCount
+	  			}else{
+	  				
+	  			}
+	  		}).catch(err=>console.log("系统错误："+err))
+	    }
 	
 	}
   
