@@ -21,7 +21,6 @@ export default class UrlMapping {
 		this.POST_ARTICLESORT_INDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/articleSortIndex';   // 根据ID所有文章
 		this.POST_ARTICLESORT_QUERYBYID = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/queryById';   // 根据ID查询
 		
-		
 		// 文章
 		this.POST_ARTICLE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/article/insert';   // 插入
 		this.POST_ARTICLE_DETAIL = (this.isLocalHost?'/apis':this.origin)+'/wm/article/detail';   // 详情

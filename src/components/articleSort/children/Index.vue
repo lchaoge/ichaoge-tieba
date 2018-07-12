@@ -12,7 +12,7 @@
 	    	<div class="panel">
 	    		<div class="panel-user">
 					<div class="panel-user-photo" style="border: 0px none;border-radius: inherit;">
-						<img :src="articleSort.image_url" />
+						<x-img :src="articleSort.image_url" default-src="../static/images/tieba.jpg"></x-img>
 					</div>
 					<div class="panel-user-right">
 						<div class="panel-user-name">{{articleSort.sort_article_name}}吧</div>
@@ -32,7 +32,7 @@
 		    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
 					<div class="panel-user mb10">
 						<div class="panel-user-photo">
-							<img :src="item.user_image_url" />
+							<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
 						</div>
 						<div class="panel-user-right">
 							<div class="panel-user-name">
@@ -46,7 +46,9 @@
 					<div class="panel-content" @click="detailEvt(item.article_id)">
 						<p class="panel-content-text">{{item.article_name}}</p>
 						<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3"><img :src="img.article_image_url" style="width:100%;height:8rem;"/></flexbox-item>
+					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+					      		<x-img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
+					      	</flexbox-item>
 					    </flexbox>
 					</div>
 					<div class="panel-button">

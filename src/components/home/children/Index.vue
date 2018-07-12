@@ -10,6 +10,9 @@
 	    </x-header>
 	    <swiper v-model="pageData.headerIndex" :height="pageData.swiperHeight" :show-dots="false">
 	        <swiper-item>
+				swiper1
+	        </swiper-item>
+	        <swiper-item>
 	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 			      <div>
 			      	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
@@ -28,24 +31,26 @@
 							</div>
 						</div>
 						<div class="panel-content" @click="detailEvt(item.article_id)">
-							<p class="panel-content-text">{{item.article_name}}</p>
+							<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
 							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3"><img :src="img.article_image_url" style="width:100%;height:8rem;"/></flexbox-item>
+						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+						      		<x-img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
+						      	</flexbox-item>
 						    </flexbox>
 						</div>
 						<div class="panel-button">
 							<flexbox :gutter="0">
 						        <flexbox-item><div class="panel-flex-button">
 						        	<i class="icon iconfont icon-fenxiang"></i>
-						        	<span>11</span>
+						        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
 						        </div></flexbox-item>
 						      	<flexbox-item><div class="panel-flex-button">
 						      		<i class="icon iconfont icon-bianji"></i>
-						        	<span>29</span>
+						      		<countup :start-val="0" :end-val="0" :duration="2"></countup>
 						      	</div></flexbox-item>
 						      	<flexbox-item><div class="panel-flex-button">
 						      		<i class="icon iconfont icon-buxing"></i>
-						        	<span>{{item.article_click}}</span>
+						      		<countup :start-val="0" :end-val="item.article_click" :duration="2"></countup>
 						      	</div></flexbox-item>
 						    </flexbox>
 						</div>
@@ -53,29 +58,31 @@
 			      </div>
 			      <!--pullup slot-->
 			      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
-			        <span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner>正在加载....</span>
+			      	<load-more tip="正在加载" v-show="status.pullupStatus === 'loading'"></load-more>
+				    <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
+			        <!--<span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner>正在加载....</span>-->
 			      </div>
 			    </scroller>
 	        </swiper-item>
-	        <!--<swiper-item>
-				swiper2
-	        </swiper-item>
 	        <swiper-item>
 	        	swiper3
-	        </swiper-item>-->
+	        </swiper-item>
       	</swiper>
 	</div>
 </template>
 
 <script>
-import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
-import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
+import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,Countup,LoadMore } from 'vux'
+import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem,XImg } from 'vux'
 
 export default {
   	directives: {
     	TransferDom
   	},
   	components: {
+  		LoadMore,
+  		XImg,
+  		Countup,
 	  	Spinner,
 	  	Scroller,
 	  	Flexbox,
@@ -108,8 +115,8 @@ export default {
 		        pulldownStatus: 'default'
 	      	},
 	    	pageData:{
-				headerNav: ['首页'],
-		      	headerIndex: 0,
+				headerNav: ['关注','首页','视频'],
+		      	headerIndex: 1,
 		      	selected:{},
 		      	swiperHeight:'0'
 	    	},

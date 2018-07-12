@@ -20,7 +20,7 @@
 					<scroller lock-y :scrollbar-x=false >
 						<div class="box" :style="'width:' + boxWidth + 'px'">
 							<router-link class="item" v-for="item in latelyList" :key="item.sort_article_id" :to="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
-								<img :src="item.image_url" />
+								<x-img :src="item.image_url" default-src="./static/images/tieba.jpg"></x-img>
 								<h3>{{item.sort_article_name}}</h3>
 							</router-link>	
 						</div>
@@ -43,10 +43,11 @@
 </template>
 
 <script>
-import {Scroller, Badge,Grid, GridItem,XHeader,XInput,Search, Group, Cell, XButton } from 'vux'
+import {Scroller, Badge,Grid, GridItem,XHeader,XInput,Search, Group, Cell, XButton,XImg } from 'vux'
 
 export default {
 	components: {
+		XImg,
 	  	Scroller,
 	  	Badge,
 	  	Grid,
