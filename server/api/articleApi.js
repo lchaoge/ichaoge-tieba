@@ -9,7 +9,7 @@ const multer = require('../multer');
 var conn = mysql.createConnection(models.mysql);
 
 conn.connect();
-let jsonWrite = function(res, ret) {
+let jsonWrite = (res, ret) => {
     if(typeof ret === 'undefined') {
         res.json({
             code: '9999',
@@ -23,7 +23,7 @@ let jsonWrite = function(res, ret) {
         });
     }
 };
-let getDateFunc = function(allFlag, times) {
+let getDateFunc = (allFlag, times) => {
     var date = new Date();
     if (undefined !== times && /^[0-9]*$/.test(times)) {
       date = new Date(times);
@@ -41,11 +41,22 @@ let getDateFunc = function(allFlag, times) {
     seconds = (seconds > 9 ? seconds : '0' + seconds);
     return allFlag == 'all' ? (year + '-' + month + "-" + day + " " + hours + ':' + minutes + ':' + seconds) : (year + '-' + month + "-" + day);
 }
-let getCount = function(callback){
+let getCount = (callback)=>{
 	let sql = $sql.article.count;
 	conn.query(sql,[],(err,result) => {
 		if(err){
 			console.log('查询总行数错误：'+err)
+		}
+		if(result){
+			callback(result)
+		}
+	})
+}
+let getImages = (article_id,callback)=>{
+	let sql = $sql.articleImages.queryByArticleId;
+	conn.query(sql,[article_id],(err,result) => {
+		if(err){
+			console.log('根据article_id查询images错误：'+err)
 		}
 		if(result){
 			callback(result)
@@ -57,9 +68,6 @@ let getCount = function(callback){
 router.post('/queryAllArticle',(req,res)=>{
 	let sql = $sql.article.queryAllArticle;
 	let params = req.body;
-	console.log("==========")
-	console.log(params);
-	console.log("==========")
 	// 获取前台页面传过来的参数
     let currentPage = parseInt(params.currentPage || 1);// 页码
     let end = parseInt(params.pageSize || 10); // 默认页数
@@ -73,21 +81,38 @@ router.post('/queryAllArticle',(req,res)=>{
 		}
 	})
 });
-
-// 详情
-router.post('/detail',(req,res)=>{
-	let sql = $sql.article.queryByArticleId;
+// 修改查看人数
+router.post('/updateClickByArticleId',(req,res)=>{
+	let sql = $sql.article.updateClickByArticleId;
 	let params = req.body;
-	console.log(params);
 	// 获取前台页面传过来的参数
 	conn.query(sql,[params.article_id],(err,result) => {
 		if(err){
 			console.log('错误：'+err)
 		}
 		if(result){
-			console.log(result)
 			jsonWrite(res,result)
 		}
+	})
+});
+// 详情
+router.post('/detail',(req,res)=>{
+	let sql = $sql.article.queryByArticleId;
+	let params = req.body;
+	// 获取前台页面传过来的参数
+	getImages(params.article_id,(data)=>{
+		conn.query(sql,[params.article_id],(err,result) => {
+			if(err){
+				console.log('错误：'+err)
+			}
+			if(result){
+				result[0].images = []
+				data.forEach(item=>{
+					result[0].images.push(item)
+				})
+				jsonWrite(res,result)
+			}
+		})
 	})
 });
 
@@ -100,10 +125,11 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	params.article_support = 0
 	params.article_click = 0
 	params.article_time = getDateFunc('all')
+	console.log(params)
 	// 主表
 	let p = new Promise((resolve, reject)=>{
-		conn.query(articleInsertSql,[params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {
-			result ? resolve(result) : reject(error);
+		conn.query(articleInsertSql,[params.type_id,params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {
+			result ? resolve(result) : reject(err);
 		})
 	})
 	// 主表查询用户插入的最后一条ID 插入子表
@@ -155,7 +181,7 @@ router.post('/index',(req,res)=>{
 				queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
 				let p = new Promise((resolve, reject)=>{
 					conn.query(queryByArticleId,[],(err,data) => {
-						data ? resolve(data) : reject(error);
+						data ? resolve(data) : reject(err);
 					})
 				})
 				p.then((data)=>{

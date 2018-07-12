@@ -159,4 +159,17 @@ export default class Apis {
 		document.getElementsByTagName('head')[0].appendChild(script)
 	}
 	
+	/**
+	 * 存储最近浏览的贴吧
+	 */
+	insertLatelys(sort_article_id){
+		if(window.localStorage.getItem("lately")!=null){
+			let latelys = window.localStorage.getItem("lately"); //1,2,3,4
+			latelys += ","+sort_article_id;
+			let arrLatelys = [...new Set(latelys.split(","))];
+			window.localStorage.setItem("lately",arrLatelys.join(','))
+		}else{
+			window.localStorage.setItem("lately",sort_article_id)
+		}	
+	}
 }

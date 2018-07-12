@@ -12,27 +12,27 @@
 			        <i slot="label" style="padding-right:10px;display:block;" class="icon iconfont icon-sousuo"></i>
 			    </x-input>
 			</div>	
-			<div class="lately" v-if="isLogin">
+			<div class="lately">
 				<div class="title">
 					<h2>最近逛的吧</h2>
 				</div>
-				<div class="content">
-					<scroller lock-y :scrollbar-x=false>
-						<div class="box">
-							<div class="item" v-for="item in 10" :key="item.sort_article_id">
-								<img src="../../../assets/images/logo.png" />
-								<h3>漫画bar</h3>
-							</div>	
+				<div class="content" v-if="latelyList.length>0">
+					<scroller lock-y :scrollbar-x=false >
+						<div class="box" :style="'width:' + boxWidth + 'px'">
+							<router-link class="item" v-for="item in latelyList" :key="item.sort_article_id" :to="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
+								<img :src="item.image_url" />
+								<h3>{{item.sort_article_name}}</h3>
+							</router-link>	
 						</div>
 				    </scroller>
-					
 				</div>
 			</div>
 			<grid :cols="2" :show-lr-borders="false" v-if="isLogin">
 				<h2>我关注的吧</h2>
-				  <grid-item v-for="item in followList" :key="item.sort_article_id">
+				  <grid-item v-for="item in followList" :key="item.sort_article_id" :link="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
 				  	<div class="grid-center">
 				  		<span>{{item.sort_article_name}}</span>
+				  		<badge text="8"></badge>
 				  	</div>
 				  </grid-item>
 			</grid>
@@ -68,7 +68,9 @@ export default {
 	      	results: [],
 	      	value: '',
 	      	followList:[],
-	      	isLogin:false
+	      	latelyList:[],
+	      	isLogin:false,
+	      	boxWidth:''
 	    }
 	},
 	created() {
@@ -77,24 +79,49 @@ export default {
 		if(this.isLogin){
 			this.queryAllByUserIdEvt()	
 		}
+		this.queryLatelys()
 	},
 	methods: {
 		// 关注的吧
 		queryAllByUserIdEvt(){
 			let user = this.$store.getters.currentUser
 			let params = {
-				userId:user.user_id
+				user_id:user.user_id
 			}
-			this.$Axios.post(this.$Urls.POST_ARTICLESORT_QUERYALLBYUSERID,params).then(res=>res.data).then((res)=>{
+			this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOW,params).then(res=>res.data).then((res)=>{
 				if(res.code === "0000"){
 					if(res.data.length>0){
 						this.followList = res.data
 					}else{
-						console.log('暂无更多数据')
+						this.$vux.toast.text('暂无数据', 'bottom')
 					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
 				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		queryLatelys(){
+			let params = {
+				latelys:window.localStorage.getItem("lately")
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLESORT_LATELYS,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.latelyList = res.data
+						this.boxWidth = res.data.length*90
+					}else{
+						this.$vux.toast.text('暂无数据', 'bottom')
+					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
 			})
 		}
+		
 	},
 	
 }
@@ -119,9 +146,10 @@ export default {
 	.search .lately .content .box{
 	    height: 100%;
 	    position: relative;
-	    width: 9999px;
+	    /*width: 9999px;*/
 	}
 	.search .lately .content .item{
+		text-decoration: none;
 		width: 80px;
 		margin-right: 10px;
 		float: left;
@@ -134,6 +162,8 @@ export default {
 	}
 	.search .lately .content .item h3{
 		text-align: center;
+		line-height: 18px;
+		color: #333333;
 		font-size: 14px;
 	}
 	.search .lately .content:after{

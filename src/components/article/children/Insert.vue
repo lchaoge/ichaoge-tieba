@@ -4,12 +4,12 @@
 	    	<a slot="left" @click="goBack">
 	    		<i class="icon iconfont icon-guanbi"></i>
 	    	</a>
-	    	发布到我的主页
+	    	<h1>发布到{{pageData.sort_article_name}}<span v-if="article.type_id==0">吧</span></h1>
 	    	<a slot="right" @click="insertEvt">发布</a>
 	    </x-header>
 	    <div class="content">
 	    	<group>
-		    	<x-input placeholder="加个标题哟~" v-model="article.article_name" :show-clear="false" autocapitalize="characters"></x-input>
+		    	<x-input v-if="!pageData.isShowName" placeholder="加个标题哟~" v-model="article.article_name" :show-clear="false" autocapitalize="characters"></x-input>
 		      	<x-textarea placeholder="来吧，尽情发挥吧..." v-model="article.article_content" :show-counter="false" :rows="4" autosize :max="300"></x-textarea>
 		      	<uploader :max="uploader.varmax" :images="uploader.images" :handle-click="false" :autoUpload="false" :show-header="false" :readonly="false"
 			  :upload-url="uploader.uploadUrl" :name="uploader.imgName" :params="uploader.params" size="small"
@@ -17,7 +17,8 @@
 		    </group>
 	    </div>
 	    <div class="footer">
-	    	<span class="vux-badge" @click="articleTypeEvt">{{articleTypeName}}</span>
+	    	<span class="vux-badge" @click="articleNameEvt">{{pageData.isShowName?"添加标题":"隐藏标题"}}</span>
+	    	<span class="vux-badge fr" @click="articleTypeEvt" v-if="article.type_id==1">{{articleTypeName}}</span>
 	    </div>
   	</view-box>
 </template>
@@ -41,7 +42,8 @@ export default {
   	data () {
 	    return {
 	    	pageData:{
-	    		
+	    		isShowName:true,
+	    		sort_article_name:''
 	    	},
 	    	articleTypeName:"所有人可见",
 	    	uploader:{
@@ -58,6 +60,8 @@ export default {
 	    		article_content:"", // 文章内容
 	    		article_type:"1", // 文章的模式:0:仅自己可见，1:所有人可见，2:仅好友可见
 	    		type_id:"", // 文章分类ID 0：贴吧 1：个人主页
+	    		sort_article_id:"", // 贴吧ID
+	    		sort_article_name:'',
 	    		images:null
 	    	}
 	    	
@@ -72,6 +76,14 @@ export default {
 		})
 	},
 	created(){
+		this.article.type_id = this.$route.query.type_id
+		this.article.sort_article_id = this.$route.query.sort_article_id
+		this.article.sort_article_name = this.$route.query.sort_article_name
+		if(this.article.type_id == 0){
+			this.pageData.sort_article_name = this.article.sort_article_name
+		}else{
+			this.pageData.sort_article_name = '个人主页'
+		}
 		this.$Apis.getIntnetIP()
 	},
   	methods:{
@@ -111,23 +123,21 @@ export default {
   			params.append("user_id",user.user_id);
   			params.append("article_content",this.article.article_content);
   			params.append("article_type",this.article.article_type);
-  			params.append("sort_article_id",1)
+  			params.append("type_id",this.article.type_id);
+			params.append("sort_article_id",this.article.sort_article_id)
   			if(this.article.images!=null){
 	  			this.article.images.forEach((item)=>{
 	  				params.append("img",item);
 	  			})	
   			}
-  			
-  			params.append("type_id","1");
-  			
-			if(params.get('article_name') =="" || params.get('article_name') ==null ){
-				this.$vux.toast.text('文章名称不能为空', 'bottom')
-	  			return false
-			}
-			if(params.get('article_name').length>30){
-				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
-	  			return false
-			}
+//			if(params.get('article_name') =="" || params.get('article_name') ==null ){
+//				this.$vux.toast.text('文章名称不能为空', 'bottom')
+//	  			return false
+//			}
+//			if(params.get('article_name').length>30){
+//				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
+//	  			return false
+//			}
 			if(params.get('article_content') =="" || params.get('article_content') ==null){
 				this.$vux.toast.text('文章名称不能为空', 'bottom')
 	  			return false
@@ -170,6 +180,9 @@ export default {
   				this.articleTypeName = "仅好友可见"
   			}  
   		},
+  		articleNameEvt(){
+  			this.pageData.isShowName = !this.pageData.isShowName 
+  		}
   	},
   	
 }

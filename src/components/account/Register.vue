@@ -16,7 +16,6 @@
 	      		<x-button :disabled="pageData.isLogin" :type="pageData.btnType" action-type="button" @click.native="registerEvt">注册</x-button>
 	      	</div>
 	    </div>
-	    <toast v-model="pageData.toast.showPositionValue" type="text" :time="800" is-show-mask :text="pageData.toast.text" position="bottom"></toast>
   	</view-box>
 </template>
 
@@ -34,10 +33,6 @@ export default {
   	data(){
 	  	return{
 	  		pageData:{
-	  			toast:{
-	  				text:"",	
-	  				showPositionValue:false
-	  			},
 	  			isLogin:true,
 	  			btnType:'default',
 	  			from:{
@@ -61,16 +56,13 @@ export default {
 	  		this.$Axios.post(this.$Urls.POST_USER_REGISTER,params).then(res=>res.data).then((res)=>{
 	  			if(res.code === '0000'){
 					if(res.data == 0){
-						this.pageData.toast.text = "注册成功"
-						this.pageData.toast.showPositionValue = true
+						this.$vux.toast.text('注册成功', 'bottom')
 						this.$router.push({name:'loginLink'});	
 					}else{
-						this.pageData.toast.text = "账号注册失败"
-						this.pageData.toast.showPositionValue = true
+						this.$vux.toast.text('账号注册失败', 'bottom')
 					}
 	  			}else{
-	  				this.pageData.toast.text = "系统错误"
-	  				this.pageData.toast.showPositionValue = true
+	  				this.$vux.toast.text('系统错误', 'bottom')
 	  			}
 	  		}).catch(err=>console.log("系统错误："+err))
 	  	},

@@ -16,7 +16,6 @@
 	      		<x-button :disabled="pageData.isLogin" :type="pageData.btnType" action-type="button" @click.native="loginEvt">登录</x-button>
 	      	</div>
 	    </div>
-	    <toast v-model="pageData.toast.showPositionValue" type="text" :time="800" is-show-mask :text="pageData.toast.text" position="bottom"></toast>
   	</view-box>
 </template>
 
@@ -34,10 +33,6 @@ export default {
   	data(){
 	  	return{
 	  		pageData:{
-	  			toast:{
-	  				text:"",	
-	  				showPositionValue:false
-	  			},
 	  			isLogin:true,
 	  			from:{
 	  				userPhone:'',
@@ -47,7 +42,6 @@ export default {
 	  	}
   	},
   	beforeRouteEnter:(to,from ,next)=>{
-//		this.$store.dispatch("setUser",null)
 		next(vm=>vm.$store.dispatch("setUser",null))
 	},
   	methods:{
@@ -60,19 +54,16 @@ export default {
 	  			if(res.code === '0000'){
 	  				let user = res.data
 	  				if(user.length>0){
-	  					this.pageData.toast.text = "登录成功"
-	  					this.pageData.toast.showPositionValue = true
+	  					this.$vux.toast.text('登录成功', 'bottom')
 	  					this.$store.dispatch("setUser",user[0])
 	  					this.$router.push({name:'indexLink'})
 	  				}else{
-	  					this.$store.dispatch("setUser",null)
-	  					this.pageData.toast.text = "账号或密码错误"
+	  					this.$vux.toast.text('账号或密码错误', 'bottom')
 	  					this.pageData.toast.showPositionValue = true
 	  				}
 	  			}else{
 	  				this.$store.dispatch("setUser",null)
-	  				this.pageData.toast.text = "系统错误"
-	  				this.pageData.toast.showPositionValue = true
+	  				this.$vux.toast.text('系统错误', 'bottom')
 	  			}
 	  		}).catch(err=>console.log("系统错误："+err))
 	  	},

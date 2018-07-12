@@ -17,11 +17,12 @@ import Register from './../components/account/Register'
 // 用户
 import User from './../components/user/User'
 import UserIndex from './../components/user/children/Index'
-// 贴吧主页
+// 文章详情
 import Article from './../components/article/Article'
 import ArticleIndex from './../components/article/children/Index'
 import ArticleInsert from './../components/article/children/Insert'
 
+import ArticleSortIndex from './../components/articleSort/children/Index'
 
 export const routes = [
 	{path:'/demo',name:'demoLink',component:demo},
@@ -42,10 +43,13 @@ export const routes = [
 	{path:'/user',name:'userLink',component:User,redirect:'/user/index',children:[
 		{path:'/user/index',name:'userIndexLink',component:UserIndex},	
 	]},
-	// 贴吧主页
+	// 文章详情
 	{path:'/article',name:'articleLink',component:Article,redirect:'/article/index',children:[
 		{path:'/article/index',name:'articleIndexLink',component:ArticleIndex},	
 		{path:'/article/insert',name:'articleInsertLink',component:ArticleInsert},	
+	]},
+	{path:'/articleSort',name:'articleSortLink',component:Article,redirect:'/articleSort/index',children:[
+		{path:'/articleSort/index',name:'articleSortIndexLink',component:ArticleSortIndex},	
 	]},
 	
 	{path:'*',redirect:'/'}

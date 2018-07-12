@@ -20,4 +20,5 @@ app.use('/wm/articleSort', articleSortApi);
 
 // 监听端口
 app.listen(3000);
-console.log('success http://localhost:3000......');
+
+console.log('Your api is running here: http://localhost:3000');

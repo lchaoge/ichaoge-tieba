@@ -22,15 +22,15 @@
 									{{item.user_name}}
 								</div>
 								<div class="panel-user-more">
-									<span>{{item.sort_article_name}}吧</span> | 
+									<span @click="sortArticleEvt(item.sort_article_id)">{{item.sort_article_name}}吧</span> | 
 									<span>{{item.article_time}}</span>
 								</div>	
 							</div>
 						</div>
 						<div class="panel-content" @click="detailEvt(item.article_id)">
 							<p class="panel-content-text">{{item.article_name}}</p>
-							<flexbox :gutter="0" class="mb10">
-						      	<flexbox-item v-for="(img, index) in item.images" :key="index"><img :src="img.article_image_url" style="width:100%"/></flexbox-item>
+							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3"><img :src="img.article_image_url" style="width:100%;height:8rem;"/></flexbox-item>
 						    </flexbox>
 						</div>
 						<div class="panel-button">
@@ -129,7 +129,7 @@ export default {
 		loadMore () {
 	      setTimeout(() => {
 	        this.queryObj.currentPage++
-	        if(this.queryObj.currentPage<=this.queryObj.pageCount){
+	        if(this.queryObj.currentPage<this.queryObj.pageCount){
 	        	this.queryEvt()
 	        }
 	        setTimeout(() => {
@@ -176,6 +176,14 @@ export default {
 	    		query:{
 		    		article_id:id
 		    	}
+	    	})
+	    },
+	    sortArticleEvt(sort_article_id){
+	    	this.$router.push({ 
+	    		name: 'articleSortIndexLink',
+	    		query: {
+	    			sort_article_id: sort_article_id
+	    		}
 	    	})
 	    }
 	
