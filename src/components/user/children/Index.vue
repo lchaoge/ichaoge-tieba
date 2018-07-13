@@ -1,57 +1,92 @@
 <template>
   <div>
-    <br/>
-    <br/>
-    <div class="space-btn" @click="spaceChange">显示间隔</div>
-    <div class="space" v-if="showSpace">间隔</div>
-    <div style="height:44px;">
-      <sticky scroll-box="vux_view_box_body" ref="sticky" :offset="0" :check-sticky-support="false">
-        <tab :line-width="1">
-          <tab-item selected>正在正映</tab-item>
-          <tab-item>即将上映</tab-item>
-        </tab>
-      </sticky>
+    <img src="https://ws1.sinaimg.cn/large/663d3650gy1fq685v5csyj208c06ygm0.jpg" style="width: 100%">
+    <search
+      @result-click="resultClick"
+      @on-change="getResult"
+      :results="results"
+      v-model="value"
+      position="absolute"
+      auto-scroll-to-top
+      top="46px"
+      @on-focus="onFocus"
+      @on-cancel="onCancel"
+      @on-submit="onSubmit"
+      ref="search"></search>
+    <group>
+      <cell title="keyword">{{ value }}</cell>
+    </group>
+
+    <div style="padding:15px;">
+      <x-button
+        @click.native="setFocus"
+        type="primary">set focus</x-button>
     </div>
-    <p v-for="i in 100">{{i}}<br></p>
+    <group>
+      <cell
+        title="static position demo"
+        is-link
+        link="/component/search-static"></cell>
+    </group>
   </div>
 </template>
 
 <script>
-import { Tab, TabItem, Sticky } from 'vux'
+import { Search, Group, Cell, XButton } from 'vux'
 
 export default {
-  components: {
-    Tab,
-    TabItem,
-    Sticky
-  },
-  data () {
-    return {
-      showSpace: false
-    }
-  },
-  methods: {
-    spaceChange () {
-      this.showSpace = !this.showSpace
-      this.$nextTick(() => {
-        this.$refs.sticky.bindSticky()
-      })
-    }
+  	components: {
+	    	Search,
+	    	Group,
+	    	Cell,
+	    	XButton
+  	},
+  	data () {
+	    	return {
+	      		results: [],
+	      		value: ''
+	    	}
+  	},
+  	created(){
+  			this.setFocus()
+  	},
+  	methods: {
+		    setFocus() {
+		      	this.$refs.search.setFocus()
+		    },
+		    resultClick(item) {
+		     	window.alert('you click the result item: ' + JSON.stringify(item))
+		    },
+		    getResult(val) {
+		      	console.log('on-change', val)
+		      	this.results = val ? getResult(this.value) : []
+		    },
+		    onSubmit() {
+		      	this.$refs.search.setBlur()
+		      	this.$vux.toast.show({
+			        type: 'text',
+			        position: 'top',
+			        text: 'on submit'
+		      	})
+		    },
+		    onFocus() {
+		      	console.log('on focus')
+		    },
+		    onCancel() {
+		    	this.$router.go(-1)
+		    }
+  	},
+  
+}
+
+function getResult (val) {
+  let rs = []
+  for (let i = 0; i < 20; i++) {
+    rs.push({
+      title: `${val} result: ${i + 1} `,
+      other: i
+    })
   }
+  return rs
 }
 </script>
-<style scoped>
-  .space-btn {
-    padding: 5px 0;
-    margin: 10px;
-    text-align: center;
-    border: 1px red solid;
-  }
-
-  .space {
-    padding: 30px 0;
-    margin: 10px;
-    text-align: center;
-    border: 1px green solid;
-  }
-</style>

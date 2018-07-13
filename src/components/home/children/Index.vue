@@ -130,7 +130,7 @@ export default {
 	methods:{
 		searchEvt(){
 			this.$router.push({
-				name:'searchLink'
+				name:'searchsLink'
 			})
 		},
 		loadMore () {

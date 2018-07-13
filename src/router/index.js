@@ -7,7 +7,9 @@ import News from './../components/home/children/News' // 消息
 import UserInfo from './../components/home/children/UserInfo' // 我的
 
 // 搜索
-import Search from './../components/search/Search'
+import Searchs from './../components/search/Search'
+import Search from './../components/search/children/Search'
+import SearchIndex from './../components/search/children/Index'
 
 // 登录
 import Login from './../components/account/Login'
@@ -33,21 +35,30 @@ export const routes = [
 		{path:'/news',name:'newsLink',component:News},
 		{path:'/userinfo',name:'userinfoLink',component:UserInfo}	
 	]},
+	
 	// 搜索
-	{path:'/search',name:'searchLink',component:Search},
+	{path:'/searchs',name:'searchsLink',component:Searchs,redirect:'/searchs/search',children:[
+		{path:'/searchs/search',name:'SearchLink',component:Search},	
+		{path:'/searchs/index',name:'SearchIndexLink',component:SearchIndex},	
+	]},
+	
 	// 登录
 	{path:'/login',name:'loginLink',component:Login},
 	{path:'/register',name:'registerLink',component:Register},
 	{path:'/forgetpwd',name:'forgetpwdLink',component:ForgetPwd},
+	
 	// 我的主页
 	{path:'/user',name:'userLink',component:User,redirect:'/user/index',children:[
 		{path:'/user/index',name:'userIndexLink',component:UserIndex},	
 	]},
+	
 	// 文章详情
 	{path:'/article',name:'articleLink',component:Article,redirect:'/article/index',children:[
 		{path:'/article/index',name:'articleIndexLink',component:ArticleIndex},	
 		{path:'/article/insert',name:'articleInsertLink',component:ArticleInsert},	
 	]},
+	
+	// 贴吧
 	{path:'/articleSort',name:'articleSortLink',component:Article,redirect:'/articleSort/index',children:[
 		{path:'/articleSort/index',name:'articleSortIndexLink',component:ArticleSortIndex},	
 	]},
