@@ -12,7 +12,7 @@
 			</a>
 			<span style="color: #666;">我的</span>
 	    </x-header>
-	    <scroller lock-x scrollbar-y :height="pageData.swiperHeight" class="vux-scroller">
+	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
 	    	<cell-box is-link class="user">
 	    		<div class="user-img">
 	    			<img src="../../../assets/images/logo.png" />
@@ -90,7 +90,6 @@ export default {
 	    	pageData:{
 		      	headerIndex: 1,
 		      	selected:{},
-		      	swiperHeight:'0'
 	    	},
 	    	
 	    }
@@ -104,7 +103,6 @@ export default {
 		})
 	},
 	created() {
-		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
 	},
 	mounted(){
 		

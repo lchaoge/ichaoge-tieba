@@ -70,6 +70,23 @@ router.post('/login',(req,res)=>{
 	})
 });
 
+// 搜索用户名
+router.post('/likeUserName',(req,res)=>{
+//	let sql = $sql.articleSort.likeArtsName;
+	let params = req.body;
+	let sql = 'select * from user where user.user_name like "%'+params.name+'%"'
+	console.log(sql)
+	// 获取前台页面传过来的参数
+	conn.query(sql,[],(err,result) => {
+		if(err){
+			console.log('搜索用户名错误：'+err)
+		}
+		if(result){
+			jsonWrite(res,result)
+		}
+	})
+});
+
 // 分页
 router.post('/queryAllUser',(req,res)=>{
 	let sql = $sql.user.queryAllUser;

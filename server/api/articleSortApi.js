@@ -76,6 +76,23 @@ router.post('/queryById',(req,res)=>{
 	})
 });
 
+// 搜索贴吧名
+router.post('/likeArtsName',(req,res)=>{
+//	let sql = $sql.articleSort.likeArtsName;
+	let params = req.body;
+	let sql = 'select * from article_sort where article_sort.sort_article_name like "%'+params.name+'%"'
+	console.log(sql)
+	// 获取前台页面传过来的参数
+	conn.query(sql,[],(err,result) => {
+		if(err){
+			console.log('搜索贴吧名错误：'+err)
+		}
+		if(result){
+			jsonWrite(res,result)
+		}
+	})
+});
+
 // 根据ID所有文章
 router.post('/articleSortIndex',(req,res)=>{
 //	let sql = $sql.articleSort.articleSortIndex;

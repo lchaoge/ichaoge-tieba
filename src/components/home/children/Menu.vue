@@ -1,14 +1,14 @@
 <template>
-	<div class="search">
+	<div class="menu">
 		<x-header :left-options="{showBack: false}" slot="header" style="background-color:#fff;">
 			<a slot="right">
 				<i class="icon iconfont icon-shezhi"></i>
 			</a>
 			<span style="color: #666;">进吧</span>
 	    </x-header>
-	    <scroller lock-x scrollbar-y :height="pageData.swiperHeight" class="vux-scroller">
+	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
 	    	<div class="group">
-				<x-input placeholder="大家都在搜：孙兴民还是虎">
+				<x-input placeholder="大家都在搜" @on-focus="searchEvt(value, $event)">
 			        <i slot="label" style="padding-right:10px;display:block;" class="icon iconfont icon-sousuo"></i>
 			    </x-input>
 			</div>	
@@ -64,7 +64,6 @@ export default {
 	    	pageData:{
 		      	headerIndex: 1,
 		      	selected:{},
-		      	swiperHeight:'0'
 	    	},
 	      	results: [],
 	      	value: '',
@@ -76,13 +75,17 @@ export default {
 	},
 	created() {
 		this.isLogin = this.$store.getters.isLogin
-		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
 		if(this.isLogin){
 			this.queryAllByUserIdEvt()	
 		}
 		this.queryLatelys()
 	},
 	methods: {
+		searchEvt(){
+			this.$router.push({
+				name:'searchsLink'
+			})
+		},
 		// 关注的吧
 		queryAllByUserIdEvt(){
 			let user = this.$store.getters.currentUser
@@ -130,26 +133,26 @@ export default {
 </script>
 
 <style>
-	.search .lately{
+	.menu .lately{
 		background: #fff;
 		margin-bottom: 10px;
 	}
-	.search .lately .title h2 {
+	.menu .lately .title h2 {
 	    padding: 10px;
 	    color: #999;
 	    position: relative;
 	}
-	.search .lately .content {
+	.menu .lately .content {
 		padding: 10px;
 		height: 100px;
 		overflow: hidden;
 	}
-	.search .lately .content .box{
+	.menu .lately .content .box{
 	    height: 100%;
 	    position: relative;
 	    /*width: 9999px;*/
 	}
-	.search .lately .content .item{
+	.menu .lately .content .item{
 		text-decoration: none;
 		width: 80px;
 		margin-right: 10px;
@@ -157,38 +160,38 @@ export default {
 		position: relative;
 		display: inline-block;
 	}
-	.search .lately .content .item img{
+	.menu .lately .content .item img{
 		width: 80px;
 		height: 80px;
 	}
-	.search .lately .content .item h3{
+	.menu .lately .content .item h3{
 		text-align: center;
 		line-height: 18px;
 		color: #333333;
 		font-size: 14px;
 	}
-	.search .lately .content:after{
+	.menu .lately .content:after{
 		height: 0;
 		width: 0;
 		clear: both;
 		overflow: hidden;
 		content: ' ';		
 	}
-	.search .weui-search-bar__label{
+	.menu .weui-search-bar__label{
 		top: 5px !important;
 	}
-	.search .vux-scroller{
+	.menu .vux-scroller{
 		margin-top: 46px;
 	}
-	.search .weui-grids{
+	.menu .weui-grids{
 		background: #fff;
 	}
-	.search .weui-grids h2{
+	.menu .weui-grids h2{
 		padding: 10px;
 		color: #999;
 		position: relative;
 	}
-	.search .weui-grids h2:after{
+	.menu .weui-grids h2:after{
 		content: " ";
 	    position: absolute;
 	    left: 0;
@@ -202,12 +205,12 @@ export default {
 	    -webkit-transform: scaleY(0.5);
 	    transform: scaleY(0.5);
 	}
-	.search .weui-grid{
+	.menu .weui-grid{
 		padding: 10px !important;
 		text-decoration: none;
 		color: #000;	
 	}
-	.search .weui-grid .grid-center .vux-badge{
+	.menu .weui-grid .grid-center .vux-badge{
 		float: right;
 	}
 </style>

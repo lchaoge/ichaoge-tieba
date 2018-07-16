@@ -13,7 +13,7 @@
 				swiper1
 	        </swiper-item>
 	        <swiper-item>
-	        	<scroller lock-x scrollbar-y use-pullup use-pulldown :height="pageData.swiperHeight" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+	        	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-96" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 			      <div>
 			      	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
 						<div class="panel-user">

@@ -64,6 +64,23 @@ let getImages = (article_id,callback)=>{
 	})
 }
 
+// 搜索文章
+router.post('/likeArtName',(req,res)=>{
+//	let sql = $sql.articleSort.likeArtsName;
+	let params = req.body;
+	let sql = 'select * from article where article.article_name like "%'+params.name+'%"'
+	console.log(sql)
+	// 获取前台页面传过来的参数
+	conn.query(sql,[],(err,result) => {
+		if(err){
+			console.log('搜索用户名错误：'+err)
+		}
+		if(result){
+			jsonWrite(res,result)
+		}
+	})
+});
+
 // 分页
 router.post('/queryAllArticle',(req,res)=>{
 	let sql = $sql.article.queryAllArticle;
@@ -81,6 +98,7 @@ router.post('/queryAllArticle',(req,res)=>{
 		}
 	})
 });
+
 // 修改查看人数
 router.post('/updateClickByArticleId',(req,res)=>{
 	let sql = $sql.article.updateClickByArticleId;
@@ -95,6 +113,7 @@ router.post('/updateClickByArticleId',(req,res)=>{
 		}
 	})
 });
+
 // 详情
 router.post('/detail',(req,res)=>{
 	let sql = $sql.article.queryByArticleId;

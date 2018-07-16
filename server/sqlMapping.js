@@ -22,7 +22,7 @@ module.exports = {
 		queryById : 'select * from article_sort where article_sort.sort_article_id = ?',
 		follow : 'select * from article_sort as art_s where art_s.sort_article_id in (select art_s_u.article_sort_id from article_sort_user as art_s_u where art_s_u.user_id = ?)', // 用户关注的
 //		latelys : '' // 最近逛的吧
-		
+		likeArtsName : 'select * from article_sort where article_sort.sort_article_name like "?%"', // 搜索贴吧名
 	},
 	articleImages:{
 		insert : 'insert into article_image (article_id,article_image_url)values((select a.article_id from article as a where a.user_id = ? order by a.article_id desc limit 1),?)', // 插入图片
