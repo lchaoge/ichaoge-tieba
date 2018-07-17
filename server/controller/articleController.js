@@ -1,46 +1,16 @@
-var models = require('../db');
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
-var $sql = require('../sqlMapping');
+const models = require('../db');
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+const $sql = require('../sqlMapping');
 const multer = require('../multer');
+const commonController = require('./base/CommonController')
 
 // 连接数据库
-var conn = mysql.createConnection(models.mysql);
-
+let conn = mysql.createConnection(models.mysql);
 conn.connect();
-let jsonWrite = (res, ret) => {
-    if(typeof ret === 'undefined') {
-        res.json({
-            code: '9999',
-            msg: '操作失败'
-        });
-    } else {
-    	res.json({
-            code: '0000',
-            msg: '操作成功',
-            data:ret
-        });
-    }
-};
-let getDateFunc = (allFlag, times) => {
-    var date = new Date();
-    if (undefined !== times && /^[0-9]*$/.test(times)) {
-      date = new Date(times);
-    }
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    month = (month > 9 ? month : '0' + month);
-    var day = date.getDate();
-    day = (day > 9 ? day : '0' + day);
-    var hours = date.getHours();
-    hours = (hours > 9 ? hours : '0' + hours);
-    var minutes = date.getMinutes();
-    minutes = (minutes > 9 ? minutes : '0' + minutes);
-    var seconds = date.getSeconds();
-    seconds = (seconds > 9 ? seconds : '0' + seconds);
-    return allFlag == 'all' ? (year + '-' + month + "-" + day + " " + hours + ':' + minutes + ':' + seconds) : (year + '-' + month + "-" + day);
-}
+
+
 let getCount = (callback)=>{
 	let sql = $sql.article.count;
 	conn.query(sql,[],(err,result) => {
@@ -76,7 +46,7 @@ router.post('/likeArtName',(req,res)=>{
 			console.log('搜索用户名错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -94,7 +64,7 @@ router.post('/queryAllArticle',(req,res)=>{
 			console.log('错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -109,7 +79,7 @@ router.post('/updateClickByArticleId',(req,res)=>{
 			console.log('错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -129,7 +99,7 @@ router.post('/detail',(req,res)=>{
 				data.forEach(item=>{
 					result[0].images.push(item)
 				})
-				jsonWrite(res,result)
+				commonController.jsonWrite(res,result)
 			}
 		})
 	})
@@ -164,11 +134,11 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 					console.log('子表插入错误：'+err)
 				}
 				if(result){
-					jsonWrite(res,result)
+					commonController.jsonWrite(res,result)
 				}
 			})	
 		}else{
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 				
 	}).catch(err=>{
@@ -177,6 +147,20 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	
 });
 
+// 当前用户发布的帖子
+router.post('/queryArticleByUserId',(req,res)=>{
+	let sql = $sql.article.queryArticleByUserId;
+	let params = req.body;
+	// 获取前台页面传过来的参数
+	conn.query(sql,[params.user_id],(err,result) => {
+		if(err){
+			console.log('错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
 
 // 首页
 router.post('/index',(req,res)=>{
@@ -212,7 +196,7 @@ router.post('/index',(req,res)=>{
 							}
 						})
 					})	
-					jsonWrite(res,{
+					commonController.jsonWrite(res,{
 						currentPage:params.currentPage,
 						pageSize:params.pageSize,
 						count:c[0].count,

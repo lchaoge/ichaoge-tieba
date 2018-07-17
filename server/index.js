@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-const userApi = require('./api/userApi');
-const articleApi = require('./api/articleApi');
-const articleSortApi = require('./api/articleSortApi');
+const userApi = require('./controller/userController');
+const articleApi = require('./controller/articleController');
+const articleSortApi = require('./controller/articleSortController');
 
 
 app.use(bodyParser.json({limit: '50mb'})); // 用来接收post提交的json数据

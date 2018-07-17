@@ -5,8 +5,8 @@
 	    	<img src="../../assets/images/logo2.png"/>
 	    	<h1>欢迎注册贴吧账号</h1>
 	    	<group>
-		      	<x-input type="text" placeholder='请输入手机号' v-model="pageData.from.userPhone"></x-input>
-		      	<x-input type="password" placeholder='请输入登录密码' v-model="pageData.from.userPwd"></x-input>
+		      	<x-input type="text" placeholder='请输入手机号' v-model="pageData.from.user_phone"></x-input>
+		      	<x-input type="password" placeholder='请输入登录密码' v-model="pageData.from.user_pwd"></x-input>
 		    </group>
 		    <div class="button-group">
 		    	<router-link :to="{name:'loginLink'}" class="text">登录账号</router-link>
@@ -36,8 +36,8 @@ export default {
 	  			isLogin:true,
 	  			btnType:'default',
 	  			from:{
-	  				userPhone:'',
-	  				userPwd:''
+	  				user_phone:'',
+	  				user_pwd:''
 	  			}
 	  		}
 	  	}
@@ -50,16 +50,18 @@ export default {
   	methods:{
 	  	registerEvt(){
 	  		let params = {
-	  			userPhone:this.pageData.from.userPhone,
-	  			userPwd:this.pageData.from.userPwd
+	  			user_phone:this.pageData.from.user_phone,
+	  			user_pwd:this.pageData.from.user_pwd
 	  		}
 	  		this.$Axios.post(this.$Urls.POST_USER_REGISTER,params).then(res=>res.data).then((res)=>{
 	  			if(res.code === '0000'){
 					if(res.data == 0){
 						this.$vux.toast.text('注册成功', 'bottom')
 						this.$router.push({name:'loginLink'});	
+					}else if(res.data == 1){
+						this.$vux.toast.text('手机号已经被注册过了', 'bottom')
 					}else{
-						this.$vux.toast.text('账号注册失败', 'bottom')
+						this.$vux.toast.text('注册失败', 'bottom')
 					}
 	  			}else{
 	  				this.$vux.toast.text('系统错误', 'bottom')
@@ -68,10 +70,10 @@ export default {
 	  	},
 	  	watchIsLogin(){
 	  		let params = {
-	  			userPhone:this.pageData.from.userPhone,
-	  			userPwd:this.pageData.from.userPwd
+	  			user_phone:this.pageData.from.user_phone,
+	  			user_pwd:this.pageData.from.user_pwd
 	  		}
-	  		if(params.userPhone == "" || params.userPwd == ""){
+	  		if(params.user_phone == "" || params.user_pwd == ""){
 	  			this.pageData.btnType = 'default'
 	  			this.pageData.isLogin = true
 	  			return false
@@ -81,8 +83,8 @@ export default {
 	  	}
   	},
   	watch:{
-	  	'pageData.from.userPhone':'watchIsLogin',
-	  	'pageData.from.userPwd':'watchIsLogin'
+	  	'pageData.from.user_phone':'watchIsLogin',
+	  	'pageData.from.user_pwd':'watchIsLogin'
   	}
 }
 </script>

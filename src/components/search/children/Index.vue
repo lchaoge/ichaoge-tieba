@@ -5,13 +5,53 @@
 	      @on-focus="onFocus" @on-cancel="onCancel" @on-clear="onClear" @on-submit="onSubmit" ref="search"></search>
 	    <div class="content">
 		    <scroller lock-x :scrollbar-y=false ref="scroller" height="-44">
-		    	<tab :line-width="2" :custom-bar-width="getBarWidth">
-			      	<tab-item active-class="active-6-1" @on-item-click="tabItemEvt(1)" selected>贴</tab-item>
-			      	<tab-item active-class="active-6-2" @on-item-click="tabItemEvt(2)">吧</tab-item>
-			      	<tab-item active-class="active-6-3" @on-item-click="tabItemEvt(3)">人</tab-item>
-			    </tab>
+		    	<sticky scroll-box="vux_view_box_body" :check-sticky-support="false" :offset="44">
+		    		<tab :line-width="2" :custom-bar-width="getBarWidth">
+				      	<tab-item active-class="active-6-1" @on-item-click="tabItemEvt(1)" selected>贴</tab-item>
+				      	<tab-item active-class="active-6-2" @on-item-click="tabItemEvt(2)">吧</tab-item>
+				      	<tab-item active-class="active-6-3" @on-item-click="tabItemEvt(3)">人</tab-item>
+				    </tab>	
+		    	</sticky>
 			   	<div class="swiper-item" v-if="pageData.tabItemIndex==1">
-			   		1
+			   		<div class="panel" v-for='item in pageData.search.articleList'>
+			   			<div class="panel-user">
+							<div class="panel-user-photo">
+								<img :src="item.image_url" />
+							</div>
+							<div class="panel-user-right">
+								<div class="panel-user-name">{{item.sort_article_name}}</div>
+								<div class="panel-user-more">
+									<span>关注：{{item.sort_article_name}}</span>
+									<span>帖子：{{item.sort_article_name}}</span>
+								</div>	
+							</div>
+						</div>
+						<div class="panel-content" @click="detailEvt(item.article_id)">
+							<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
+							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+						      		<x-img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
+						      	</flexbox-item>
+						    </flexbox>
+						</div>
+						<div class="panel-button">
+							<flexbox :gutter="0">
+						        <flexbox-item><div class="panel-flex-button">
+						        	<i class="icon iconfont icon-fenxiang"></i>
+						        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
+						        </div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-bianji"></i>
+						      		<countup :start-val="0" :end-val="0" :duration="2"></countup>
+						      	</div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-buxing"></i>
+						      		<countup :start-val="0" :end-val="item.article_click" :duration="2"></countup>
+						      	</div></flexbox-item>
+						    </flexbox>
+						</div>
+			   		</div>
+					<divider v-if="pageData.search.articleList.length<=0">您搜索的帖子不存在哦</divider>
 			   	</div>
 			   	<div class="swiper-item" v-else-if="pageData.tabItemIndex==2">
 			   		<div class="panel-user" v-for='item in pageData.search.articleSortList' v-if="pageData.search.articleSortList.length>0">
@@ -89,6 +129,7 @@
 	  	},
 	  	created(){
   			this.pageData.search.value = this.$route.query.name
+  			this.updateSearchList()
   			this.queryUser()
     		this.queryArticle()
     		this.queryArticleSprt()
@@ -97,6 +138,9 @@
 	  		this.setFocus()
 	  	},
 	  	methods: {
+	  		updateSearchList(){
+	  			this.$Apis.insertSearchList(this.pageData.search.value)
+	  		},
 	  		tabItemEvt(index){
 	  			this.pageData.tabItemIndex = index
 	  		},
@@ -123,8 +167,6 @@
 		  			if(res.code === '0000'){
 		  				if(res.data.length>0){
 		  					this.pageData.search.userList = res.data	
-		  				}else{
-		  					this.$vux.toast.text('您搜索的用户不存在哦', 'bottom')
 		  				}
 		  			}else{
 		  				this.$vux.toast.text('系统错误', 'bottom')
@@ -139,8 +181,6 @@
 		  			if(res.code === '0000'){
 		  				if(res.data.length>0){
 		  					this.pageData.search.articleList = res.data	
-		  				}else{
-		  					this.$vux.toast.text('您搜索的帖子不存在哦', 'bottom')
 		  				}
 		  			}else{
 		  				this.$vux.toast.text('系统错误', 'bottom')
@@ -155,8 +195,6 @@
 		  			if(res.code === '0000'){
 		  				if(res.data.length>0){
 		  					this.pageData.search.articleSprtlist = res.data	
-		  				}else{
-		  					this.$vux.toast.text('您搜索的贴吧不存在哦', 'bottom')
 		  				}
 		  			}else{
 		  				this.$vux.toast.text('系统错误', 'bottom')
@@ -217,4 +255,45 @@
 	  color: rgb(55, 174, 252) !important;
 	  border-color: rgb(55, 174, 252) !important;
 	}
+	.panel {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.panel-user {
+    margin-bottom: 10px;
+}
+.panel-user-photo {
+    float: left;
+    border-radius: 50px;
+    border: 1px solid #A3A3A3;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.panel-user-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.panel-user-right {
+    height: 50px;
+    padding-left: 60px;
+}
+.panel-user-name {
+    color: #333;
+    line-height: 22px;
+    margin-bottom: 6px;
+}
+.panel-user-right .panel-user-more {
+    color: #a3a3a3;
+}
+.panel-content-text {
+    margin: 0 0 10px;
+}
+.panel-flex-button {
+    text-align: center;
+}
 </style>

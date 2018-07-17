@@ -10,7 +10,7 @@
 	    </x-header>
 	    <div class="content">
 	    	<div class="panel">
-	    		<div class="panel-user">
+	    		<div class="panel-user" style="margin-bottom: 0;">
 					<div class="panel-user-photo" style="border: 0px none;border-radius: inherit;">
 						<x-img :src="articleSort.image_url" default-src="../static/images/tieba.jpg"></x-img>
 					</div>
@@ -28,47 +28,49 @@
 			        </tab>
 		      	</sticky>
 		    </div>
-		    <div class="">
-		    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
-					<div class="panel-user mb10">
-						<div class="panel-user-photo">
-							<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
-						</div>
-						<div class="panel-user-right">
-							<div class="panel-user-name">
-								{{item.user_name}}
+		    <scroller lock-x :scrollbar-y=false height="-170" class="vux-scroller">
+		    	<div class="">
+			    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
+						<div class="panel-user mb10">
+							<div class="panel-user-photo">
+								<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
 							</div>
-							<div class="panel-user-more">
-								<span>{{item.article_time}}</span>
-							</div>	
+							<div class="panel-user-right">
+								<div class="panel-user-name">
+									{{item.user_name}}
+								</div>
+								<div class="panel-user-more">
+									<span>{{item.article_time}}</span>
+								</div>	
+							</div>
+						</div>
+						<div class="panel-content" @click="detailEvt(item.article_id)">
+							<p class="panel-content-text">{{item.article_name}}</p>
+							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+						      		<x-img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
+						      	</flexbox-item>
+						    </flexbox>
+						</div>
+						<div class="panel-button">
+							<flexbox :gutter="0">
+						        <flexbox-item><div class="panel-flex-button">
+						        	<i class="icon iconfont icon-fenxiang"></i>
+						        	<span>11</span>
+						        </div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-bianji"></i>
+						        	<span>29</span>
+						      	</div></flexbox-item>
+						      	<flexbox-item><div class="panel-flex-button">
+						      		<i class="icon iconfont icon-buxing"></i>
+						        	<span>{{item.article_click}}</span>
+						      	</div></flexbox-item>
+						    </flexbox>
 						</div>
 					</div>
-					<div class="panel-content" @click="detailEvt(item.article_id)">
-						<p class="panel-content-text">{{item.article_name}}</p>
-						<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-					      		<x-img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
-					      	</flexbox-item>
-					    </flexbox>
-					</div>
-					<div class="panel-button">
-						<flexbox :gutter="0">
-					        <flexbox-item><div class="panel-flex-button">
-					        	<i class="icon iconfont icon-fenxiang"></i>
-					        	<span>11</span>
-					        </div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-bianji"></i>
-					        	<span>29</span>
-					      	</div></flexbox-item>
-					      	<flexbox-item><div class="panel-flex-button">
-					      		<i class="icon iconfont icon-buxing"></i>
-					        	<span>{{item.article_click}}</span>
-					      	</div></flexbox-item>
-					    </flexbox>
-					</div>
-				</div>
-		    </div>
+			    </div>
+		    </scroller>
 	    </div>
 		<div class="insert" @click="insertEvt">
 			<i slot="icon" class="icon iconfont icon-roundadd"></i>
@@ -77,13 +79,14 @@
 </template>
 
 <script>
-	import {Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		Scroller,
 	  		FlexboxItem,
 	  		Flexbox,
 	  		XImg,

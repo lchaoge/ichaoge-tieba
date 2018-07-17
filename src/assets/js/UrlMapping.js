@@ -4,7 +4,6 @@
  * Date: 2018/05/23
 */
 
-
 export default class UrlMapping {
 	constructor(){
 		this.isLocalHost = window.location.host.toLowerCase() == 'http://localhost:8080';
@@ -29,6 +28,7 @@ export default class UrlMapping {
 		this.POST_ARTICLE_INDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/article/index';   // 首页
 		this.POST_ARTICLE_UPDATECLICK = (this.isLocalHost?'/apis':this.origin)+'/wm/article/updateClickByArticleId';   // 修改查看人数
 		this.POST_ARTICLE_LIKEARTNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/article/likeArtName';   // 搜索文章
+		this.POST_ARTICLE_QUERYBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/queryArticleByUserId';   // 当前用户发布的帖子
 		
 	}
 	

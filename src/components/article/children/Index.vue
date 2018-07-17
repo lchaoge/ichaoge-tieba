@@ -32,14 +32,14 @@
 				    </div>
 				</div>
 	    	</div>
-	    	<div style="height:44px;">
-		      	<sticky scroll-box="" ref="sticky" :offset="46" :check-sticky-support="false">
+	    </div>
+	    <div style="height:44px;">
+	      	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false">
 		        <tab :line-width="1">
 		          	<tab-item selected>全部回复</tab-item>
 		          	<tab-item>只看楼主</tab-item>
 		        </tab>
-		      </sticky>
-		    </div>
+	      </sticky>
 	    </div>
 	</view-box>
 </template>

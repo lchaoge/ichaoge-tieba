@@ -1,27 +1,15 @@
-var models = require('../db');
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
-var $sql = require('../sqlMapping');
+const models = require('../db');
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+const $sql = require('../sqlMapping');
+const commonController = require('./base/CommonController')
+
 
 // 连接数据库
-var conn = mysql.createConnection(models.mysql);
-
+const conn = mysql.createConnection(models.mysql);
 conn.connect();
-var jsonWrite = (res, ret) => {
-    if(typeof ret === 'undefined') {
-        res.json({
-            code: '9999',
-            msg: '操作失败'
-        });
-    } else {
-    	res.json({
-            code: '0000',
-            msg: '操作成功',
-            data:ret
-        });
-    }
-};
+
 let getCount = (callback)=>{
 	let sql = $sql.article.count;
 	conn.query(sql,[],(err,result) => {
@@ -43,7 +31,7 @@ router.post('/latelys',(req,res)=>{
 			console.log('最近逛的吧查询错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -56,7 +44,7 @@ router.post('/follow',(req,res)=>{
 			console.log('关注的吧查询错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -71,7 +59,7 @@ router.post('/queryById',(req,res)=>{
 			console.log('根据ID查询错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -88,7 +76,7 @@ router.post('/likeArtsName',(req,res)=>{
 			console.log('搜索贴吧名错误：'+err)
 		}
 		if(result){
-			jsonWrite(res,result)
+			commonController.jsonWrite(res,result)
 		}
 	})
 });
@@ -130,7 +118,7 @@ router.post('/articleSortIndex',(req,res)=>{
 							}
 						})
 					})	
-					jsonWrite(res,{
+					commonController.jsonWrite(res,{
 						currentPage:params.currentPage,
 						pageSize:params.pageSize,
 						count:c[0].count,
@@ -141,7 +129,7 @@ router.post('/articleSortIndex',(req,res)=>{
 					console.log('子表查询错误：'+err)
 				})
 			}else{
-				jsonWrite(res,{
+				commonController.jsonWrite(res,{
 					currentPage:params.currentPage,
 					pageSize:params.pageSize,
 					count:c[0].count,

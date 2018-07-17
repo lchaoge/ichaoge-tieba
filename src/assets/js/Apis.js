@@ -172,4 +172,17 @@ export default class Apis {
 			window.localStorage.setItem("lately",sort_article_id)
 		}	
 	}
+	/**
+	 * 存储搜索的名字
+	 */
+	insertSearchList(name){
+		if(window.localStorage.getItem("searchList")!=null){
+			let latelys = window.localStorage.getItem("searchList"); //1,2,3,4
+			latelys += ","+name;
+			let arrLatelys = [...new Set(latelys.split(","))];
+			window.localStorage.setItem("searchList",arrLatelys.join(','))
+		}else{
+			window.localStorage.setItem("searchList",name)
+		}	
+	}
 }

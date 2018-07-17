@@ -15,34 +15,30 @@
 	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
 	    	<cell-box is-link class="user">
 	    		<div class="user-img">
-	    			<img src="../../../assets/images/logo.png" />
+	    			<img :src="pageData.currentUser.user_image_url" />
 	    		</div>
 	    		<div class="user-right">
-	    			<h4>京城朝歌</h4>
+	    			<h4>{{pageData.currentUser.user_name}}</h4>
 	    			<p>查看个人主页或编辑资料</p>
 	    		</div>
     		</cell-box>
 	    	<card>
 		      <div slot="content" class="card-demo-flex card-demo-content01">
 		        <div class="vux-1px-r">
-		          <span>1130</span>
-		          <br/>
-		          	关注
+		          	<countup :start-val="0" :end-val="9876" :duration="2"></countup>
+		          	<br/>关注
 		        </div>
 		        <div class="vux-1px-r">
-		          <span>15</span>
-		          <br/>
-		          粉丝
+		          	<countup :start-val="0" :end-val="42342" :duration="2"></countup>
+		          	<br/>粉丝
 		        </div>
 		        <div class="vux-1px-r">
-		          <span>0</span>
-		          <br/>
-		         关注的吧
+		        	<countup :start-val="0" :end-val="pageData.followList.length" :duration="2"></countup>
+		          	<br/>关注的吧
 		        </div>
 		        <div>
-		          <span>88</span>
-		          <br/>
-		          帖子
+		        	<countup :start-val="0" :end-val="pageData.articleList.length" :duration="2"></countup>
+		          	<br/>帖子
 		        </div>
 		      </div>
 		    </card>
@@ -81,36 +77,12 @@
 </template>
 
 <script>
-import { CellBox ,Card,Group,XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
+import { Countup,CellBox ,Card,Group,XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
 import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
 
 export default {
-	data () {
-	    return {
-	    	pageData:{
-		      	headerIndex: 1,
-		      	selected:{},
-	    	},
-	    	
-	    }
-	},
-	beforeRouteEnter:(to,from ,next)=>{
-		next((vm)=>{
-			let isLogin = vm.$store.getters.isLogin
-			if(!isLogin){
-				vm.$router.push({name:'loginLink'})
-			}
-		})
-	},
-	created() {
-	},
-	mounted(){
-		
-	},
-	computed:{
-		
-	},
 	components: {
+		Countup,
 	  	CellBox,
 	  	Group,
 	    Card,
@@ -130,7 +102,80 @@ export default {
 	    Swiper,
 	    Panel,
 	    SwiperItem
+	},
+	data () {
+	    return {
+	    	pageData:{
+		      	currentUser:{},
+		      	followList:[],
+		      	articleList:[]
+	    	},
+	    	
+	    }
+	},
+	beforeRouteEnter:(to,from ,next)=>{
+		next((vm)=>{
+			let isLogin = vm.$store.getters.isLogin
+			if(!isLogin){
+				vm.$router.push({name:'loginLink'})
+			}else{
+				vm.pageData.currentUser = vm.$store.getters.currentUser
+			}
+		})
+	},
+	created() {
+		// @todo 关注
+		
+		// @todo 粉丝
+		
+		// 关注的吧
+		this.queryFollowEvt()
+		// 帖子
+		this.queryArticleByUserId()
+	},
+	mounted(){
+		
+	},
+	computed:{
+		
+	},
+	methods:{
+		// 关注的吧
+		queryFollowEvt(){
+			let params = {
+				user_id:this.$store.getters.currentUser.user_id
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOW,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.followList = res.data
+					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		// 关注的贴子
+		queryArticleByUserId(){
+			let params = {
+				user_id:this.$store.getters.currentUser.user_id
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLE_QUERYBYUSERID,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.articleList = res.data
+					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		}
 	}
+	
 }
 </script>
 
@@ -218,5 +263,8 @@ export default {
 }
 .card-demo-flex span {
   color: #f74c31;
+}
+.userinfo .weui-cells{
+	margin-top: 0 !important;
 }
 </style>

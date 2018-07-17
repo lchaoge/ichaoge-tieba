@@ -5,17 +5,9 @@
 	      @on-focus="onFocus" @on-cancel="onCancel" @on-clear="onClear" @on-submit="onSubmit" ref="search"></search>
 	    <div class="content">
 		    <scroller lock-x :scrollbar-y=false ref="scroller" height="-44">
-		    	<div v-if="pageData.search.isFocus">
+		    	<div v-if="pageData.search.isFocus && pageData.searchList.length>0">
 					<group class="cells">
-			        	<cell title="Title11">
-			        		<i slot="icon" class="icon iconfont icon-shijian" style="display:block;margin-right:5px;"></i>
-			        		<i class="icon iconfont icon-guanbi" style="font-size: 12px;"></i>
-					    </cell>
-					    <cell title="Title11">
-			        		<i slot="icon" class="icon iconfont icon-shijian" style="display:block;margin-right:5px;"></i>
-			        		<i class="icon iconfont icon-guanbi" style="font-size: 12px;"></i>
-					    </cell>
-					    <cell title="Title11">
+			        	<cell v-for="item in pageData.searchList" :title="item.sort_article_name" :key="item.sort_article_name" @click.native="searchNameEvt(item)">
 			        		<i slot="icon" class="icon iconfont icon-shijian" style="display:block;margin-right:5px;"></i>
 			        		<i class="icon iconfont icon-guanbi" style="font-size: 12px;"></i>
 					    </cell>
@@ -53,18 +45,30 @@ export default {
 	      			isFocus:true,
 	      			value:'',
 	      			list:[]
-	      		}
-	      		
+	      		},
+	      		searchList:[]
 	      	}
 	    }
   	},
   	created(){
-  		
+  		this.getSearchList()
   	},
   	mounted(){
   		this.setFocus()
   	},
   	methods: {
+  		getSearchList(){
+  			this.pageData.searchList = []
+  			if(window.localStorage.getItem("searchList")!=null){
+  				let obj = window.localStorage.getItem("searchList").split(',')
+  				obj.forEach(item=>{
+  					this.pageData.searchList.push({
+	  					sort_article_name:item
+	  				})	
+  				})
+  				
+  			}
+  		},
 	    setFocus() {
 	      	this.$refs.search.setFocus()
 	    },

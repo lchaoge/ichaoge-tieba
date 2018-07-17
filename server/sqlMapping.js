@@ -2,8 +2,9 @@ module.exports = {
 	// 用户表
 	user:{
 		queryAllUser : 'select * from user order by ad_id desc limit ?, ?',  //分页
-		add : 'insert into user(user_name,user_pwd) values (?,?)',  //注册
-		login : 'select * from user where user_name = ? and user_pwd = ?',  //登录
+		add : 'insert into user(user_phone,user_pwd,user_image_url,user_name) values (?,?,?,?)',  //注册
+		login : 'select * from user where user_phone = ? and user_pwd = ?',  //登录
+		queryByUserPhone : 'select * from user where user_phone = ?',  //查询手机号是否存在
 	},
 	// 文章表
 	article:{
@@ -13,7 +14,7 @@ module.exports = {
 		count : 'select count(*) as count from article',
 		queryByArticleId : 'select art.article_id,art.article_name,art.article_content,art.article_click,art.article_time,u.user_name,u.user_image_url,art_s.sort_article_name,art_s.sort_article_id from article as art left join article_sort as art_s on art.sort_article_id=art_s.sort_article_id left join user as u on art.user_id=u.user_id where art.article_id = ?',
 		updateClickByArticleId : 'update article set article_click=article_click+1 where article_id = ?',
-		
+		queryArticleByUserId : 'select * from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ?' // 根据用户ID查询
 	},
 	// 文章分类表
 	articleSort:{

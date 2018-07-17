@@ -1,6 +1,6 @@
 <template>
 	<tabbar slot="bottom">
-		<tabbar-item link='/index'>
+		<tabbar-item link='/index' selected>
 			<i slot="icon" class="icon iconfont icon-shouye"></i>
 	        <span slot="label">首页</span>
 	    </tabbar-item>
@@ -11,11 +11,11 @@
 	    <tabbar-item :link="{path: '/article/insert',query:{type_id:1,sort_article_id:-1,sort_article_name:''}}" class="tabbar-add">
 			<i slot="icon" class="icon iconfont icon-roundadd"></i>
 	    </tabbar-item>
-	    <tabbar-item link='/news' badge="2">
+	    <tabbar-item link='/news'>
 	    	<i slot="icon" class="icon iconfont icon-tixing"></i>
 	        <span slot="label">消息</span>
 	    </tabbar-item>
-	    <tabbar-item link='/userinfo' show-dot>
+	    <tabbar-item link='/userinfo'>
 	    	<i slot="icon" class="icon iconfont icon-geren"></i>
 	        <span slot="label">我的</span>
 	    </tabbar-item>

@@ -27,7 +27,7 @@
 				    </scroller>
 				</div>
 			</div>
-			<grid :cols="2" :show-lr-borders="false" v-if="isLogin">
+			<grid :cols="2" :show-lr-borders="false" v-if="isLogin && followList.length>0">
 				<h2>我关注的吧</h2>
 				  <grid-item v-for="item in followList" :key="item.sort_article_id" :link="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
 				  	<div class="grid-center">
@@ -96,8 +96,6 @@ export default {
 				if(res.code === "0000"){
 					if(res.data.length>0){
 						this.followList = res.data
-					}else{
-						this.$vux.toast.text('暂无数据', 'bottom')
 					}
 				}else{
 					this.$vux.toast.text('系统错误', 'bottom')
