@@ -218,6 +218,15 @@
 		   	},
 		   	essenceEvt(essence){
 		   		this.queryObj.essence = essence
+		   		this.queryObj.list = []
+		   		this.status= {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	}
+		   		this.queryObj.currentPage = 1
+		    	this.queryObj.pageSize = 10
+		    	this.queryObj.count = 0
+		    	this.queryObj.pageCount = 0
 		   		this.queryEvt()
 		   	},
 		   	// 增加
