@@ -69,7 +69,6 @@ router.post('/likeArtsName',(req,res)=>{
 //	let sql = $sql.articleSort.likeArtsName;
 	let params = req.body;
 	let sql = 'select * from article_sort where article_sort.sort_article_name like "%'+params.name+'%"'
-	console.log(sql)
 	// 获取前台页面传过来的参数
 	conn.query(sql,[],(err,result) => {
 		if(err){

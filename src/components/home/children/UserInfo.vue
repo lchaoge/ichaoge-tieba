@@ -10,7 +10,7 @@
 			<a slot="right">
 				<i class="icon iconfont icon-shezhi"></i>
 			</a>
-			<span style="color: #666;">我的</span>
+			<h1 style="color: #666;">我的</h1>
 	    </x-header>
 	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
 	    	<cell-box is-link class="user">
@@ -24,15 +24,15 @@
     		</cell-box>
 	    	<card>
 		      <div slot="content" class="card-demo-flex card-demo-content01">
-		        <div class="vux-1px-r">
-		          	<countup :start-val="0" :end-val="9876" :duration="2"></countup>
+		        <div class="vux-1px-r" @click="goUserFollow">
+		          	<countup :start-val="0" :end-val="pageData.userFollow.length" :duration="2"></countup>
 		          	<br/>关注
 		        </div>
-		        <div class="vux-1px-r">
-		          	<countup :start-val="0" :end-val="42342" :duration="2"></countup>
+		        <div class="vux-1px-r" @click="goUserFans">
+		          	<countup :start-val="0" :end-val="pageData.fansList.length" :duration="2"></countup>
 		          	<br/>粉丝
 		        </div>
-		        <div class="vux-1px-r">
+		        <div class="vux-1px-r" @click="goUserFollowArticleSort">
 		        	<countup :start-val="0" :end-val="pageData.followList.length" :duration="2"></countup>
 		          	<br/>关注的吧
 		        </div>
@@ -106,9 +106,14 @@ export default {
 	data () {
 	    return {
 	    	pageData:{
-		      	currentUser:{},
+		      	currentUser:{
+		      		user_name:'',
+		      		user_image_url:''
+		      	},
 		      	followList:[],
-		      	articleList:[]
+		      	articleList:[],
+		      	fansList:[],
+		      	userFollow:[]
 	    	},
 	    	
 	    }
@@ -118,16 +123,17 @@ export default {
 			let isLogin = vm.$store.getters.isLogin
 			if(!isLogin){
 				vm.$router.push({name:'loginLink'})
-			}else{
-				vm.pageData.currentUser = vm.$store.getters.currentUser
 			}
 		})
 	},
 	created() {
+		this.pageData.currentUser = this.$store.getters.currentUser
+		
+		this.$Apis.inserttabbarSelected(4)
 		// @todo 关注
-		
+		this.queryUserFollowEvt()
 		// @todo 粉丝
-		
+		this.queryFansEvt()
 		// 关注的吧
 		this.queryFollowEvt()
 		// 帖子
@@ -140,6 +146,49 @@ export default {
 		
 	},
 	methods:{
+		goUserFollow(){
+			this.$router.push({name:'userFollowLink'})
+		},
+		goUserFollowArticleSort(){
+			this.$router.push({name:'userFollowArticleSortLink'})
+		},
+		goUserFans(){
+			this.$router.push({name:'userFansLink'})
+		},
+		// 用户粉丝
+		queryFansEvt(){
+			let params = {
+				user_id:this.$store.getters.currentUser.user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USER_FANS,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.fansList = res.data
+					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		// 用户关注
+		queryUserFollowEvt(){
+			let params = {
+				user_id:this.$store.getters.currentUser.user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USER_FOLLOW,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.userFollow = res.data
+					}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
 		// 关注的吧
 		queryFollowEvt(){
 			let params = {

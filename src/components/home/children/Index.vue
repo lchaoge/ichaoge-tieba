@@ -13,55 +13,61 @@
 				swiper1
 	        </swiper-item>
 	        <swiper-item>
-	        	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-96" :pulldown-config="{content:'下拉刷新...',downContent:'下拉刷新...',upContent:'释放刷新...',loadingContent:'正在加载...'}" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
-			      <div>
-			      	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
-						<div class="panel-user">
-							<div class="panel-user-photo">
-								<img :src="item.user_image_url" />
-							</div>
-							<div class="panel-user-right">
-								<div class="panel-user-name">
-									{{item.user_name}}
+	        	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-96" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+			      	<div class="">
+			      		<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
+							<div class="panel-user">
+								<div class="panel-user-photo">
+									<img :src="item.user_image_url" />
 								</div>
-								<div class="panel-user-more">
-									<span @click="sortArticleEvt(item.sort_article_id)">{{item.sort_article_name}}吧</span> | 
-									<span>{{item.article_time}}</span>
-								</div>	
+								<div class="panel-user-right">
+									<div class="panel-user-name">
+										{{item.user_name}}
+									</div>
+									<div class="panel-user-more">
+										<span @click="sortArticleEvt(item.sort_article_id)">{{item.sort_article_name}}吧</span> | 
+										<span>{{item.article_time}}</span>
+									</div>	
+								</div>
+							</div>
+							<div class="panel-content" @click="detailEvt(item.article_id)">
+								<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
+								<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+							      		<img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;" />
+							      		<!--<x-img :offset='300' :src="img.article_image_url" :webp-src="`${img.article_image_url}?type=webp`" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>-->
+							      	</flexbox-item>
+							    </flexbox>
+							</div>
+							<div class="panel-button">
+								<flexbox :gutter="0">
+							        <flexbox-item><div class="panel-flex-button">
+							        	<i class="icon iconfont icon-fenxiang"></i>
+							        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
+							        </div></flexbox-item>
+							      	<flexbox-item><div class="panel-flex-button">
+							      		<i class="icon iconfont icon-bianji"></i>
+							      		<countup :start-val="0" :end-val="0" :duration="2"></countup>
+							      	</div></flexbox-item>
+							      	<flexbox-item><div class="panel-flex-button">
+							      		<i class="icon iconfont icon-buxing"></i>
+							      		<countup :start-val="0" :end-val="item.article_click" :duration="2"></countup>
+							      	</div></flexbox-item>
+							    </flexbox>
 							</div>
 						</div>
-						<div class="panel-content" @click="detailEvt(item.article_id)">
-							<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
-							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-						      		<x-img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
-						      	</flexbox-item>
-						    </flexbox>
-						</div>
-						<div class="panel-button">
-							<flexbox :gutter="0">
-						        <flexbox-item><div class="panel-flex-button">
-						        	<i class="icon iconfont icon-fenxiang"></i>
-						        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
-						        </div></flexbox-item>
-						      	<flexbox-item><div class="panel-flex-button">
-						      		<i class="icon iconfont icon-bianji"></i>
-						      		<countup :start-val="0" :end-val="0" :duration="2"></countup>
-						      	</div></flexbox-item>
-						      	<flexbox-item><div class="panel-flex-button">
-						      		<i class="icon iconfont icon-buxing"></i>
-						      		<countup :start-val="0" :end-val="item.article_click" :duration="2"></countup>
-						      	</div></flexbox-item>
-						    </flexbox>
-						</div>
-					</div>
-			      </div>
-			      <!--pullup slot-->
-			      <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px; bottom: -40px; text-align: center;">
-			      	<load-more tip="正在加载" v-show="status.pullupStatus === 'loading'"></load-more>
-				    <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
-			        <!--<span v-show="status.pullupStatus === 'loading'"><spinner type="ios-small"></spinner>正在加载....</span>-->
-			      </div>
+			      	</div>
+			      	<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
+				      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+				      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+				      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			      	</div>
+			      	<div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+				      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+				      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+				      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+				      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+			      	</div>
 			    </scroller>
 	        </swiper-item>
 	        <swiper-item>
@@ -72,7 +78,7 @@
 </template>
 
 <script>
-import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,Countup,LoadMore } from 'vux'
+import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,Countup,LoadMore,InlineLoading } from 'vux'
 import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem,XImg } from 'vux'
 
 export default {
@@ -80,6 +86,7 @@ export default {
     	TransferDom
   	},
   	components: {
+  		InlineLoading,
   		LoadMore,
   		XImg,
   		Countup,
@@ -124,6 +131,7 @@ export default {
 	    }
   	},
   	created() {
+  		this.$Apis.inserttabbarSelected(1)
 		this.pageData.swiperHeight = (document.documentElement.clientHeight-46-50)+"px"
 		this.queryEvt()
 	},
@@ -134,28 +142,31 @@ export default {
 			})
 		},
 		loadMore () {
-	      setTimeout(() => {
-	        this.queryObj.currentPage++
-	        if(this.queryObj.currentPage<this.queryObj.pageCount){
-	        	this.queryEvt()
-	        }
-	        setTimeout(() => {
-	          this.$refs.scroller.donePullup()
-	        }, 10)
-	      }, 2000)
+	      	setTimeout(() => {
+		        this.queryObj.currentPage++
+		        if(this.queryObj.currentPage<this.queryObj.pageCount){
+		        	this.queryEvt()
+		        	setTimeout(() => {
+			          this.$refs.scroller.donePullup()
+			        }, 10)
+		        }else{
+		        	this.$refs.scroller.disablePullup()
+		        }
+	        
+	      	}, 2000)
 	    },
 	    refresh () {
-	      setTimeout(() => {
-	        this.queryObj.currentPage = 1
-	        this.queryObj.list = []
-	        this.queryEvt()
-	        this.$nextTick(() => {
-	          setTimeout(() => {
-	            this.$refs.scroller.donePulldown()
-	            this.pullupEnabled && this.$refs.scroller.enablePullup()
-	          }, 10)
-	        })
-	      }, 2000)
+	      	setTimeout(() => {
+		        this.queryObj.currentPage = 1
+		        this.queryObj.list = []
+		        this.queryEvt()
+		        this.$nextTick(() => {
+		          setTimeout(() => {
+		            this.$refs.scroller.donePulldown()
+		            this.pullupEnabled && this.$refs.scroller.enablePullup()
+		          }, 10)
+		        })
+	      	}, 2000)
 	    },
 	    queryEvt(){
 	    	let params = {
@@ -242,21 +253,21 @@ export default {
     	position: fixed !important;
     	left: 0;
     }
-    .panel{
+    .index .panel{
     	background: #fff;
     	margin-bottom: 10px;
     	padding: 10px;
     }
-    .panel-user{
+    .index .panel-user{
     	margin-bottom: 10px;
     }
-    .panel-user:after{
+    .index .panel-user:after{
     	display: block;
     	height: 0;
     	width: 0;
     	clear: both;
     }
-    .panel-user-photo{
+    .index .panel-user-photo{
     	float: left;
     	border-radius: 50px;
     	border: 1px solid #A3A3A3;
@@ -265,27 +276,27 @@ export default {
     	height: 50px;
     	box-sizing: border-box;
     }
-    .panel-user-photo img{
+    .index .panel-user-photo img{
     	display: block;
     	width: 50px;
     	height: 50px;
     }
-    .panel-user-right{
+    .index .panel-user-right{
     	height: 50px;
     	padding-left: 60px;
     }
-    .panel-user-name{
+    .index .panel-user-name{
     	color: #333;
     	line-height: 22px;
     	margin-bottom: 6px;
     }
-    .panel-user-right .panel-user-more{
+    .index .panel-user-right .panel-user-more{
     	color: #a3a3a3;
     }
-    .panel-content-text{
+    .index .panel-content-text{
     	margin: 0 0 10px;
     }
-    .panel-flex-button{
+    .index .panel-flex-button{
     	text-align: center;
     }
 </style>

@@ -34,6 +34,7 @@ export default {
 	  	return{
 	  		pageData:{
 	  			isLogin:true,
+	  			router:{},
 	  			from:{
 	  				user_phone:'',
 	  				user_pwd:''
@@ -41,8 +42,11 @@ export default {
 	  		}
 	  	}
   	},
-  	beforeRouteEnter:(to,from ,next)=>{
-		next(vm=>vm.$store.dispatch("setUser",null))
+  	beforeRouteEnter:(to,from,next)=>{
+		next(vm=>{
+			vm.$store.dispatch("setUser",null)
+			vm.pageData.router = from
+		})
 	},
   	methods:{
 	  	loginEvt(){
@@ -56,7 +60,13 @@ export default {
 	  				if(user.length>0){
 	  					this.$vux.toast.text('登录成功', 'bottom')
 	  					this.$store.dispatch("setUser",user[0])
-	  					this.$router.push({name:'indexLink'})
+	  					let routerName = this.pageData.router.name
+	  					let query = this.pageData.router.query
+	  					debugger
+	  					this.$router.push({
+	  						name:routerName,
+	  						query:query
+	  					})
 	  				}else{
 	  					this.$vux.toast.text('账号或密码错误', 'bottom')
 	  					this.pageData.toast.showPositionValue = true

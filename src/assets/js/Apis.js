@@ -185,4 +185,11 @@ export default class Apis {
 			window.localStorage.setItem("searchList",name)
 		}	
 	}
+	/**
+	 * 存储tabbar
+	 */
+	inserttabbarSelected(index){
+		window.localStorage.removeItem("tabbarSelected")
+		window.localStorage.setItem("tabbarSelected",index)
+	}
 }

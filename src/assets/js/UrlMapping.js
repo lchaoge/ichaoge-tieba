@@ -14,6 +14,8 @@ export default class UrlMapping {
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
 		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
 		this.POST_USER_LIKEUSERNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/user/likeUserName';   // 搜索用户
+		this.POST_USER_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/user/follow';   // 用户关注
+		this.POST_USER_FANS = (this.isLocalHost?'/apis':this.origin)+'/wm/user/fans';   // 用户粉丝
 		
 		// 文章类型
 		this.POST_ARTICLESORT_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/follow';   // 关注的吧

@@ -5,6 +5,8 @@ module.exports = {
 		add : 'insert into user(user_phone,user_pwd,user_image_url,user_name) values (?,?,?,?)',  //注册
 		login : 'select * from user where user_phone = ? and user_pwd = ?',  //登录
 		queryByUserPhone : 'select * from user where user_phone = ?',  //查询手机号是否存在
+		follow : 'select * from user as u where u.user_id in (select ua.attention_id from user_attention as ua where ua.user_id = ?)', // 我关注的
+		fans : 'select * from user as u where u.user_id in (select ua.user_id from user_attention as ua where ua.attention_id = 19)',  // 粉丝
 	},
 	// 文章表
 	article:{

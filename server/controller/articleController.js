@@ -39,7 +39,6 @@ router.post('/likeArtName',(req,res)=>{
 //	let sql = $sql.articleSort.likeArtsName;
 	let params = req.body;
 	let sql = 'select * from article where article.article_name like "%'+params.name+'%"'
-	console.log(sql)
 	// 获取前台页面传过来的参数
 	conn.query(sql,[],(err,result) => {
 		if(err){
@@ -113,8 +112,7 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	params.article_up = 0
 	params.article_support = 0
 	params.article_click = 0
-	params.article_time = getDateFunc('all')
-	console.log(params)
+	params.article_time = commonController.getDateFunc('all')
 	// 主表
 	let p = new Promise((resolve, reject)=>{
 		conn.query(articleInsertSql,[params.type_id,params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {

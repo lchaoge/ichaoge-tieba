@@ -17,5 +17,10 @@ export default {
 			state.currentUser = null
 			state.isLogin = false
 		}
-	}
+	},
+	
+	// 修改loading状态
+	updateLoadingStatus (state, payload) {
+      	state.isLoading = payload.isLoading
+    }
 }

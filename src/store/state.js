@@ -6,5 +6,6 @@
 
 export default {
 	currentUser:null,
-	isLogin:false
+	isLogin:false,
+	isLoading: false
 }

@@ -37,6 +37,21 @@ let router = new VueRouter({
 	routes
 })
 
+//router.beforeEach(function (to, from, next) {
+//	Vue.$vux.loading.show({text: 'Loading'})
+//store.commit('updateLoadingStatus', {isLoading: true})
+//next()
+//})
+//
+//router.afterEach(function (to) {
+////	 隐藏
+//setTimeout(()=>{
+//	Vue.$vux.loading.hide()
+//},500)
+//	  	
+//store.commit('updateLoadingStatus', {isLoading: false})
+//})
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -74,6 +74,7 @@ export default {
 	    }
 	},
 	created() {
+		this.$Apis.inserttabbarSelected(2)
 		this.isLogin = this.$store.getters.isLogin
 		if(this.isLogin){
 			this.queryAllByUserIdEvt()	

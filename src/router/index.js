@@ -1,4 +1,3 @@
-import demo from './../components/demo'
 // 首页
 import Home from './../components/home/Home'
 import Index from './../components/home/children/Index'// 首页
@@ -19,6 +18,10 @@ import Register from './../components/account/Register'
 // 用户
 import User from './../components/user/User'
 import UserIndex from './../components/user/children/Index'
+import UserFans from './../components/user/children/Fans'
+import UserFollow from './../components/user/children/Follow'
+import UserFollowArticleSort from './../components/user/children/FollowArticleSort'
+
 // 文章详情
 import Article from './../components/article/Article'
 import ArticleIndex from './../components/article/children/Index'
@@ -27,41 +30,36 @@ import ArticleInsert from './../components/article/children/Insert'
 import ArticleSortIndex from './../components/articleSort/children/Index'
 
 export const routes = [
-	{path:'/demo',name:'demoLink',component:demo},
-	
 	{path:'/',name:'homeLink',component:Home,redirect:'/index',children:[
 		{path:'/index',name:'indexLink',component:Index},
 		{path:'/menu',name:'menuLink',component:Menu},
 		{path:'/news',name:'newsLink',component:News},
 		{path:'/userinfo',name:'userinfoLink',component:UserInfo}	
 	]},
-	
 	// 搜索
 	{path:'/searchs',name:'searchsLink',component:Searchs,redirect:'/searchs/search',children:[
 		{path:'/searchs/search',name:'SearchLink',component:Search},	
 		{path:'/searchs/index',name:'SearchIndexLink',component:SearchIndex},	
 	]},
-	
 	// 登录
 	{path:'/login',name:'loginLink',component:Login},
 	{path:'/register',name:'registerLink',component:Register},
 	{path:'/forgetpwd',name:'forgetpwdLink',component:ForgetPwd},
-	
 	// 我的主页
 	{path:'/user',name:'userLink',component:User,redirect:'/user/index',children:[
-		{path:'/user/index',name:'userIndexLink',component:UserIndex},	
+		{path:'/user/index',name:'userIndexLink',component:UserIndex},
+		{path:'/user/fans',name:'userFansLink',component:UserFans},
+		{path:'/user/follow',name:'userFollowLink',component:UserFollow},
+		{path:'/user/followArticleSort',name:'userFollowArticleSortLink',component:UserFollowArticleSort},
 	]},
-	
 	// 文章详情
 	{path:'/article',name:'articleLink',component:Article,redirect:'/article/index',children:[
 		{path:'/article/index',name:'articleIndexLink',component:ArticleIndex},	
 		{path:'/article/insert',name:'articleInsertLink',component:ArticleInsert},	
 	]},
-	
 	// 贴吧
 	{path:'/articleSort',name:'articleSortLink',component:Article,redirect:'/articleSort/index',children:[
 		{path:'/articleSort/index',name:'articleSortIndexLink',component:ArticleSortIndex},	
 	]},
-	
 	{path:'*',redirect:'/'}
 ]

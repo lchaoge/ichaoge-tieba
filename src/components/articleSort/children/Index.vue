@@ -28,7 +28,7 @@
 			        </tab>
 		      	</sticky>
 		    </div>
-		    <scroller lock-x :scrollbar-y=false height="-170" class="vux-scroller">
+		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-170" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 		    	<div class="">
 			    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
 						<div class="panel-user mb10">
@@ -70,6 +70,17 @@
 						</div>
 					</div>
 			    </div>
+			    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
+			      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+			      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+			      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			    </div>
+			    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+			      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+			      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+			      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+			    </div>
 		    </scroller>
 	    </div>
 		<div class="insert" @click="insertEvt">
@@ -79,13 +90,14 @@
 </template>
 
 <script>
-	import {Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {InlineLoading,Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		InlineLoading,
 	  		Scroller,
 	  		FlexboxItem,
 	  		Flexbox,
@@ -105,6 +117,11 @@
 	  	},
 	  	data(){
 			return {
+				pullupEnabled: true,
+		      	status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	},
 				articleSort:{},
 				queryObj:{
 					sort_article_id:-1,
@@ -125,9 +142,36 @@
 			this.initFunc()
 		},
 		methods:{
+			loadMore () {
+		      	setTimeout(() => {
+			        this.queryObj.currentPage++
+			        if(this.queryObj.currentPage<this.queryObj.pageCount){
+			        	this.queryEvt()
+			        	setTimeout(() => {
+				          this.$refs.scroller.donePullup()
+				        }, 10)
+			        }else{
+			        	this.$refs.scroller.disablePullup()
+			        }
+		        
+		      	}, 2000)
+		    },
+		    refresh () {
+		      	setTimeout(() => {
+			        this.queryObj.currentPage = 1
+			        this.queryObj.list = []
+			        this.queryEvt()
+			        this.$nextTick(() => {
+			          setTimeout(() => {
+			            this.$refs.scroller.donePulldown()
+			            this.pullupEnabled && this.$refs.scroller.enablePullup()
+			          }, 10)
+			        })
+		      	}, 2000)
+		    },
 			initFunc(){
 				this.queryById()
-				this.articleSortIndex()
+				this.queryEvt()
 			},
 			queryById(){
 				let params = {
@@ -141,7 +185,7 @@
 		  			}
 		  		}).catch(err=>console.log("系统修改查看人数错误："+err))
 			},
-			articleSortIndex(){
+			queryEvt(){
 				let params = {
 					sort_article_id:this.queryObj.sort_article_id,
 					essence:this.queryObj.essence,
@@ -151,12 +195,10 @@
 				}
 				this.$Axios.post(this.$Urls.POST_ARTICLESORT_INDEX,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
-						let obj = []
 						res.data.list.forEach(item=>{
 							item.article_time = this.$Apis.dateFormat("MM-dd",new Date(item.article_time).getTime())
-							obj.push(item)
+							this.queryObj.list.push(item)
 						})
-						this.queryObj.list = obj
 						this.queryObj.currentPage = res.data.currentPage
 			    		this.queryObj.pageSize = res.data.pageSize
 			    		this.queryObj.count = res.data.count
@@ -176,7 +218,7 @@
 		   	},
 		   	essenceEvt(essence){
 		   		this.queryObj.essence = essence
-		   		this.articleSortIndex()
+		   		this.queryEvt()
 		   	},
 		   	// 增加
 		   	insertEvt(){

@@ -226,44 +226,44 @@
 </script>
 
 <style>
-	.weui-search-bar__label{
+	.searchIndex .weui-search-bar__label{
 		top: 5px !important;
 	}
-	.searchIndex .weui-search-bar{
+	.searchIndex .searchIndex .weui-search-bar{
 		background: #fff !important;	
 	}
-	.searchIndex .content{
+	.searchIndex .searchIndex .content{
 		margin-top: 44px;
 	}
-	.weui-cells{
+	.searchIndex .weui-cells{
 		margin-top: 0 !important;
 	}
-	.empty{
+	.searchIndex .empty{
 		background: #fff;
 		padding: 10px 15px;
 		color: #999;
 	}
-	.active-6-1 {
+	.searchIndex .active-6-1 {
 	  color: rgb(252, 55, 140) !important;
 	  border-color: rgb(252, 55, 140) !important;
 	}
-	.active-6-2 {
+	.searchIndex .active-6-2 {
 	  color: #04be02 !important;
 	  border-color: #04be02 !important;
 	}
-	.active-6-3 {
+	.searchIndex .active-6-3 {
 	  color: rgb(55, 174, 252) !important;
 	  border-color: rgb(55, 174, 252) !important;
 	}
-	.panel {
+	.searchIndex .panel {
     background: #fff;
     margin-bottom: 10px;
     padding: 10px;
 }
-.panel-user {
+.searchIndex .panel-user {
     margin-bottom: 10px;
 }
-.panel-user-photo {
+.searchIndex .panel-user-photo {
     float: left;
     border-radius: 50px;
     border: 1px solid #A3A3A3;
@@ -273,27 +273,27 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
-.panel-user-photo img {
+.searchIndex .panel-user-photo img {
     display: block;
     width: 100%;
     height: 100%;
 }
-.panel-user-right {
+.searchIndex .panel-user-right {
     height: 50px;
     padding-left: 60px;
 }
-.panel-user-name {
+.searchIndex .panel-user-name {
     color: #333;
     line-height: 22px;
     margin-bottom: 6px;
 }
-.panel-user-right .panel-user-more {
+.searchIndex .panel-user-right .panel-user-more {
     color: #a3a3a3;
 }
-.panel-content-text {
+.searchIndex .panel-content-text {
     margin: 0 0 10px;
 }
-.panel-flex-button {
+.searchIndex .panel-flex-button {
     text-align: center;
 }
 </style>

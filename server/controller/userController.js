@@ -78,12 +78,40 @@ router.post('/likeUserName',(req,res)=>{
 	})
 });
 
+// 用户关注
+router.post('/follow',(req,res)=>{
+	let sql = $sql.user.follow;
+	let params = req.body;
+	// 获取前台页面传过来的参数
+	conn.query(sql,[params.user_id],(err,result) => {
+		if(err){
+			console.log('用户关注错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
+
+// 用户粉丝
+router.post('/fans',(req,res)=>{
+	let sql = $sql.user.fans;
+	let params = req.body;
+	// 获取前台页面传过来的参数
+	conn.query(sql,[params.user_id],(err,result) => {
+		if(err){
+			console.log('用户粉丝错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
+
 // 分页
 router.post('/queryAllUser',(req,res)=>{
 	let sql = $sql.user.queryAllUser;
 	let params = req.body;
-	console.log(params);
-	// 获取前台页面传过来的参数
     let currentPage = parseInt(params.currentPage || 1);// 页码
     let end = parseInt(params.pageSize || 10); // 默认页数
     let start = (currentPage - 1) * end;

@@ -135,7 +135,7 @@ export default {
 </script>
 
 <style>
-	.weui-search-bar__label{
+	.search .weui-search-bar__label{
 		top: 5px !important;
 	}
 	.search .weui-search-bar{
@@ -144,10 +144,10 @@ export default {
 	.search .content{
 		margin-top: 44px;
 	}
-	.weui-cells{
+	.search .weui-cells{
 		margin-top: 0 !important;
 	}
-	.empty{
+	.search .empty{
 		background: #fff;
 		padding: 10px 15px;
 		color: #999;

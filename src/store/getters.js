@@ -12,5 +12,8 @@ export default {
 	},
   	isLogin (state) {
 		return state.isLogin;
-	}
+	},
+  	isLoading (state) {
+		return state.isLoading;
+	},
 }
