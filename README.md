@@ -1,4 +1,4 @@
-# wm-vue-mobile
+# 仿百度贴吧
 
 > A Vue.js project
 
