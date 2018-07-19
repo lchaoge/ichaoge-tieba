@@ -8,6 +8,7 @@ const app = express();
 const userApi = require('./controller/userController');
 const articleApi = require('./controller/articleController');
 const articleSortApi = require('./controller/articleSortController');
+const stayMessageApi = require('./controller/stayMessageController');
 
 
 app.use(bodyParser.json({limit: '50mb'})); // 用来接收post提交的json数据
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({limit: '50mb',extended:true})); // 也可以接�
 app.use('/wm/user', userApi);
 app.use('/wm/article', articleApi);
 app.use('/wm/articleSort', articleSortApi);
+app.use('/wm/stayMessage', stayMessageApi);
 
 // 监听端口
 app.listen(3000);

@@ -328,15 +328,17 @@ CREATE TABLE `shuoshuo` (
 -- ----------------------------
 DROP TABLE IF EXISTS `stay_message`;
 CREATE TABLE `stay_message` (
-  `stay_id` int(8) NOT NULL AUTO_INCREMENT COMMENT '留言表自增ID',
+  `stay_id` int(8) NOT NULL AUTO_INCREMENT COMMENT '评论表自增ID',
+  `article_id` int(8) NOT NULL COMMENT '文章ID',
   `user_id` int(8) NOT NULL COMMENT '用户ID',
-  `stay_user_id` int(8) NOT NULL COMMENT '留言者ID',
-  `message_content` varchar(255) NOT NULL COMMENT '留言内容',
-  `stay_user_ip` varchar(15) NOT NULL COMMENT '留言用户的IP地址',
-  `message_stay_time` datetime NOT NULL COMMENT '留言时间',
+  `stay_user_id` int(8) NOT NULL COMMENT '评论者ID',
+  `floor` int(8) NOT NULL COMMENT '楼层',
+  `message_content` varchar(255) NOT NULL COMMENT '评论内容',
+  `stay_user_ip` varchar(15) NOT NULL COMMENT '评论用户的IP地址',
+  `message_stay_time` datetime NOT NULL COMMENT '评论时间',
   `place` varchar(64) NOT NULL COMMENT '地区',
   PRIMARY KEY (`stay_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户留言表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户评论帖子表';
 
 -- ----------------------------
 -- Records of stay_message

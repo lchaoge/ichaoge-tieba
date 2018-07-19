@@ -1,5 +1,5 @@
 <template>
-	<view-box ref="viewBox" class="userFollow">
+	<view-box ref="viewBox" class="FollowArticleSort">
 		<x-header :left-options="{backText: ''}" slot="header">
 			<h1 style="color: #666;">我关注的吧</h1>
 		</x-header>
@@ -7,7 +7,7 @@
 			<scroller lock-x :scrollbar-y=false height="-46" class="vux-scroller">
 		    	<div class="panel">
 		    		<divider v-if="queryObj.list.length<=0">暂无数据</divider>
-		    		<div class="panel-user" v-for="item in queryObj.list">
+		    		<div class="panel-user" v-for="item in queryObj.list" :key="item.sort_article_id" @click="detailEvt(item)">
 						<div class="panel-user-photo">
 							<x-img :src="item.image_url" default-src="../static/images/tieba.jpg"></x-img>
 						</div>
@@ -74,6 +74,14 @@
 					this.$vux.toast.text('系统错误：'+err, 'bottom')
 				})
 			},
+			detailEvt(item){
+				this.$router.push({
+					name: 'articleSortIndexLink', 
+					query: {
+						sort_article_id: item.sort_article_id 
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -129,12 +137,12 @@
 	.vux-header .vux-header-title{
 		margin: 0 100px !important;
 	}
-	.userFollow .panel{
+	.FollowArticleSort .panel{
 		overflow: hidden;
 		padding: 10px;
 		background: #fff;
 	}
-	.userFollow .panel-user{
+	.FollowArticleSort .panel-user{
 		padding-bottom: 10px;
 		display: -webkit-box;
 	    display: -webkit-flex;
@@ -145,7 +153,7 @@
 	    margin-bottom: 10px;
 	    position: relative;
 	}
-	.userFollow .panel-user:after{
+	.FollowArticleSort .panel-user:after{
 		content: " ";
 	    position: absolute;
 	    left: 0;
@@ -159,29 +167,28 @@
 	    -webkit-transform: scaleY(0.5);
 	    transform: scaleY(0.5);
 	}
-	.userFollow .panel-user:last-of-type{
+	.FollowArticleSort .panel-user:last-of-type{
 		margin-bottom: 0;
 		padding-bottom: 0;
 	}
-	.userFollow .panel-user:last-of-type:after{
+	.FollowArticleSort .panel-user:last-of-type:after{
 		border-top: 0px none;
 	}
-	.userFollow .panel-user .panel-user-photo {
+	.FollowArticleSort .panel-user .panel-user-photo {
 	    margin-right: .8em;
 	    width: 40px;
 	    height: 40px;
 	    line-height: 40px;
 	    text-align: center;
-	    border-radius: 50%;
 	    overflow: hidden;
 	}
-	.userFollow .panel-user .panel-user-content {
+	.FollowArticleSort .panel-user .panel-user-content {
 	    -webkit-box-flex: 1;
 	    -webkit-flex: 1;
 	    flex: 1;
 	    min-width: 0;
 	}
-	.userFollow .panel-user .panel-user-content .panel-user-name {
+	.FollowArticleSort .panel-user .panel-user-content .panel-user-name {
 	    font-weight: 400;
 	    font-size: 17px;
 	    width: auto;
@@ -192,7 +199,7 @@
 	    word-wrap: break-word;
 	    word-break: break-all;
 	}
-	.userFollow .panel-user .panel-user-content .panel-user-desc {
+	.FollowArticleSort .panel-user .panel-user-content .panel-user-desc {
 	    color: #999999;
 	    font-size: 13px;
 	    line-height: 1.2;
@@ -202,22 +209,22 @@
 	    -webkit-box-orient: vertical;
 	    -webkit-line-clamp: 2;
 	}
-	.userFollow .panel-user .panel-user-right{
+	.FollowArticleSort .panel-user .panel-user-right{
 		display: flex;
     	text-align: center;
 	}
-	.userFollow .panel-user .panel-user-right .btn{
+	.FollowArticleSort .panel-user .panel-user-right .btn{
 		line-height: 30px;
 		height: 30px;
 		background: #fff;
 		border: 1px solid #09BB07;
 		color: #09BB07;
 	}
-	.userFollow .panel-user .panel-user-right .btn.active{
+	.FollowArticleSort .panel-user .panel-user-right .btn.active{
 		color: #999;
 		border: 1px solid #999;
 	}
-	.userFollow .panel-user .panel-user-right .btn .icon{
+	.FollowArticleSort .panel-user .panel-user-right .btn .icon{
 		font-size: 12px;
 	}
 </style>

@@ -104,7 +104,7 @@ router.post('/detail',(req,res)=>{
 	})
 });
 
-// 插入
+// 增加帖子
 router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let articleInsertSql = $sql.article.insert;
 	let articleImagesInsertSql = 'insert into article_image (article_id,article_image_url)values';

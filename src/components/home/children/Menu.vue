@@ -32,7 +32,7 @@
 				  <grid-item v-for="item in followList" :key="item.sort_article_id" :link="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
 				  	<div class="grid-center">
 				  		<span>{{item.sort_article_name}}</span>
-				  		<badge text="8"></badge>
+				  		<badge text="1"></badge>
 				  	</div>
 				  </grid-item>
 			</grid>

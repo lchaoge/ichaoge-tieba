@@ -62,14 +62,12 @@ export default {
 	  					this.$store.dispatch("setUser",user[0])
 	  					let routerName = this.pageData.router.name
 	  					let query = this.pageData.router.query
-	  					debugger
 	  					this.$router.push({
 	  						name:routerName,
 	  						query:query
 	  					})
 	  				}else{
 	  					this.$vux.toast.text('账号或密码错误', 'bottom')
-	  					this.pageData.toast.showPositionValue = true
 	  				}
 	  			}else{
 	  				this.$store.dispatch("setUser",null)

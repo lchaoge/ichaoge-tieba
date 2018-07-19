@@ -32,26 +32,60 @@
 				    </div>
 				</div>
 	    	</div>
+	    	<div style="height:44px;">
+	    		<sticky scroll-box="" ref="sticky" :offset="46" :check-sticky-support="false">
+			        <tab :line-width="1">
+			          	<tab-item selected>全部回复</tab-item>
+			          	<tab-item>只看楼主</tab-item>
+			        </tab>
+		      	</sticky>
+		    </div>
+		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+		    	<div class="">
+			    	
+			    </div>
+			    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
+			      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+			      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+			      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			    </div>
+			    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+			      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+			      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+			      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+			    </div>
+	    	</scroller>
 	    </div>
-	    <div style="height:44px;">
-	      	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false">
-		        <tab :line-width="1">
-		          	<tab-item selected>全部回复</tab-item>
-		          	<tab-item>只看楼主</tab-item>
-		        </tab>
-	      </sticky>
+	    <div class="footer" slot="bottom">
+	    	<group>
+	    		<x-textarea placeholder="说说你的看法..." @on-focus="textareaFocus" :readonly="true" :show-counter="false" :rows="1" autosize :max="200"></x-textarea>
+	    	</group>
+	    </div>
+	    <div v-transfer-dom>
+	      	<popup v-model="stayMessage.show" position="bottom" max-height="50%">
+      			<group>
+      				<div class="flexDiv">
+			          	<x-textarea placeholder="说说你的看法..." ref="messageContent" v-model="stayMessage.form.message_content" :show-counter="false" :rows="1" autosize :max="200"></x-textarea>
+			          	<a @click="insertStayMessageEvt">发表</a>
+		          	</div>
+		        </group>
+	      	</popup>
 	    </div>
 	</view-box>
 </template>
 
 <script>
-	import {Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {Popup,InlineLoading,Scroller,Badge,ViewBox,XHeader,XTextarea,XInput,Group,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		Popup,
+	  		InlineLoading,
+	  		Scroller,
 	  		XImg,
 	  		Previewer,
 		  	ViewBox,
@@ -60,19 +94,34 @@
 		  	XInput,
 		  	Group,
 		  	Badge,
-		  	Alert,
-		  	Toast,
 		  	Sticky,
 		  	Tab,
 		  	TabItem
 	  	},
 		data(){
 			return {
+				currentUser:{},
+				stayMessage:{
+					show:false,
+					form:{
+						message_content:''
+					}
+				},
+				pullupEnabled: true,
+		      	status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	},
 				queryObj:{
 					article_id:'',
 					detail:{
 						images:[]
-					}
+					},
+					currentPage:1,
+		    		pageSize:10,
+		    		count:0,
+		    		pageCount:0,
+					list:[]
 				},
 				options: {
 			        getThumbBoundsFn (index) {
@@ -94,8 +143,75 @@
 		created(){
 			this.queryObj.article_id = this.$route.query.article_id
 			this.updateClick()
+			this.$Apis.getIntnetIP()
+			this.currentUser = this.$store.getters.currentUser
 		},
 		methods:{
+			insertStayMessageEvt(){
+				this.stayMessage.show = false
+				let params = {
+					user_id:this.queryObj.detail.user_id,
+					article_id:this.queryObj.detail.article_id,
+					stay_user_id:this.currentUser.user_id,
+					stay_user_ip:returnCitySN.cip,
+					message_content:this.stayMessage.form.message_content
+				}
+				
+				this.$Axios.post(this.$Urls.POST_STAYMESSAGE_INSERT,params).then(res=>res.data).then((res)=>{
+		  			if(res.code === '0000'){
+	  					// 显示
+	  					this.$vux.toast.show({
+						 	text: '发送成功',
+						 	time: '1000'
+						})
+	  					this.stayMessage.form.message_content = ""		  		
+						this.refresh()
+		  			}else{
+		  				this.$vux.toast.text('填写失败', 'bottom')
+		  			}
+		  		}).catch(err=>console.log("系统错误："+err))
+			},
+			textareaFocus(){
+				let isLogin = this.$store.getters.isLogin
+				if(!isLogin){
+					this.$router.push({
+						name:'loginLink',
+						query:{
+							article_id:this.queryObj.article_id
+						}
+					})
+				}else{
+					this.stayMessage.show = true
+					this.$refs.messageContent.focus()
+					this.currentUser = this.$store.getters.currentUser
+				}
+			},
+			loadMore () {
+		      	setTimeout(() => {
+			        this.queryObj.currentPage++
+			        if(this.queryObj.currentPage<this.queryObj.pageCount){
+			        	this.queryEvt()
+			        	setTimeout(() => {
+				          this.$refs.scroller.donePullup()
+				        }, 10)
+			        }else{
+			        	this.$refs.scroller.disablePullup()
+			        }
+		      	}, 2000)
+		    },
+		    refresh () {
+		      	setTimeout(() => {
+			        this.queryObj.currentPage = 1
+			        this.queryObj.list = []
+			        this.queryEvt()
+			        this.$nextTick(() => {
+			          setTimeout(() => {
+			            this.$refs.scroller.donePulldown()
+			            this.pullupEnabled && this.$refs.scroller.enablePullup()
+			          }, 10)
+			        })
+		      	}, 2000)
+		    },
 			updateClick(){
 				let params = {
 					article_id:this.queryObj.article_id
@@ -228,5 +344,28 @@
 	.articleIndex .content{
 		margin-top: 46px;
 	}
-	
+	.articleIndex .footer{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 40px;
+		overflow: hidden;
+	}
+	.articleIndex .footer .vux-no-group-title,.vux-popup-dialog .vux-no-group-title{
+		margin-top: 0;
+	}
+	.articleIndex .footer .weui-cell,.flexDiv .weui-cell{
+		padding: 6px 10px;
+	}
+	.flexDiv{
+		display: -webkit-flex; /* Safari */
+  		display: flex;
+  		justify-content:center;
+	}
+	.flexDiv a{
+		flex: 1;
+		text-align: center;
+		line-height: 40px;
+	}
 </style>

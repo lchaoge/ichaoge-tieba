@@ -1,9 +1,9 @@
-var models = require('../db');
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
-var $sql = require('../sqlMapping');
-var crypto = require('crypto');
+const models = require('../db');
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+const $sql = require('../sqlMapping');
+const crypto = require('crypto');
 const commonController = require('./base/CommonController')
 
 // 连接数据库

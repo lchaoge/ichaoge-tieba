@@ -16,19 +16,19 @@
 					</div>
 					<div class="panel-user-right">
 						<div class="panel-user-name">{{articleSort.sort_article_name}}吧</div>
-						<div class="panel-user-desc">{{articleSort.desc}}</div>	
+						<div class="panel-user-desc">{{articleSort.desc?articleSort.desc:'暂无签名'}}</div>	
 					</div>
 				</div>
 	    	</div>
 	    	<div style="height:44px;">
-		      	<sticky scroll-box="" ref="sticky" :offset="0" :check-sticky-support="false" >
+		      	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false">
 			        <tab :line-width="1">
 			          	<tab-item selected @on-item-click="essenceEvt(0)">全部</tab-item>
 			          	<tab-item @on-item-click="essenceEvt(1)">精华</tab-item>
 			        </tab>
 		      	</sticky>
 		    </div>
-		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-170" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 		    	<div class="">
 			    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
 						<div class="panel-user mb10">
@@ -48,7 +48,7 @@
 							<p class="panel-content-text">{{item.article_name}}</p>
 							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
 						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-						      		<x-img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>
+						      		<img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;" />
 						      	</flexbox-item>
 						    </flexbox>
 						</div>
@@ -153,7 +153,6 @@
 			        }else{
 			        	this.$refs.scroller.disablePullup()
 			        }
-		        
 		      	}, 2000)
 		    },
 		    refresh () {
@@ -304,6 +303,10 @@
 	    color: #333;
 	    line-height: 22px;
 	    margin-bottom: 6px;
+	}
+	.articleSortIndex .panel-user-desc{
+		color: #999;
+		font-size: 14px;
 	}
 	.articleSortIndex .panel-user-right .panel-user-more {
 	    color: #a3a3a3;
