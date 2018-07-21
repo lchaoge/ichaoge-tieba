@@ -34,7 +34,7 @@ export default class UrlMapping {
 	
 		// 评论
 		this.POST_STAYMESSAGE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/insert';   // 插入
-		
+		this.POST_STAYMESSAGE_QUERYFLOORALL = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryFloorAll';   // 查询评论
 	}
 	
 }

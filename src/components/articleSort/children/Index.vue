@@ -20,69 +20,67 @@
 					</div>
 				</div>
 	    	</div>
-	    	<div style="height:44px;">
-		      	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false">
-			        <tab :line-width="1">
-			          	<tab-item selected @on-item-click="essenceEvt(0)">全部</tab-item>
-			          	<tab-item @on-item-click="essenceEvt(1)">精华</tab-item>
-			        </tab>
-		      	</sticky>
-		    </div>
-		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
-		    	<div class="">
-			    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
-						<div class="panel-user mb10">
-							<div class="panel-user-photo">
-								<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
-							</div>
-							<div class="panel-user-right">
-								<div class="panel-user-name">
-									{{item.user_name}}
-								</div>
-								<div class="panel-user-more">
-									<span>{{item.article_time}}</span>
-								</div>	
-							</div>
+	    </div>
+      	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false" :disabled="stickyDisabled">
+	        <tab :line-width="1">
+	          	<tab-item selected @on-item-click="essenceEvt(0)">全部</tab-item>
+	          	<tab-item @on-item-click="essenceEvt(1)">精华</tab-item>
+	        </tab>
+      	</sticky>
+      	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+	    	<div class="">
+		    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
+					<div class="panel-user mb10">
+						<div class="panel-user-photo">
+							<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
 						</div>
-						<div class="panel-content" @click="detailEvt(item.article_id)">
-							<p class="panel-content-text">{{item.article_name}}</p>
-							<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-						      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-						      		<img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;" />
-						      	</flexbox-item>
-						    </flexbox>
-						</div>
-						<div class="panel-button">
-							<flexbox :gutter="0">
-						        <flexbox-item><div class="panel-flex-button">
-						        	<i class="icon iconfont icon-fenxiang"></i>
-						        	<span>11</span>
-						        </div></flexbox-item>
-						      	<flexbox-item><div class="panel-flex-button">
-						      		<i class="icon iconfont icon-bianji"></i>
-						        	<span>29</span>
-						      	</div></flexbox-item>
-						      	<flexbox-item><div class="panel-flex-button">
-						      		<i class="icon iconfont icon-buxing"></i>
-						        	<span>{{item.article_click}}</span>
-						      	</div></flexbox-item>
-						    </flexbox>
+						<div class="panel-user-right">
+							<div class="panel-user-name">
+								{{item.user_name}}
+							</div>
+							<div class="panel-user-more">
+								<span>{{item.article_time}}</span>
+							</div>	
 						</div>
 					</div>
-			    </div>
-			    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
-			      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-			      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
-			      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-			    </div>
-			    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
-			      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
-			      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-			      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-			      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
-			    </div>
-		    </scroller>
-	    </div>
+					<div class="panel-content" @click="detailEvt(item.article_id)">
+						<p class="panel-content-text">{{item.article_content}}</p>
+						<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+					      		<img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;" />
+					      	</flexbox-item>
+					    </flexbox>
+					</div>
+					<div class="panel-button">
+						<flexbox :gutter="0">
+					        <flexbox-item><div class="panel-flex-button">
+					        	<i class="icon iconfont icon-fenxiang"></i>
+					        	<span>11</span>
+					        </div></flexbox-item>
+					      	<flexbox-item><div class="panel-flex-button">
+					      		<i class="icon iconfont icon-bianji"></i>
+					        	<span>29</span>
+					      	</div></flexbox-item>
+					      	<flexbox-item><div class="panel-flex-button">
+					      		<i class="icon iconfont icon-buxing"></i>
+					        	<span>{{item.article_click}}</span>
+					      	</div></flexbox-item>
+					    </flexbox>
+					</div>
+				</div>
+		    </div>
+		    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
+		      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+		      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		    </div>
+		    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+		      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+		      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+		    </div>
+	    </scroller>
 		<div class="insert" @click="insertEvt">
 			<i slot="icon" class="icon iconfont icon-roundadd"></i>
 		</div>
@@ -117,6 +115,7 @@
 	  	},
 	  	data(){
 			return {
+				stickyDisabled:typeof navigator !== 'undefined' && /iphone/i.test(navigator.userAgent) && /ucbrowser/i.test(navigator.userAgent),
 				pullupEnabled: true,
 		      	status: {
 			        pullupStatus: 'default',
@@ -325,7 +324,7 @@
 		font-size: 36px !important;
     	color: #09BB07 !important;
 	}
-	.weui-tab__panel{
+	.articleSortIndex .weui-tab__panel{
 		padding-bottom: 0 !important;
 	}
 </style>

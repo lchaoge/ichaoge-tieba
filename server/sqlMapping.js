@@ -34,7 +34,9 @@ module.exports = {
 	},
 	// 评论表
 	stayMessage:{
-		queryByFloor :'select floor from stay_message order by floor desc limit 1', // 查询最后一个插入的楼层
+		queryByFloor :'select floor from stay_message where article_id = ? order by floor desc limit 1', // 查询最后一个插入的楼层
 		insert : 'insert into stay_message (article_id,user_id,stay_user_id,parent_id,floor,message_content,stay_user_ip,message_stay_time)values(?,?,?,?,?,?,?,?)', // 插入评论
+		queryFloorAll : 'select sm.*,u.user_name,u.user_image_url from `user` as u join stay_message as sm on u.user_id = sm.stay_user_id where sm.article_id = ? group by sm.floor order by sm.floor',  // 楼层查询
+//		queryFloorByParentId : 'select s.*,u.user_name,u.user_image_url from stay_message as s join user as u on s.stay_user_id = u.user_id where s.article_id = ? and s.parent_id = ? order by s.stay_id', // 楼层评论
 	}
 }

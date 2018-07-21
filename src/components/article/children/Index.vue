@@ -32,31 +32,54 @@
 				    </div>
 				</div>
 	    	</div>
-	    	<div style="height:44px;">
-	    		<sticky scroll-box="" ref="sticky" :offset="46" :check-sticky-support="false">
-			        <tab :line-width="1">
-			          	<tab-item selected>全部回复</tab-item>
-			          	<tab-item>只看楼主</tab-item>
-			        </tab>
-		      	</sticky>
-		    </div>
-		    <scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
-		    	<div class="">
-			    	
-			    </div>
-			    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
-			      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-			      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
-			      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-			    </div>
-			    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
-			      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
-			      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-			      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-			      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
-			    </div>
-	    	</scroller>
 	    </div>
+		<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false" :disabled="stickyDisabled">
+	        <tab :line-width="1">
+	          	<tab-item selected>全部回复</tab-item>
+	          	<tab-item>只看楼主</tab-item>
+	        </tab>
+      	</sticky>
+	    <!--<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">-->
+    	<div class="stayMessage">
+	      	<div class="m-cell" v-for="item in stayMessageList">
+		        <div class="m-img">
+		        	<router-link :to="{name:'userIndexLink'}"><img :src="item.user_image_url" /></router-link>
+		        </div>
+		        <div class="m-box">
+		          	<h3>{{item.user_name}}</h3>
+		          	<div class="m-desc">
+		          		<span class="m-floor">第{{item.floor}}楼</span>|
+		          		<span class="m-time">{{item.message_stay_time}}</span>
+		          	</div>
+		          	<p class="m-content">{{item.message_content}}</p>
+		          	<template v-if="item.children.length>0">
+				        <cell-box v-for="el in item.children" :key="el.stay_id" v-if="item.children.length<2">
+				        	<div class="item">
+				        		<a>{{el.user_name}}:</a>
+				        		<span v-if="item.user_id != el.user_id">回复</span>
+				        		<a v-if="item.user_id != el.user_id">{{el.user_id}}:</a>
+				        		<span>{{el.message_content}}</span>
+							</div>	
+				        </cell-box>
+				    </template>	
+		        </div>
+	      	</div>
+	      	<div v-if="stayMessageList.length<=0">
+	      		<load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
+	      	</div>
+	    </div>
+		    <!--<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
+		      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+		      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		    </div>
+		    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+		      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+		      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+		    </div>
+    	</scroller>-->
 	    <div class="footer" slot="bottom">
 	    	<group>
 	    		<x-textarea placeholder="说说你的看法..." @on-focus="textareaFocus" :readonly="true" :show-counter="false" :rows="1" autosize :max="200"></x-textarea>
@@ -76,13 +99,17 @@
 </template>
 
 <script>
-	import {Popup,InlineLoading,Scroller,Badge,ViewBox,XHeader,XTextarea,XInput,Group,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {LoadMore,Masker,CellBox,Cell,Popup,InlineLoading,Scroller,Badge,ViewBox,XHeader,XTextarea,XInput,Group,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		LoadMore,
+	  		Masker,
+	  		CellBox,
+	  		Cell,
 	  		Popup,
 	  		InlineLoading,
 	  		Scroller,
@@ -100,6 +127,7 @@
 	  	},
 		data(){
 			return {
+				stickyDisabled:typeof navigator !== 'undefined' && /iphone/i.test(navigator.userAgent) && /ucbrowser/i.test(navigator.userAgent),
 				currentUser:{},
 				stayMessage:{
 					show:false,
@@ -107,6 +135,7 @@
 						message_content:''
 					}
 				},
+				stayMessageList:[],
 				pullupEnabled: true,
 		      	status: {
 			        pullupStatus: 'default',
@@ -147,6 +176,18 @@
 			this.currentUser = this.$store.getters.currentUser
 		},
 		methods:{
+			queryFloorAll(){
+				let params = {
+					article_id:this.queryObj.detail.article_id
+				}
+				this.$Axios.post(this.$Urls.POST_STAYMESSAGE_QUERYFLOORALL,params).then(res=>res.data).then((res)=>{
+		  			if(res.code === '0000'){
+	  					this.stayMessageList = res.data
+		  			}else{
+		  				this.$vux.toast.text('查询评论失败', 'bottom')
+		  			}
+		  		}).catch(err=>console.log("系统错误："+err))
+			},
 			insertStayMessageEvt(){
 				this.stayMessage.show = false
 				let params = {
@@ -165,9 +206,9 @@
 						 	time: '1000'
 						})
 	  					this.stayMessage.form.message_content = ""		  		
-						this.refresh()
+						this.queryFloorAll()
 		  			}else{
-		  				this.$vux.toast.text('填写失败', 'bottom')
+		  				this.$vux.toast.text('发送失败', 'bottom')
 		  			}
 		  		}).catch(err=>console.log("系统错误："+err))
 			},
@@ -243,6 +284,7 @@
 		  				})
 		  				obj.images = images
 		  				this.queryObj.detail = obj 
+		  				this.queryFloorAll()
 		  				this.$Apis.insertLatelys(this.queryObj.detail.sort_article_id)
 		  				
 		  			}else{
@@ -367,5 +409,70 @@
 		flex: 1;
 		text-align: center;
 		line-height: 40px;
+	}
+	.stayMessage{
+		background: #fff;
+		overflow: hidden;
+	}
+	.articleIndex .m-cell{
+		display: flex;
+		display: -webkit-flex; /* Safari */
+		align-items: stretch;
+		align-content:stretch;
+		padding:10px;
+		position: relative;
+	}
+	.articleIndex .m-cell:after{
+		content: " "; 
+	    position: absolute;
+	    left: 0;
+	    bottom: 0;
+	    right: 0;
+	    height: 0px;
+	    border-top: 1px solid #D9D9D9; 
+	    color: #D9D9D9; 
+	    -webkit-transform-origin: 0 0;
+	    transform-origin: 0 0;
+	    -webkit-transform: scaleY(0.5);
+	    transform: scaleY(0.5);
+	}
+	.articleIndex .m-cell .m-img{
+		text-align: center;
+		margin-right: 10px;
+	}
+	.articleIndex .m-cell .m-img img{
+		border-radius: 50%;
+		overflow: hidden;
+		width: 30px;
+		height: 30px;
+	}
+	.articleIndex .m-cell .m-box{
+		flex: 1;
+		width:100%;
+		flex-shrink:0;
+	}
+	.articleIndex .m-cell .m-box h3{
+		color: #000;
+		margin-bottom: 8px;
+	}
+	.articleIndex .m-cell .m-box .m-desc{
+		margin-bottom: 8px;
+		color: #999;
+		font-size: 14px;
+	}
+	.articleIndex .m-cell .m-box .m-content{
+		margin-bottom: 8px;
+		font-weight: 500;		
+	}
+	.articleIndex .m-cell .m-box .weui-cell{
+		background: #efeff4;
+	}
+	.articleIndex .m-cell .m-box .weui-cell:before{
+		border-top: 0px none;
+		height: 0;
+		color: inherit;
+	}
+	.articleIndex .m-cell .m-box .weui-cell a{
+		color: #0366d6;
 	}
 </style>

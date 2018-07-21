@@ -32,10 +32,10 @@
 							</div>
 							<div class="panel-content" @click="detailEvt(item.article_id)">
 								<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
-								<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
+								<flexbox class="mb10" v-if="item.images.length>0">
 							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-							      		<img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;" />
-							      		<!--<x-img :offset='300' :src="img.article_image_url" :webp-src="`${img.article_image_url}?type=webp`" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;"></x-img>-->
+							      		<!--<img :src="img.article_image_url" default-src="./static/images/tieba.jpg" style="width:100%;height:8rem;" />-->
+							      		<div style="width:100%;height:8rem;" v-bind:style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize: '100% auto'}"></div>
 							      	</flexbox-item>
 							    </flexbox>
 							</div>
