@@ -1,8 +1,6 @@
 <template>
 	<view-box ref="viewBox" class="userFollow">
-		<x-header :left-options="{backText: ''}" slot="header">
-			<h1 style="color: #666;">我关注的人</h1>
-		</x-header>
+		<x-header :left-options="{backText: ''}" slot="header">我关注的人</x-header>
 		<div style="margin-top: 46px;">
 			<scroller lock-x :scrollbar-y=false height="-46" class="vux-scroller">
 		    	<div class="panel">
@@ -82,56 +80,6 @@
 </script>
 
 <style>
-	.vux-header{
-		background-color: #fff !important;
-		position: fixed !important;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 999;
-	}
-	.vux-header:after {
-	    content: " ";
-	    position: absolute;
-	    left: 0;
-	    bottom: 0;
-	    right: 0;
-	    height: 1px;
-	    border-top: 1px solid #C0BFC4;
-	    color: #C0BFC4;
-	    -webkit-transform-origin: 0 0;
-	    transform-origin: 0 0;
-	    -webkit-transform: scaleY(0.5);
-	    transform: scaleY(0.5);
-	}
-	.vux-header .vux-header-title{
-		margin: 0 100px !important;
-	}
-	.vux-header{
-		background-color: #fff !important;
-		position: fixed !important;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 999;
-	}
-	.vux-header:after {
-	    content: " ";
-	    position: absolute;
-	    left: 0;
-	    bottom: 0;
-	    right: 0;
-	    height: 1px;
-	    border-top: 1px solid #C0BFC4;
-	    color: #C0BFC4;
-	    -webkit-transform-origin: 0 0;
-	    transform-origin: 0 0;
-	    -webkit-transform: scaleY(0.5);
-	    transform: scaleY(0.5);
-	}
-	.vux-header .vux-header-title{
-		margin: 0 100px !important;
-	}
 	.userFollow .panel{
 		overflow: hidden;
 		padding: 10px;
@@ -155,8 +103,8 @@
 	    bottom: 0;
 	    right: 0;
 	    height: 1px;
-	    border-top: 1px solid #D9D9D9;
-	    color: #D9D9D9;
+	    border-top: 1px solid #ededed;
+	    color: #ededed;
 	    -webkit-transform-origin: 0 0;
 	    transform-origin: 0 0;
 	    -webkit-transform: scaleY(0.5);
@@ -194,6 +142,8 @@
 	    word-wrap: normal;
 	    word-wrap: break-word;
 	    word-break: break-all;
+	    color: #090909;
+	    margin-bottom: 6px;
 	}
 	.userFollow .panel-user .panel-user-content .panel-user-desc {
 	    color: #999999;
@@ -210,11 +160,13 @@
     	text-align: center;
 	}
 	.userFollow .panel-user .panel-user-right .btn{
+		padding: 0 8px;
 		line-height: 30px;
 		height: 30px;
 		background: #fff;
-		border: 1px solid #09BB07;
-		color: #09BB07;
+		border: 1px solid #55b5e5;
+		color: #55b5e5;
+		border-radius: 3px;
 	}
 	.userFollow .panel-user .panel-user-right .btn.active{
 		color: #999;

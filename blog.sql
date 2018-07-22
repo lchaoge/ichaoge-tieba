@@ -16,7 +16,7 @@ Date: 2018-07-21 11:53:46
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for about_blog
+-- Table structure for blog
 -- ----------------------------
 DROP TABLE IF EXISTS `about_blog`;
 CREATE TABLE `about_blog` (

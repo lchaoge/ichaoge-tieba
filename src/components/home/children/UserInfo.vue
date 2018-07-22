@@ -26,19 +26,23 @@
 		      <div slot="content" class="card-demo-flex card-demo-content01">
 		        <div class="vux-1px-r" @click="goUserFollow">
 		          	<countup :start-val="0" :end-val="pageData.userFollow.length" :duration="2"></countup>
-		          	<br/>关注
+		          	<br/>
+		          	<span class="fs15">关注</span>
 		        </div>
 		        <div class="vux-1px-r" @click="goUserFans">
 		          	<countup :start-val="0" :end-val="pageData.fansList.length" :duration="2"></countup>
-		          	<br/>粉丝
+		          	<br/>
+		          	<span class="fs15">粉丝</span>
 		        </div>
 		        <div class="vux-1px-r" @click="goUserFollowArticleSort">
 		        	<countup :start-val="0" :end-val="pageData.followList.length" :duration="2"></countup>
-		          	<br/>关注的吧
+		          	<br/>
+		          	<span class="fs15">关注的吧</span>
 		        </div>
 		        <div>
 		        	<countup :start-val="0" :end-val="pageData.articleList.length" :duration="2"></countup>
-		          	<br/>帖子
+		          	<br/>
+		          	<span class="fs15">帖子</span>
 		        </div>
 		      </div>
 		    </card>
@@ -229,21 +233,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import '~vux/src/styles/1px.less';
-.vux-header:after {
-    content: " ";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    border-top: 1px solid #C0BFC4;
-    color: #C0BFC4;
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-}
 .vux-scroller{
 	margin-top: 46px;
 }
@@ -263,7 +252,7 @@ export default {
 	width: 60px;
 	overflow: hidden;
 	box-sizing: border-box;
-	border: 1px solid #D0CDD1;
+	border: 1px solid #ddd;
 	border-radius: 100%;
 }
 .user-img img{
@@ -281,9 +270,10 @@ export default {
 	padding-left: 15px;
 	margin: 9px 0 10px;
 	font-size: 18px;
+	color: #000;
 }
 .user-right p{
-	color: #999;
+	color: #666;
 	padding-left: 15px;
 }
 .weui-panel{
@@ -311,9 +301,12 @@ export default {
   font-size: 12px;
 }
 .card-demo-flex span {
-  color: #f74c31;
+  color: #000;
+  font-size: 18px;
 }
-.userinfo .weui-cells{
-	margin-top: 0 !important;
+.card-demo-flex span.fs15{
+	font-size: 15px;
+	color: #666;
 }
+
 </style>

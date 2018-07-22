@@ -197,8 +197,8 @@ export default {
 	    bottom: 0;
 	    right: 0;
 	    height: 1px;
-	    border-bottom: 1px solid #D9D9D9;
-	    color: #D9D9D9;
+	    border-bottom: 1px solid #f5f5f5;
+	    color: #f5f5f5;
 	    -webkit-transform-origin: 0 100%;
 	    transform-origin: 0 100%;
 	    -webkit-transform: scaleY(0.5);
@@ -211,5 +211,15 @@ export default {
 	}
 	.menu .weui-grid .grid-center .vux-badge{
 		float: right;
+	}
+	.menu .weui-grid:before{
+		top: 8px;
+		bottom: 8px;
+		border-right: 1px solid #f5f5f5;
+    	color: #f5f5f5;
+	}
+	.menu .weui-grid:after{
+		border-bottom: 1px solid #f5f5f5;
+    	color: #f5f5f5;
 	}
 </style>

@@ -315,31 +315,6 @@
 </script>
 
 <style>
-	.vux-header{
-		background-color: #fff !important;
-		position: fixed !important;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 999;
-	}
-	.vux-header:after {
-	    content: " ";
-	    position: absolute;
-	    left: 0;
-	    bottom: 0;
-	    right: 0;
-	    height: 1px;
-	    border-top: 1px solid #C0BFC4;
-	    color: #C0BFC4;
-	    -webkit-transform-origin: 0 0;
-	    transform-origin: 0 0;
-	    -webkit-transform: scaleY(0.5);
-	    transform: scaleY(0.5);
-	}
-	.vux-header .vux-header-title{
-		margin: 0 100px !important;
-	}
 	.articleIndex .panel {
 	    background: #fff;
 	    margin-bottom: 10px;

@@ -21,11 +21,9 @@
 									<img :src="item.user_image_url" />
 								</div>
 								<div class="panel-user-right">
-									<div class="panel-user-name">
-										{{item.user_name}}
-									</div>
+									<div class="panel-user-name">{{item.user_name}}</div>
 									<div class="panel-user-more">
-										<span @click="sortArticleEvt(item.sort_article_id)">{{item.sort_article_name}}吧</span> | 
+										<span class="vux-1px-r" @click="sortArticleEvt(item.sort_article_id)">{{item.sort_article_name}}吧</span>
 										<span>{{item.article_time}}</span>
 									</div>	
 								</div>
@@ -212,44 +210,22 @@ export default {
 </script>
 
 <style>
-	.vux-header{
-		background-color: #fff !important;
-		position: fixed !important;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 999;
-	}
-	.vux-header:after {
-	    content: " ";
-	    position: absolute;
-	    left: 0;
-	    bottom: 0;
-	    right: 0;
-	    height: 1px;
-	    border-top: 1px solid #C0BFC4;
-	    color: #C0BFC4;
-	    -webkit-transform-origin: 0 0;
-	    transform-origin: 0 0;
-	    -webkit-transform: scaleY(0.5);
-	    transform: scaleY(0.5);
-	}
-	.vux-header .vux-header-title{
+	.index .vux-header .vux-header-title{
 		margin: 0 100px !important;
 	}
-	.vux-tab-wrap{
+	.index .vux-tab-wrap{
 		padding-top: 41px !important;
 	}
-	.vux-tab-container {
+	.index .vux-tab-container {
     	height: 41px !important;
     }
-    .vux-tab{
+    .index .vux-tab{
     	height: 41px !important;
     }
-    .vux-slider{
+    .index .vux-slider{
     	margin-top: 46px;
     }
-    .weui-tabbar{
+    .index .weui-tabbar{
     	position: fixed !important;
     	left: 0;
     }
@@ -270,7 +246,7 @@ export default {
     .index .panel-user-photo{
     	float: left;
     	border-radius: 50px;
-    	border: 1px solid #A3A3A3;
+    	border: 1px solid #dddddd;
     	overflow: hidden;
     	width: 50px;
     	height: 50px;
@@ -286,17 +262,25 @@ export default {
     	padding-left: 60px;
     }
     .index .panel-user-name{
-    	color: #333;
+    	color: #2d2d2d;
     	line-height: 22px;
+    	height: 22px;
     	margin-bottom: 6px;
     }
     .index .panel-user-right .panel-user-more{
-    	color: #a3a3a3;
+    	color: #979797;
+    	font-size: 14px;
+    }
+    .index .panel-user-right .panel-user-more .vux-1px-r{
+    	padding-right: 10px;
+    	margin-right: 10px;
     }
     .index .panel-content-text{
     	margin: 0 0 10px;
+    	color: #060606;
     }
     .index .panel-flex-button{
     	text-align: center;
+    	color: #606060;
     }
 </style>
