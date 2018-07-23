@@ -4,9 +4,8 @@
 			<h1 style="color: #666;">我关注的吧</h1>
 		</x-header>
 		<div style="margin-top: 46px;">
-			<scroller lock-x :scrollbar-y=false height="-46" class="vux-scroller">
+			<scroller lock-x :scrollbar-y=false use-pullup height="-46" @on-pullup-loading="loadMore" v-model="queryObj.status" ref="scroller">
 		    	<div class="panel">
-		    		<divider v-if="queryObj.list.length<=0">暂无数据</divider>
 		    		<div class="panel-user" v-for="item in queryObj.list" :key="item.sort_article_id" @click="detailEvt(item)">
 						<div class="panel-user-photo">
 							<x-img :src="item.image_url" default-src="../static/images/tieba.jpg"></x-img>
@@ -16,20 +15,28 @@
 							<div class="panel-user-desc">{{item.desc?item.desc:'暂无签名'}}</div>
 						</div>
 					</div>
+					<load-more v-show="queryObj.status.pullupStatus === 'disabled'" :show-loading="false" tip="您已经碰到我的底线了" background-color="#fbf9fe"></load-more>
 		    	</div>
+		    	<div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
+			      	<p v-show="queryObj.status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+			      	<p v-show="queryObj.status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+			      	<p v-show="queryObj.status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	</div>
 		    </scroller>	
 		</div>
 	</view-box>
 </template>
 
 <script>
-	import {XButton,Scroller,ViewBox,XHeader,XImg,TransferDom,Divider } from 'vux'
+	import {XButton,Scroller,ViewBox,XHeader,XImg,TransferDom,Divider,LoadMore,InlineLoading} from 'vux'
 	export default{
 		name: 'userFollow',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		InlineLoading,
+	  		LoadMore,
 	  		Divider,
 	  		XButton,
 	  		Scroller,
@@ -40,6 +47,14 @@
 	  	data(){
 			return {
 				queryObj:{
+					status: {
+				        pullupStatus: 'default',
+				        pulldownStatus: 'default'
+			      	},
+			      	currentPage:1,
+		    		pageSize:20,
+		    		count:0,
+		    		pageCount:0,
 					list:[]
 				}
 			}
@@ -53,19 +68,41 @@
 			})
 		},
 		created() {
-			this.queryAllByUserIdEvt()
+			
+		},
+		mounted(){
+			this.queryEvt()
 		},
 		methods:{
+			loadMore () {
+		        this.queryObj.currentPage++
+		        this.queryEvt()
+		    },
 			// 关注的吧
-			queryAllByUserIdEvt(){
-				let user = this.$store.getters.currentUser
+			queryEvt(){
 				let params = {
-					user_id:user.user_id
+					user_id:this.$store.getters.currentUser.user_id,
+					currentPage:this.queryObj.currentPage,
+		    		pageSize:this.queryObj.pageSize
 				}
-				this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOW,params).then(res=>res.data).then((res)=>{
+				this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOWPAGE,params).then(res=>res.data).then((res)=>{
 					if(res.code === "0000"){
-						if(res.data.length>0){
-							this.queryObj.list = res.data
+						if(res.data.list.length>0){
+							res.data.list.forEach(el=>{
+			  					this.queryObj.list.push(el)	
+			  				})
+			  				this.queryObj.currentPage = res.data.currentPage
+							this.queryObj.pageSize = res.data.pageSize
+							this.queryObj.count = res.data.count
+							this.queryObj.pageCount = res.data.pageCount
+							
+							this.queryObj.status.pullupStatus = 'default'
+						    this.$refs.scroller.reset()
+							if(this.queryObj.currentPage>=this.queryObj.pageCount){
+								this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
+							}
+						}else{
+							this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
 						}
 					}else{
 						this.$vux.toast.text('系统错误', 'bottom')
@@ -137,8 +174,10 @@
 	    -webkit-flex: 1;
 	    flex: 1;
 	    min-width: 0;
+	    height: 40px;
 	}
 	.FollowArticleSort .panel-user .panel-user-content .panel-user-name {
+		margin-bottom: 6px;
 	    font-weight: 400;
 	    font-size: 17px;
 	    width: auto;

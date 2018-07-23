@@ -25,12 +25,12 @@
 	    	<card>
 		      <div slot="content" class="card-demo-flex card-demo-content01">
 		        <div class="vux-1px-r" @click="goUserFollow">
-		          	<countup :start-val="0" :end-val="pageData.userFollow.length" :duration="2"></countup>
+		          	<countup :start-val="0" :end-val="pageData.userFollow[0].count" :duration="2"></countup>
 		          	<br/>
 		          	<span class="fs15">关注</span>
 		        </div>
 		        <div class="vux-1px-r" @click="goUserFans">
-		          	<countup :start-val="0" :end-val="pageData.fansList.length" :duration="2"></countup>
+		          	<countup :start-val="0" :end-val="pageData.fansList[0].count" :duration="2"></countup>
 		          	<br/>
 		          	<span class="fs15">粉丝</span>
 		        </div>
@@ -116,8 +116,8 @@ export default {
 		      	},
 		      	followList:[],
 		      	articleList:[],
-		      	fansList:[],
-		      	userFollow:[]
+		      	fansList:[{count:0}],
+		      	userFollow:[{count:0}]
 	    	},
 	    	
 	    }
@@ -131,17 +131,18 @@ export default {
 		})
 	},
 	created() {
-		this.pageData.currentUser = this.$store.getters.currentUser
-		
-		this.$Apis.inserttabbarSelected(4)
-		// @todo 关注
-		this.queryUserFollowEvt()
-		// @todo 粉丝
-		this.queryFansEvt()
-		// 关注的吧
-		this.queryFollowEvt()
-		// 帖子
-		this.queryArticleByUserId()
+		if(this.$store.getters.isLogin){
+			this.pageData.currentUser = this.$store.getters.currentUser
+			this.$Apis.inserttabbarSelected(4)
+			// @todo 关注
+			this.queryUserFollowEvt()
+			// @todo 粉丝
+			this.queryFansEvt()
+			// 关注的吧
+			this.queryFollowEvt()
+			// 帖子
+			this.queryArticleByUserId()
+		}
 	},
 	mounted(){
 		
@@ -164,7 +165,7 @@ export default {
 			let params = {
 				user_id:this.$store.getters.currentUser.user_id
 			}
-			this.$Axios.post(this.$Urls.POST_USER_FANS,params).then(res=>res.data).then((res)=>{
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_FANSCOUNT,params).then(res=>res.data).then((res)=>{
 				if(res.code === "0000"){
 					if(res.data.length>0){
 						this.pageData.fansList = res.data
@@ -181,7 +182,7 @@ export default {
 			let params = {
 				user_id:this.$store.getters.currentUser.user_id
 			}
-			this.$Axios.post(this.$Urls.POST_USER_FOLLOW,params).then(res=>res.data).then((res)=>{
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_FOLLOWCOUNT,params).then(res=>res.data).then((res)=>{
 				if(res.code === "0000"){
 					if(res.data.length>0){
 						this.pageData.userFollow = res.data

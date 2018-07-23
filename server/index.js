@@ -5,20 +5,22 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-const userApi = require('./controller/userController');
-const articleApi = require('./controller/articleController');
-const articleSortApi = require('./controller/articleSortController');
-const stayMessageApi = require('./controller/stayMessageController');
+const userController = require('./controller/userController');
+const userAttentionController = require('./controller/userAttentionController');
+const articleController = require('./controller/articleController');
+const articleSortController = require('./controller/articleSortController');
+const stayMessageController = require('./controller/stayMessageController');
 
 
 app.use(bodyParser.json({limit: '50mb'})); // 用来接收post提交的json数据
 app.use(bodyParser.urlencoded({limit: '50mb',extended:true})); // 也可以接收任何数据类型的数据，包括文本、视频、图片等
 
 // 后端api路由
-app.use('/wm/user', userApi);
-app.use('/wm/article', articleApi);
-app.use('/wm/articleSort', articleSortApi);
-app.use('/wm/stayMessage', stayMessageApi);
+app.use('/wm/user', userController);
+app.use('/wm/userAttention', userAttentionController);
+app.use('/wm/article', articleController);
+app.use('/wm/articleSort', articleSortController);
+app.use('/wm/stayMessage', stayMessageController);
 
 // 监听端口
 app.listen(3000);

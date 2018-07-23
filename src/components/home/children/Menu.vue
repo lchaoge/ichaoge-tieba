@@ -4,41 +4,43 @@
 			<a slot="right">
 				<i class="icon iconfont icon-shezhi"></i>
 			</a>
-			<span style="color: #666;">进吧</span>
+			进吧
 	    </x-header>
-	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
-	    	<div class="group">
-				<x-input placeholder="大家都在搜" @on-focus="searchEvt(value, $event)">
-			        <i slot="label" style="padding-right:10px;display:block;" class="icon iconfont icon-sousuo"></i>
-			    </x-input>
-			</div>	
-			<div class="lately">
-				<div class="title">
-					<h2>最近逛的吧</h2>
+	    <div style="margin-top: 46px;">
+	    <scroller lock-x :scrollbar-y=false height="-96" ref="scroller">
+	    	<div class="box">
+	    		<div class="group">
+					<x-input placeholder="大家都在搜" @on-focus="searchEvt(value, $event)">
+				        <i slot="label" style="padding-right:10px;display:block;" class="icon iconfont icon-sousuo"></i>
+				    </x-input>
+				</div>	
+				<div class="lately">
+					<div class="title">
+						<h2>最近逛的吧</h2>
+					</div>
+					<div class="content" v-if="latelyList.length>0">
+						<scroller lock-y :scrollbar-x=false >
+							<div class="box" :style="'width:' + boxWidth + 'px'">
+								<router-link class="item" v-for="item in latelyList" :key="item.sort_article_id" :to="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
+									<x-img :src="item.image_url" default-src="./static/images/tieba.jpg"></x-img>
+									<h3>{{item.sort_article_name}}</h3>
+								</router-link>	
+							</div>
+					    </scroller>
+					</div>
 				</div>
-				<div class="content" v-if="latelyList.length>0">
-					<scroller lock-y :scrollbar-x=false >
-						<div class="box" :style="'width:' + boxWidth + 'px'">
-							<router-link class="item" v-for="item in latelyList" :key="item.sort_article_id" :to="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
-								<x-img :src="item.image_url" default-src="./static/images/tieba.jpg"></x-img>
-								<h3>{{item.sort_article_name}}</h3>
-							</router-link>	
-						</div>
-				    </scroller>
-				</div>
-			</div>
-			<grid :cols="2" :show-lr-borders="false" v-if="isLogin && followList.length>0">
-				<h2>我关注的吧</h2>
-				  <grid-item v-for="item in followList" :key="item.sort_article_id" :link="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
-				  	<div class="grid-center">
-				  		<span>{{item.sort_article_name}}</span>
-				  		<badge text="1"></badge>
-				  	</div>
-				  </grid-item>
-			</grid>
+				<grid :cols="2" :show-lr-borders="false" v-if="isLogin && followList.length>0">
+					<h2>我关注的吧</h2>
+					  <grid-item v-for="item in followList" :key="item.sort_article_id" :link="{ name: 'articleSortIndexLink', query: { sort_article_id: item.sort_article_id }}">
+					  	<div class="grid-center">
+					  		<span>{{item.sort_article_name}}</span>
+					  		<badge text="1"></badge>
+					  	</div>
+					  </grid-item>
+				</grid>	
+	    	</div>
 	    </scroller>
-		
-	      
+	    </div>
 	</div>
 </template>
 

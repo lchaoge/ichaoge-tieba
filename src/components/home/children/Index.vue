@@ -109,7 +109,7 @@ export default {
 	    return {
 	    	queryObj:{
 	    		currentPage:1,
-	    		pageSize:10,
+	    		pageSize:20,
 	    		count:0,
 	    		pageCount:0,
 	    		list:[]

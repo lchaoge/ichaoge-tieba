@@ -36,16 +36,49 @@ router.post('/latelys',(req,res)=>{
 	})
 });
 // 关注的吧查询
-router.post('/follow',(req,res)=>{
+let followEvt = (user_id,callback)=>{
 	let sql = $sql.articleSort.follow;
-	let params = req.body;
-	conn.query(sql,[params.user_id],(err,result) => {
+	conn.query(sql,[user_id],(err,result) => {
 		if(err){
 			console.log('关注的吧查询错误：'+err)
 		}
 		if(result){
-			commonController.jsonWrite(res,result)
+			callback(result)
 		}
+	})
+}
+// 关注的吧分页查询
+router.post('/followPage',(req,res)=>{
+	let params = req.body;
+	followEvt(params.user_id,(c)=>{
+		let sql = $sql.articleSort.followPage;
+		let currentPage = parseInt(params.currentPage || 1);// 页码
+	    let end = parseInt(params.pageSize || 10); // 默认页数
+	    let start = (currentPage - 1) * end;
+	    
+		conn.query(sql,[params.user_id,start,end],(err,result) => {
+			if(err){
+				console.log('关注的吧分页查询错误：'+err)
+			}
+			if(result){
+				commonController.jsonWrite(res,{
+					currentPage:params.currentPage,
+					pageSize:params.pageSize,
+					count:c.length,
+					pageCount:Math.ceil(c.length/(params.currentPage*params.pageSize)),
+					list:result
+				})
+			}
+		})
+	})
+	
+});
+
+// 关注的吧查询
+router.post('/follow',(req,res)=>{
+	let params = req.body;
+	followEvt(params.user_id,(data)=>{
+		commonController.jsonWrite(res,data)
 	})
 });
 

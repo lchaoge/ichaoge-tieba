@@ -14,11 +14,17 @@ export default class UrlMapping {
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
 		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
 		this.POST_USER_LIKEUSERNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/user/likeUserName';   // 搜索用户
-		this.POST_USER_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/user/follow';   // 用户关注
-		this.POST_USER_FANS = (this.isLocalHost?'/apis':this.origin)+'/wm/user/fans';   // 用户粉丝
+		
+		this.POST_USERATTENTION_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/follow';   // 用户关注
+		this.POST_USERATTENTION_FANS = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/fans';   // 用户粉丝
+		this.POST_USERATTENTION_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/insert';   // 插入关注
+		this.POST_USERATTENTION_DELETE = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/delete';   // 删除关注
+		this.POST_USERATTENTION_FOLLOWCOUNT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/followCount';   // 查询用户关注总数
+		this.POST_USERATTENTION_FANSCOUNT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/fansCount';   // 查询用户粉丝总数
 		
 		// 贴吧
 		this.POST_ARTICLESORT_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/follow';   // 关注的吧
+		this.POST_ARTICLESORT_FOLLOWPAGE = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/followPage';   // 关注的吧分页
 		this.POST_ARTICLESORT_LATELYS = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/latelys';   // 最近逛的吧
 		this.POST_ARTICLESORT_INDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/articleSortIndex';   // 根据ID所有文章
 		this.POST_ARTICLESORT_QUERYBYID = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/queryById';   // 根据ID查询
