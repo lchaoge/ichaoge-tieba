@@ -5,6 +5,7 @@ module.exports = {
 		add : 'insert into user(user_phone,user_pwd,user_image_url,user_name) values (?,?,?,?)',  //注册
 		login : 'select * from user where user_phone = ? and user_pwd = ?',  //登录
 		queryByUserPhone : 'select * from user where user_phone = ?',  //查询手机号是否存在
+		updateUser : 'update user as u set u.user_image_url = ?,u.user_phone = ?,u.user_name = ?,u.user_sex = ?,u.user_birthday = ?,u.user_address = ?,u.user_description = ? where u.user_id = ?' // 修改个人信息
 	},
 	// 用户关注
 	userAttention:{
@@ -16,11 +17,11 @@ module.exports = {
 		fans : 'select u.user_id,u.user_name,u.user_image_url,u.user_description from user as u where u.user_id in (select ua.user_id from user_attention as ua where ua.attention_id =?) limit ?,?',  // 用户的粉丝
 		fans2 : 'select u.user_id,u.attention_id from user_attention as u where u.user_id in(select ua.user_id from user_attention as ua where ua.attention_id = ?)', // 粉丝关注的用户
 		fansCount : 'select count(*) as count from user_attention where attention_id = ?' // 用户粉丝总数
-		 
 	},
 	// 帖子表
 	article:{
-		queryAllArticle : 'select * from article order by article_id desc limit ?, ?', // 分页
+		queryCountByUserId : 'select count(*) as count from article where user_id = ?', // 查询用户发布总数
+		queryByUserId : 'select art.*,art_s.sort_article_name from article as art left join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ? order by art.article_time desc limit ?,?', // 用户帖子分页查询
 		insert : 'insert into article(type_id,article_name,article_time,article_ip,article_click,sort_article_id,user_id,article_type,article_content,article_up,article_support) values (?,?,?,?,?,?,?,?,?,?,?)', // 插入文章
 		index : 'SELECT art.article_id,art.article_name,art.article_content,art.article_time,art.article_click,art.type_id,art_s.sort_article_name,art_s.sort_article_id,u.user_image_url,u.user_name FROM article AS art JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id LEFT JOIN USER AS u ON u.user_id = art.user_id where art.type_id=0 ORDER BY art.article_time DESC LIMIT ?,?',
 		count : 'select count(*) as count from article',

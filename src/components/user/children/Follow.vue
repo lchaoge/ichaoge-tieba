@@ -26,17 +26,19 @@
 		      	</div>
 			</scroller>	
 		</div>
+		<actionsheet v-model="actionsheet.show" :menus="actionsheet.menus" @on-click-menu-delete="actionsheetDelete" show-cancel></actionsheet>
 	</view-box>
 </template>
 
 <script>
-	import {XButton,Scroller,ViewBox,XHeader,XImg,TransferDom,Divider,LoadMore,InlineLoading} from 'vux'
+	import {XButton,Scroller,ViewBox,XHeader,XImg,TransferDom,Divider,LoadMore,InlineLoading,Actionsheet} from 'vux'
 	export default{
 		name: 'userFollow',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		Actionsheet,
 	  		InlineLoading,
 	  		LoadMore,
 	  		Divider,
@@ -48,6 +50,14 @@
 	  	},
 	  	data(){
 			return {
+				actionsheet:{
+					menus: {
+			        	'title.noop': '<span style="color:#666;font-size:12px;">确定不在关注此人？</span>',
+				        delete: '<span>确定</span>'
+				    },
+				    show:false,	
+				    form:{}
+				},
 				queryObj:{
 					status: {
 				        pullupStatus: 'default',
@@ -70,11 +80,28 @@
 			})
 		},
 		created() {
-		},
-		mounted(){
 			this.queryEvt()
 		},
+		mounted(){
+			
+		},
 		methods:{
+			actionsheetDelete () {
+				let params = {
+					user_id : this.$store.getters.currentUser.user_id,
+					attention_id : this.actionsheet.form.user_id
+				}
+				this.$Axios.post(this.$Urls.POST_USERATTENTION_DELETE,params).then(res=>res.data).then((res)=>{
+					if(res.code === "0000"){
+						this.$vux.toast.text('取消关注成功', 'bottom')
+						this.actionsheet.form.show = !this.actionsheet.form.show
+					}else{
+						this.$vux.toast.text('取消关注失败', 'bottom')
+					}
+				}).catch(err=>{
+					this.$vux.toast.text('系统错误：'+err, 'bottom')
+				})
+		    },
 			loadMore () {
 		        this.queryObj.currentPage++
 		        this.queryEvt()
@@ -114,21 +141,8 @@
 				})
 			},
 			deleteEvt(item){
-				let params = {
-					user_id : this.$store.getters.currentUser.user_id,
-					attention_id : item.user_id
-				}
-				this.$Axios.post(this.$Urls.POST_USERATTENTION_DELETE,params).then(res=>res.data).then((res)=>{
-					if(res.code === "0000"){
-						this.$vux.toast.text('取消关注成功', 'bottom')
-						debugger
-						item.show = !item.show
-					}else{
-						this.$vux.toast.text('取消关注失败', 'bottom')
-					}
-				}).catch(err=>{
-					this.$vux.toast.text('系统错误：'+err, 'bottom')
-				})
+				this.actionsheet.show = true
+				this.actionsheet.form = item
 			},
 			addEvt(item){
 				let params = {
@@ -138,7 +152,6 @@
 				this.$Axios.post(this.$Urls.POST_USERATTENTION_INSERT,params).then(res=>res.data).then((res)=>{
 					if(res.code === "0000"){
 						this.$vux.toast.text('关注成功', 'bottom')
-						debugger
 						item.show = !item.show
 					}else{
 						this.$vux.toast.text('关注失败', 'bottom')

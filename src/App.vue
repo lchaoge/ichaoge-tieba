@@ -145,8 +145,8 @@ export default {
 	@media screen and (-webkit-min-device-pixel-ratio: 3) {
     
 	}
-	.vux-header{
-		background-color: #fff !important;
+	#app .vux-header{
+		background-color: #fff;
 		position: fixed !important;
 		top: 0;
 		left: 0;

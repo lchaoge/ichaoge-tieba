@@ -14,6 +14,7 @@ export default class UrlMapping {
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
 		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
 		this.POST_USER_LIKEUSERNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/user/likeUserName';   // 搜索用户
+		this.POST_USER_UPDATEUSER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/updateUser';   // 修改个人信息
 		
 		this.POST_USERATTENTION_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/follow';   // 用户关注
 		this.POST_USERATTENTION_FANS = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/fans';   // 用户粉丝
@@ -37,6 +38,7 @@ export default class UrlMapping {
 		this.POST_ARTICLE_UPDATECLICK = (this.isLocalHost?'/apis':this.origin)+'/wm/article/updateClickByArticleId';   // 修改查看人数
 		this.POST_ARTICLE_LIKEARTNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/article/likeArtName';   // 搜索文章
 		this.POST_ARTICLE_QUERYBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/queryArticleByUserId';   // 当前用户发布的帖子
+		this.POST_ARTICLE_ARTICLEPAGEBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/articlePageByUserId';   // 当前用户发布的帖子分页
 	
 		// 评论
 		this.POST_STAYMESSAGE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/insert';   // 插入

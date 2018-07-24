@@ -1,8 +1,6 @@
 <template>
 	<view-box ref="viewBox" class="userFans">
-		<x-header :left-options="{backText: ''}" slot="header">
-			<h1 style="color: #666;">我的粉丝</h1>
-		</x-header>
+		<x-header :left-options="{backText: ''}" slot="header">我的粉丝</x-header>
 		<div style="margin-top: 46px;">
 			<scroller lock-x :scrollbar-y=false use-pullup height="-46" @on-pullup-loading="loadMore" v-model="queryObj.status" ref="scroller">
 		    	<div class="panel">

@@ -34,6 +34,35 @@ let getImages = (article_id,callback)=>{
 	})
 }
 
+// 查询用户发布总数
+let queryCountByUserIdEvt = (user_id,callback)=>{
+	let sql = $sql.article.queryCountByUserId;
+	conn.query(sql,[user_id],(err,result) => {
+		if(err){
+			console.log('查询用户发布总数错误：'+err)
+		}
+		if(result){
+			callback(result)
+		}
+	})
+}
+
+// 我的帖子分页
+let queryByUserIdEvt = (user_id,currentPage,pageSize,callback)=>{
+	let sql = $sql.article.queryByUserId;
+	currentPage = parseInt(currentPage || 1);// 页码
+    let end = parseInt(pageSize || 10); // 默认页数
+    let start = (currentPage - 1) * end;
+	conn.query(sql,[user_id,start,end],(err,result) => {
+		if(err){
+			console.log('我的帖子分页错误：'+err)
+		}
+		if(result){
+			callback(result)
+		}
+	})
+}
+
 // 搜索文章
 router.post('/likeArtName',(req,res)=>{
 //	let sql = $sql.articleSort.likeArtsName;
@@ -50,22 +79,56 @@ router.post('/likeArtName',(req,res)=>{
 	})
 });
 
-// 分页
-router.post('/queryAllArticle',(req,res)=>{
-	let sql = $sql.article.queryAllArticle;
+// 我的帖子分页
+router.post('/articlePageByUserId',(req,res)=>{
 	let params = req.body;
-	// 获取前台页面传过来的参数
-    let currentPage = parseInt(params.currentPage || 1);// 页码
-    let end = parseInt(params.pageSize || 10); // 默认页数
-    let start = (currentPage - 1) * end;
-	conn.query(sql,[start,end],(err,result) => {
-		if(err){
-			console.log('错误：'+err)
-		}
-		if(result){
-			commonController.jsonWrite(res,result)
-		}
+	queryCountByUserIdEvt(params.user_id,(c)=>{
+		queryByUserIdEvt(params.user_id,params.currentPage,params.pageSize,(result)=>{
+			if(result.length>0){
+				let queryByArticleId = '';
+				result.forEach(item=>{
+					queryByArticleId+=' SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+' UNION ALL'
+				})
+				queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
+				let p = new Promise((resolve, reject)=>{
+					conn.query(queryByArticleId,[],(err,data) => {
+						data ? resolve(data) : reject(err);
+					})
+				})
+				p.then((data)=>{
+					result.forEach(item=>{
+						item.images = []
+						data.forEach(el=>{
+							if(el.article_id == item.article_id){
+								item.images.push(el)
+							}
+						})
+					})	
+					commonController.jsonWrite(res,{
+						currentPage:params.currentPage,
+						pageSize:params.pageSize,
+						count:c[0].count,
+						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+						list:result
+					})
+				}).catch(err=>{
+					console.log('查询帖子图片失败：'+err)
+				})
+			}else{
+				commonController.jsonWrite(res,{
+					currentPage:params.currentPage,
+					pageSize:params.pageSize,
+					count:c[0].count,
+					pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+					list:result
+				})
+			}
+			
+			
+			
+		})
 	})
+	
 });
 
 // 修改查看人数

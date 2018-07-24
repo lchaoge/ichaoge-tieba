@@ -1,8 +1,6 @@
 <template>
 	<view-box ref="viewBox" class="FollowArticleSort">
-		<x-header :left-options="{backText: ''}" slot="header">
-			<h1 style="color: #666;">我关注的吧</h1>
-		</x-header>
+		<x-header :left-options="{backText: ''}" slot="header">我关注的吧</x-header>
 		<div style="margin-top: 46px;">
 			<scroller lock-x :scrollbar-y=false use-pullup height="-46" @on-pullup-loading="loadMore" v-model="queryObj.status" ref="scroller">
 		    	<div class="panel">

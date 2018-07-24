@@ -82,18 +82,15 @@ router.post('/follow',(req,res)=>{
 				if(result){
 					let obj = []
 					data.forEach(item=>{
+						item.attention_type = 0 // 已关注
+						item.show = true
 						result.forEach(el=>{
 							if(item.user_id == el.user_id){
 								item.attention_type = 1 // 互相关注
-							}else{
-								item.attention_type = 0 // 已关注
 							}
-							item.show = true
-							console.log()
 						})
 						obj.push(item)
 					})
-					console.log(obj)
 					commonController.jsonWrite(res,{
 						currentPage:params.currentPage,
 						pageSize:params.pageSize,

@@ -192,4 +192,22 @@ export default class Apis {
 		window.localStorage.removeItem("tabbarSelected")
 		window.localStorage.setItem("tabbarSelected",index)
 	}
+	/**
+	 * 获取用户注册多少天
+	 *  
+	 */
+	getUserRegDay(time){
+		// 当前日期
+		let a = new Date();
+		// 注册日期
+		let b = new Date(time);
+		// 日期差  得到的是毫秒
+		let diff = a - b;
+		// 算天数
+		let days = diff / 1000 / 60 / 60 /24;
+		// 除去未完成的今天，这就是你要的天数
+		days = Math.floor(days);
+		let year = (days/365).toFixed(0)
+		return year
+	}
 }

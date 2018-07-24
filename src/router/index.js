@@ -22,13 +22,17 @@ import UserFans from './../components/user/children/Fans'
 import UserFollow from './../components/user/children/Follow'
 import UserFollowArticleSort from './../components/user/children/FollowArticleSort'
 
-// 文章详情
+// 帖子
 import Article from './../components/article/Article'
 import ArticleIndex from './../components/article/children/Index'
 import ArticleInsert from './../components/article/children/Insert'
-
+// 贴吧
+import ArticleSort from './../components/articleSort/ArticleSort'
 import ArticleSortIndex from './../components/articleSort/children/Index'
-
+// 设置
+import Setup from './../components/setup/Setup'
+import SetupIndex from './../components/setup/children/Index'
+import SetupUserInfo from './../components/setup/children/UserInfo'
 export const routes = [
 	{path:'/',name:'homeLink',component:Home,redirect:'/index',children:[
 		{path:'/index',name:'indexLink',component:Index},
@@ -58,8 +62,13 @@ export const routes = [
 		{path:'/article/insert',name:'articleInsertLink',component:ArticleInsert},	
 	]},
 	// 贴吧
-	{path:'/articleSort',name:'articleSortLink',component:Article,redirect:'/articleSort/index',children:[
+	{path:'/articleSort',name:'articleSortLink',component:ArticleSort,redirect:'/articleSort/index',children:[
 		{path:'/articleSort/index',name:'articleSortIndexLink',component:ArticleSortIndex},	
+	]},
+	// 设置
+	{path:'/setup',name:'setupLink',component:Setup,redirect:'/setup/index',children:[
+		{path:'/setup/index',name:'setupIndexLink',component:SetupIndex},	
+		{path:'/setup/userinfo',name:'setupUserInfoLink',component:SetupUserInfo}
 	]},
 	{path:'*',redirect:'/'}
 ]

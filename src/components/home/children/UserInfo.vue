@@ -1,19 +1,19 @@
 <template>
 	<div class="userinfo">
-		<x-header :left-options="{showBack: false}" slot="header" style="background-color:#fff;">
+		<x-header :left-options="{showBack: false}" slot="header">
 			<a slot="left">
 				<i class="icon iconfont icon-saoyisao"></i>
 			</a>
 			<a slot="right">
 				<i class="icon iconfont icon-liwu"></i>
 			</a>
-			<a slot="right">
+			<router-link slot="right" :to="{name:'setupLink'}" style="text-decoration: none;">
 				<i class="icon iconfont icon-shezhi"></i>
-			</a>
-			<h1 style="color: #666;">我的</h1>
+			</router-link>
+			我的
 	    </x-header>
 	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
-	    	<cell-box is-link class="user">
+	    	<cell-box is-link class="user" :link="{name:'userIndexLink'}">
 	    		<div class="user-img">
 	    			<img :src="pageData.currentUser.user_image_url" />
 	    		</div>
