@@ -54,14 +54,15 @@ export default {
 		    	imgName:'img'	
 	    	},
 	    	article:{
-	    		article_name:"", // 文章名称
-	    		article_ip:"", // 发布IP
-	    		user_id:"", // 所属用户ID
-	    		article_content:"", // 文章内容
-	    		article_type:"1", // 文章的模式:0:仅自己可见，1:所有人可见，2:仅好友可见
-	    		type_id:"", // 文章分类ID 0：贴吧 1：个人主页
-	    		sort_article_id:"", // 贴吧ID
+	    		article_name:'', // 文章名称
+	    		article_ip:'', // 发布IP
+	    		user_id:'', // 所属用户ID
+	    		article_content:'', // 文章内容
+	    		article_type:1, // 文章的模式:0:仅自己可见，1:所有人可见，2:仅好友可见
+	    		type_id:'', // 文章分类ID 0：贴吧 1：个人主页
+	    		sort_article_id:'', // 贴吧ID
 	    		sort_article_name:'',
+	    		image_type_id:'', // 图片类型 1：图片 2：视频
 	    		images:null
 	    	}
 	    	
@@ -88,15 +89,10 @@ export default {
 	},
   	methods:{
   		previewMethod(item){
-  			console.log(item)
   		},
   		addImageMethod(){
-  			console.log(this.uploadUrl)
-  			console.log(this.images)
-  			console.log(this.params)
   		},
   		removeImageMethod(item){
-  			console.log(item)
   		},
   		uploadImageMethod(formData){
   			let _this = this
@@ -128,16 +124,15 @@ export default {
   			if(this.article.images!=null){
 	  			this.article.images.forEach((item)=>{
 	  				params.append("img",item);
+	  				if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(item.type)) {
+	  				 	// 视频
+	  				 	params.append("image_type_id",0);
+	  				}else{
+	  				 	// 图片
+	  					params.append("image_type_id",1);
+	  				}
 	  			})	
   			}
-//			if(params.get('article_name') =="" || params.get('article_name') ==null ){
-//				this.$vux.toast.text('文章名称不能为空', 'bottom')
-//	  			return false
-//			}
-//			if(params.get('article_name').length>30){
-//				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
-//	  			return false
-//			}
 			if(params.get('article_content') =="" || params.get('article_content') ==null){
 				this.$vux.toast.text('文章名称不能为空', 'bottom')
 	  			return false
@@ -146,11 +141,9 @@ export default {
 				this.$vux.toast.text('文章名称不能超过30字', 'bottom')
 	  			return false
 			}
-  			
 		    let config = {
 		        headers: {'Content-Type': 'multipart/form-data'}
 		    }
-		    // 添加请求头
 		    axios.post(this.$Urls.POST_ARTICLE_INSERT, params, config).then(res => res.data).then((res)=>{
 		    	if(res.code == '0000'){
 		    		// 显示

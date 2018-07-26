@@ -4,6 +4,7 @@ const router = express.Router();
 const mysql = require('mysql');
 const $sql = require('../sqlMapping');
 const crypto = require('crypto');
+const multer = require('../multer');
 const commonController = require('./base/CommonController')
 
 // 连接数据库
@@ -78,6 +79,21 @@ router.post('/likeUserName',(req,res)=>{
 	})
 });
 
+// 根据ID查询用户
+router.post('/queryByUserId',(req,res)=>{
+	let sql = $sql.user.queryByUserId;
+	let params = req.body;
+	conn.query(sql,[params.user_id],(err,result) => {
+		if(err){
+			console.log('根据ID查询用户错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
+
+
 // 分页
 router.post('/queryAllUser',(req,res)=>{
 	let sql = $sql.user.queryAllUser;
@@ -96,15 +112,16 @@ router.post('/queryAllUser',(req,res)=>{
 });
 
 // 修改个人信息
-router.post('/updateUser',(req,res)=>{
+router.post('/updateUser', multer.array('img'),(req,res)=>{
 	let sql = $sql.user.updateUser;
 	let params = req.body;
+	console.log(res)
+	params.user_image_url = '../../static/uploads/images/' + req.files[0].filename;
 	conn.query(sql,[params.user_image_url,params.user_phone,params.user_name,params.user_sex,params.user_birthday,params.user_address,params.user_description,params.user_id],(err,result) => {
 		if(err){
 			console.log('修改个人信息错误：'+err)
 		}
 		if(result){
-			console.log(result)
 			commonController.jsonWrite(res,result)
 		}
 	})

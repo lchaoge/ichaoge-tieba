@@ -30,14 +30,12 @@
       	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-90" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
 	    	<div class="">
 		    	<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
-					<div class="panel-user mb10">
+					<div class="panel-user mb10" @click="userIndexEvt(item.user_id)">
 						<div class="panel-user-photo">
-							<x-img :src="item.user_image_url" default-src="../static/images/user.jpg"></x-img>
+							<img :src="item.user_image_url" />
 						</div>
 						<div class="panel-user-right">
-							<div class="panel-user-name">
-								{{item.user_name}}
-							</div>
+							<div class="panel-user-name">{{item.user_name}}</div>
 							<div class="panel-user-more">
 								<span>{{item.article_time}}</span>
 							</div>	
@@ -170,6 +168,21 @@
 			initFunc(){
 				this.queryById()
 				this.queryEvt()
+			},
+			userIndexEvt(user_id){
+				let isCurrentUser = false;
+				if(this.$store.getters.currentUser){
+					if(this.$store.getters.currentUser.user_id == user_id){
+						isCurrentUser = true
+					}
+				}
+				this.$router.push({
+					name:'userIndexLink',
+					query:{
+						isCurrentUser:isCurrentUser,
+						user_id:user_id
+					}
+				})
 			},
 			queryById(){
 				let params = {

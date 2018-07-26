@@ -23,7 +23,7 @@ let followCount = (user_id,callback)=>{
 	})
 }
 
-// 用户关注
+// 用户关注分页
 let followEvt = (user_id,currentPage,pageSize,callback)=>{
 	let sql = $sql.userAttention.follow;
 	currentPage = parseInt(currentPage || 1);// 页码
@@ -113,6 +113,19 @@ router.post('/followCount',(req,res)=>{
 		commonController.jsonWrite(res,c)
 	})
 });
+// 查询是否关注用户
+router.post('/queryById',(req,res)=>{
+	let sql = $sql.userAttention.queryById;
+	let params = req.body;
+	conn.query(sql,[params.user_id,params.attention_id],(err,result) => {
+		if(err){
+			console.log('查询是否关注用户错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
 
 // 插入关注 
 router.post('/insert',(req,res)=>{
@@ -185,9 +198,6 @@ router.post('/fans',(req,res)=>{
 			
 		})
 	})
-	
-	
-	
 });
 
 

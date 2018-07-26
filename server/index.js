@@ -22,7 +22,10 @@ app.use('/wm/article', articleController);
 app.use('/wm/articleSort', articleSortController);
 app.use('/wm/stayMessage', stayMessageController);
 
-// 监听端口
-app.listen(3000);
+//app.use(express.static(path.join(__dirname, 'docs')))
 
-console.log('Your api is running here: http://localhost:3000');
+// 监听端口
+app.listen(3000,()=>{
+	console.log('Your api is running here: http://localhost:3000');	
+});
+

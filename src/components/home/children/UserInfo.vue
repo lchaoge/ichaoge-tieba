@@ -13,7 +13,7 @@
 			我的
 	    </x-header>
 	    <scroller lock-x :scrollbar-y=false height="-96" class="vux-scroller">
-	    	<cell-box is-link class="user" :link="{name:'userIndexLink'}">
+	    	<cell-box is-link class="user" :link="{name:'userIndexLink',query:{isCurrentUser:true,currentUser:{}}}">
 	    		<div class="user-img">
 	    			<img :src="pageData.currentUser.user_image_url" />
 	    		</div>

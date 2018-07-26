@@ -121,7 +121,7 @@ router.post('/articleSortIndex',(req,res)=>{
 	if(params.essence == 1){
 		essence = 'and art.essence = 1'
 	}
-	let sql = 'SELECT art.article_id,art.article_name,art.article_content,art.article_time,art.article_click,art_s.sort_article_name,u.user_image_url,u.user_name,art_s.sort_article_id	FROM article AS art left JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id left JOIN USER AS u ON u.user_id = art.user_id where art.type_id = 0 and art.sort_article_id = ? '+essence+' ORDER BY art.article_time desc limit ?,?';
+	let sql = 'SELECT art.article_id,art.article_name,art.article_content,art.article_time,art.article_click,art_s.sort_article_name,u.user_image_url,u.user_name,u.user_id,art_s.sort_article_id	FROM article AS art left JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id left JOIN USER AS u ON u.user_id = art.user_id where art.type_id = 0 and art.sort_article_id = ? '+essence+' ORDER BY art.article_time desc limit ?,?';
 	let currentPage = parseInt(params.currentPage || 1);// 页码
     let end = parseInt(params.pageSize || 10); // 默认页数
     let start = (currentPage - 1) * end;

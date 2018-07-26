@@ -2,7 +2,7 @@
 	<view-box ref="viewBox" class="articleIndex">
 		<x-header :left-options="{backText: ''}" slot="header">
 	    	<a slot="right" @click="moreEvt">
-	    		<i class="icon iconfont icon-xitongcaidan"></i>
+	    		<i class="icon iconfont icon-gengduotianchong"></i>
 	    	</a>
 	    </x-header>
 	    <div class="content">
@@ -25,7 +25,8 @@
 				<div class="panel-content">
 					<p class="panel-content-text">{{queryObj.detail.article_content}}</p>
 					<div style="text-align:center;">
-				      	<img class="previewer-demo-img" v-for="(item, index) in queryObj.detail.images" :src="item.article_image_url" width="100%" @click="show(index)">
+				      	<img class="previewer-demo-img" v-for="(item, index) in queryObj.detail.images" v-if="index<3 && queryObj.detail.image_type_id==1" :src="item.article_image_url" width="100%" @click="show(index)">
+				      	<player v-for="(img, index) in queryObj.detail.images" :key="index" v-if="queryObj.detail.image_type_id==0" :video-url="img.article_image_url" :state="false"></player>
 				    </div>
 				    <div v-transfer-dom>
 				      	<previewer :list="queryObj.detail.images" ref="previewer" :options="options" @on-index-change="logIndexChange"></previewer>
@@ -48,7 +49,7 @@
 		        <div class="m-box">
 		          	<h3>{{item.user_name}}</h3>
 		          	<div class="m-desc">
-		          		<span class="m-floor">第{{item.floor}}楼</span>|
+		          		<span class="m-floor">第{{item.floor}}楼</span> | 
 		          		<span class="m-time">{{item.message_stay_time}}</span>
 		          	</div>
 		          	<p class="m-content">{{item.message_content}}</p>
@@ -99,13 +100,18 @@
 </template>
 
 <script>
-	import {LoadMore,Masker,CellBox,Cell,Popup,InlineLoading,Scroller,Badge,ViewBox,XHeader,XTextarea,XInput,Group,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {dateFormat,LoadMore,Masker,CellBox,Cell,Popup,InlineLoading,Scroller,Badge,ViewBox,XHeader,XTextarea,XInput,Group,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import player from '../../common/Player';
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
+		filters: {
+		    dateFormat
+		},
 	  	components:{
+	  		player,
 	  		LoadMore,
 	  		Masker,
 	  		CellBox,
@@ -180,9 +186,13 @@
 				let params = {
 					article_id:this.queryObj.detail.article_id
 				}
+				this.stayMessageList = []
 				this.$Axios.post(this.$Urls.POST_STAYMESSAGE_QUERYFLOORALL,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
-	  					this.stayMessageList = res.data
+		  				res.data.forEach(item=>{
+		  					item.message_stay_time = dateFormat(new Date(item.message_stay_time), 'MM-DD')
+		  					this.stayMessageList.push(item)	
+		  				})
 		  			}else{
 		  				this.$vux.toast.text('查询评论失败', 'bottom')
 		  			}

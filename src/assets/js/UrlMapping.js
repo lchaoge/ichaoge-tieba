@@ -6,22 +6,26 @@
 
 export default class UrlMapping {
 	constructor(){
-		this.isLocalHost = window.location.host.toLowerCase() == 'http://localhost:8080';
-		this.isLocalHost = true
-		this.origin = window.location.origin;
+		this.isLocalHost = window.location.host.toLowerCase() == 'localhost:8080';
+		console.log(this.isLocalHost)
+//		this.origin = window.location.origin;
+		this.origin = 'http://10.111.86.193:3000';
 		
 		// 用户
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               
 		this.POST_USER_REGISTER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/register';   // 注册       
 		this.POST_USER_LIKEUSERNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/user/likeUserName';   // 搜索用户
 		this.POST_USER_UPDATEUSER = (this.isLocalHost?'/apis':this.origin)+'/wm/user/updateUser';   // 修改个人信息
-		
+		this.POST_USER_QUERYBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/user/queryByUserId';   // 根据ID查询用户
+
+		// 用户关注
 		this.POST_USERATTENTION_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/follow';   // 用户关注
 		this.POST_USERATTENTION_FANS = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/fans';   // 用户粉丝
 		this.POST_USERATTENTION_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/insert';   // 插入关注
 		this.POST_USERATTENTION_DELETE = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/delete';   // 删除关注
 		this.POST_USERATTENTION_FOLLOWCOUNT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/followCount';   // 查询用户关注总数
 		this.POST_USERATTENTION_FANSCOUNT = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/fansCount';   // 查询用户粉丝总数
+		this.POST_USERATTENTION_QUERYBYID = (this.isLocalHost?'/apis':this.origin)+'/wm/userAttention/queryById';   // 查询是否关注用户
 		
 		// 贴吧
 		this.POST_ARTICLESORT_FOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSort/follow';   // 关注的吧

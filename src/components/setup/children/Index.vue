@@ -15,8 +15,8 @@
 		      	<cell title="版本信息" value="9.6.8.2"></cell>
 		      	<cell title="意见反馈" is-link></cell>
 		    </group>
-		    <group class="signout-box">
-		    	<x-button type="warn">退出</x-button>
+		    <group class="signout-box" v-if="!isLogin">
+		    	<x-button type="warn" @click.native="exitLogon">退出</x-button>
 		    </group>
 		</div>
 	</view-box>
@@ -35,7 +35,24 @@
 		},
 		data () {
 		    return {
+		    	
 		    }
+		},
+		computed:{
+			currentUser(){
+				return this.$store.getters.currentUser
+			},
+			isLogin(){
+				return this.$store.getters.isLogin
+			}
+		},
+		methods:{
+			exitLogon(){
+				this.$store.dispatch("setUser",null)
+				this.$router.push({
+					name:'loginLink'
+				})
+			}
 		}
 	}
 </script>

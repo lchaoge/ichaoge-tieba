@@ -1,12 +1,16 @@
 <template>
 	<div class="userIndex">
-		<x-header :left-options="{backText: ''}" slot="header" :style="{backgroundColor:headerColor}">我的主页</x-header>
+		<x-header :left-options="{backText: ''}" slot="header" :style="{backgroundColor:headerColor}">{{isCurrentUser?'我的主页':'TA的主页'}}</x-header>
 		<scroller lock-x :scrollbar-y=false use-pullup @on-pullup-loading="loadMore" @on-scroll="scrollEvt" v-model="queryObj.status" ref="scroller">
 				<div class="">
 					<blur :blur-amount=40 :url="currentUser.user_image_url"></blur>
 					<div class="userbox">
 						<div class="btn-group">
-							<x-button mini type="primary">编辑资料</x-button>
+							<x-button mini type="primary" @click.native="addEvt(currentUser.user_id)" v-if="!isCurrentUser && isFollow">
+								<i class="icon iconfont icon-zengjia" style="font-size: 13px;"></i>
+								关注
+							</x-button>
+							<x-button mini type="primary" v-if="isCurrentUser" :link="{name:'setupUserInfoLink'}">编辑资料</x-button>
 						</div>
 						<img class="u-photo" :src="currentUser.user_image_url">
 		      	<h1 class="u-name">{{currentUser.user_name}}</h1>
@@ -44,14 +48,17 @@
 									<h4 class="panel-sort" v-if="item.type_id==0">{{item.sort_article_name}}吧</h4>
 									<h4 class="panel-sort" v-else-if="item.type_id==1">个人主页</h4>
 									<a class="panel-sort-btn">
-										<i class="icon iconfont icon-qita"></i>
+										<i class="icon iconfont icon-gengduotianchong"></i>
 									</a>
 								</div>
 								<div class="panel-content" @click="detailEvt(item.article_id)">
 									<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
 									<flexbox class="mb10" v-if="item.images.length>0">
-								      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
+								      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
 								      		<div style="width:100%;height:8rem;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'100% auto'}"></div>
+								      	</flexbox-item>
+								      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
+								      		<player :video-url="img.article_image_url" :state="false"></player>
 								      	</flexbox-item>
 								    </flexbox>
 								</div>
@@ -87,20 +94,21 @@
 
 <script>
 import {LoadMore,InlineLoading,FlexboxItem,Flexbox,TransferDom,Scroller,Blur,Group,Cell,XButton,XHeader,Countup} from 'vux'
-
+import player from '../../common/Player';
 export default {
-		directives: {
+	directives: {
 	    TransferDom
-		},
+	},
   	components: {
+  		player,
   		LoadMore,
   		InlineLoading,
   		FlexboxItem,
   		Flexbox,
-			Countup,
-			XHeader,
-			Scroller,
-			Blur,
+		Countup,
+		XHeader,
+		Scroller,
+		Blur,
     	Group,
     	Cell,
     	XButton
@@ -112,92 +120,167 @@ export default {
     			userFollow:[{count:0}],
     			fansList:[{count:0}]
     		},
+    		isFollow:true,
     		headerColor:0,
+    		isCurrentUser:false,
+    		user_id:'',
+    		user_register_time:'',
     		currentUser:{},
-	      queryObj:{
-	      	status: {
-		        pullupStatus: 'default',
-		        pulldownStatus: 'default'
-	      	},
-	      	currentPage:1,
+	      	queryObj:{
+	      		status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+	      		},
+	      		currentPage:1,
 	    		pageSize:20,
 	    		count:0,
 	    		pageCount:0,
 					list:[]
-	      }
+	      	}
     	}
-	  },
-	  beforeRouteEnter:(to,from ,next)=>{
-			next((vm)=>{
-				let isLogin = vm.$store.getters.isLogin
-				if(!isLogin){
-					vm.$router.push({name:'loginLink'})
+	},
+//	beforeRouteEnter:(to,from ,next)=>{
+//		next((vm)=>{
+//			let isLogin = vm.$store.getters.isLogin
+//			if(!isLogin){
+//				vm.$router.push({name:'loginLink'})
+//			}
+//		})
+//	},
+	created() {
+		this.isCurrentUser = this.$route.query.isCurrentUser
+		if(this.isCurrentUser){ // 当前登录账户
+			this.user_id = this.$store.getters.currentUser.user_id
+		}else{
+			this.user_id = this.$route.query.user_id
+		}
+		this.queryByUserIdEvt(this.user_id,(data)=>{
+			if(data.length>0){
+				this.currentUser = data[0]
+				this.user_register_time = this.$Apis.getUserRegDay(this.currentUser.user_register_time)
+				
+				if(this.$store.getters.isLogin){
+					this.isFollowEvt(this.currentUser.user_id)	
 				}
+				
+				this.queryEvt(this.currentUser.user_id)	
+				// @todo 关注
+				this.queryUserFollowEvt(this.currentUser.user_id)
+				// @todo 粉丝
+				this.queryFansEvt(this.currentUser.user_id)
+				// 关注的吧
+				this.queryFollowEvt(this.currentUser.user_id)
+			}
+		})
+		
+	},
+	mounted(){
+	},
+	methods:{
+		isFollowEvt(user_id){
+			let params = {
+				user_id : this.$store.getters.currentUser.user_id,
+				attention_id : user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_QUERYBYID,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.isFollow = true	
+					}
+				}else{
+					this.$vux.toast.text('查询是否关注用户失败', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
 			})
 		},
-		created() {
-			if(this.$store.getters.isLogin){
-				this.currentUser = this.$store.getters.currentUser
-				this.user_register_time = this.$Apis.getUserRegDay(this.currentUser.user_register_time)
-				this.queryEvt()	
-				// @todo 关注
-				this.queryUserFollowEvt()
-				// @todo 粉丝
-				this.queryFansEvt()
-				// 关注的吧
-				this.queryFollowEvt()
+		addEvt(user_id){
+			if(!this.$store.getters.currentUser){
+				this.$router.push({
+					name:'loginLink',
+					query:{
+						user_id:this.$route.query.user_id,
+						isCurrentUser:this.$route.query.isCurrentUser
+					}
+				})
 			}
+			let params = {
+				user_id : this.$store.getters.currentUser.user_id,
+				attention_id : user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_INSERT,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					this.$vux.toast.text('关注成功', 'bottom')
+					this.isFollow = false
+				}else{
+					this.$vux.toast.text('关注失败', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
 		},
-		mounted(){
+		scrollEvt(e){
+			this.$nextTick(() => {
+				let a = e.top/200
+				this.headerColor = 'rgba(255,255,255,'+a+')'
+    		})
 		},
-		methods:{
-			scrollEvt(e){
-				this.$nextTick(() => {
-					let a = e.top/200
-					this.headerColor = 'rgba(255,255,255,'+a+')'
-        })
-			},
-			loadMore () {
-        this.queryObj.currentPage++
-        this.queryEvt()
+		loadMore () {
+	        this.queryObj.currentPage++
+	        this.queryEvt()
+	    },
+	    queryByUserIdEvt(user_id,callback){
+	    	
+	    	let params = {
+				user_id:user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USER_QUERYBYUSERID,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					callback(res.data)
+				}else{
+					this.$vux.toast.text('查询用户失败', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
 	    },
 	    // 查询帖子
-			queryEvt(){
-				let params = {
-					user_id:this.$store.getters.currentUser.user_id,
-					currentPage:this.queryObj.currentPage,
-		    	pageSize:this.queryObj.pageSize
-				}
-				this.$Axios.post(this.$Urls.POST_ARTICLE_ARTICLEPAGEBYUSERID,params).then(res=>res.data).then((res)=>{
-					if(res.code === "0000"){
-						if(res.data.list.length>0){
-							res.data.list.forEach(el=>{
-								let myDate = new Date(el.article_time)								
-								el.month = myDate.getMonth()+1
-								el.date = myDate.getDate()
-								this.queryObj.list.push(el)
+		queryEvt(user_id){
+			let params = {
+				user_id:user_id,
+				currentPage:this.queryObj.currentPage,
+	    		pageSize:this.queryObj.pageSize
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLE_ARTICLEPAGEBYUSERID,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.list.length>0){
+						res.data.list.forEach(el=>{
+							let myDate = new Date(el.article_time)								
+							el.month = myDate.getMonth()+1
+							el.date = myDate.getDate()
+							this.queryObj.list.push(el)
 		  				})
 		  				this.queryObj.currentPage = res.data.currentPage
-							this.queryObj.pageSize = res.data.pageSize
-							this.queryObj.count = res.data.count
-							this.queryObj.pageCount = res.data.pageCount
-							
-							this.queryObj.status.pullupStatus = 'default'
-						    this.$refs.scroller.reset()
-							if(this.queryObj.currentPage>=this.queryObj.pageCount){
-								this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
-							}
-						}else{
+						this.queryObj.pageSize = res.data.pageSize
+						this.queryObj.count = res.data.count
+						this.queryObj.pageCount = res.data.pageCount
+						
+						this.queryObj.status.pullupStatus = 'default'
+					    this.$refs.scroller.reset()
+						if(this.queryObj.currentPage>=this.queryObj.pageCount){
 							this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
 						}
 					}else{
-						this.$vux.toast.text('帖子查询失败', 'bottom')
+						this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
 					}
-				}).catch(err=>{
-					this.$vux.toast.text('系统错误：'+err, 'bottom')
-				})
-			},
-			detailEvt(id){
+				}else{
+					this.$vux.toast.text('帖子查询失败', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		detailEvt(id){
 	    	this.$router.push({
 	    		name:'articleIndexLink',
 	    		query:{
@@ -206,57 +289,57 @@ export default {
 	    	})
 	    },
 	    // 用户粉丝
-			queryFansEvt(){
-				let params = {
-					user_id:this.$store.getters.currentUser.user_id
-				}
-				this.$Axios.post(this.$Urls.POST_USERATTENTION_FANSCOUNT,params).then(res=>res.data).then((res)=>{
-					if(res.code === "0000"){
-						if(res.data.length>0){
-							this.pageData.fansList = res.data
-						}
-					}else{
-						this.$vux.toast.text('系统错误', 'bottom')
+		queryFansEvt(user_id){
+			let params = {
+				user_id:user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_FANSCOUNT,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.fansList = res.data
 					}
-				}).catch(err=>{
-					this.$vux.toast.text('系统错误：'+err, 'bottom')
-				})
-			},
-			// 用户关注
-			queryUserFollowEvt(){
-				let params = {
-					user_id:this.$store.getters.currentUser.user_id
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
 				}
-				this.$Axios.post(this.$Urls.POST_USERATTENTION_FOLLOWCOUNT,params).then(res=>res.data).then((res)=>{
-					if(res.code === "0000"){
-						if(res.data.length>0){
-							this.pageData.userFollow = res.data
-						}
-					}else{
-						this.$vux.toast.text('系统错误', 'bottom')
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		// 用户关注
+		queryUserFollowEvt(user_id){
+			let params = {
+				user_id:user_id
+			}
+			this.$Axios.post(this.$Urls.POST_USERATTENTION_FOLLOWCOUNT,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.userFollow = res.data
 					}
-				}).catch(err=>{
-					this.$vux.toast.text('系统错误：'+err, 'bottom')
-				})
-			},
-			// 关注的吧
-			queryFollowEvt(){
-				let params = {
-					user_id:this.$store.getters.currentUser.user_id
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
 				}
-				this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOW,params).then(res=>res.data).then((res)=>{
-					if(res.code === "0000"){
-						if(res.data.length>0){
-							this.pageData.followList = res.data
-						}
-					}else{
-						this.$vux.toast.text('系统错误', 'bottom')
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+		// 关注的吧
+		queryFollowEvt(user_id){
+			let params = {
+				user_id:user_id
+			}
+			this.$Axios.post(this.$Urls.POST_ARTICLESORT_FOLLOW,params).then(res=>res.data).then((res)=>{
+				if(res.code === "0000"){
+					if(res.data.length>0){
+						this.pageData.followList = res.data
 					}
-				}).catch(err=>{
-					this.$vux.toast.text('系统错误：'+err, 'bottom')
-				})
-			},
-		}
+				}else{
+					this.$vux.toast.text('系统错误', 'bottom')
+				}
+			}).catch(err=>{
+				this.$vux.toast.text('系统错误：'+err, 'bottom')
+			})
+		},
+	}
 }
 
 </script>
@@ -283,6 +366,7 @@ export default {
 	.userIndex .btn-group{
 		text-align: right;
 		margin-bottom: 10px;
+		height: 29px;
 	}
 	.userIndex .u-photo{
 		position: absolute;

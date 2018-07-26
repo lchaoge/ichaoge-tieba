@@ -30,27 +30,19 @@ Vue.use(ToastPlugin)
 Vue.use(ConfigPlugin, {
   $layout: 'VIEW_BOX'
 })
+// 视频播放
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+//require('videojs-contrib-hls/dist/videojs-contrib-hls');
 
+import VideoPlayer from 'vue-video-player'
+Vue.use(VideoPlayer);
 
 let router = new VueRouter({
 	mode:'history',
 	routes
 })
 
-//router.beforeEach(function (to, from, next) {
-//	Vue.$vux.loading.show({text: 'Loading'})
-//store.commit('updateLoadingStatus', {isLoading: true})
-//next()
-//})
-//
-//router.afterEach(function (to) {
-////	 隐藏
-//setTimeout(()=>{
-//	Vue.$vux.loading.hide()
-//},500)
-//	  	
-//store.commit('updateLoadingStatus', {isLoading: false})
-//})
 
 Vue.config.productionTip = false
 
@@ -62,3 +54,4 @@ new Vue({
   store,
   template: '<App/>'
 })
+

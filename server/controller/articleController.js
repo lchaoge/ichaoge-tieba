@@ -170,7 +170,7 @@ router.post('/detail',(req,res)=>{
 // 增加帖子
 router.post('/insert', multer.array('img'),(req,res,next)=>{
 	let articleInsertSql = $sql.article.insert;
-	let articleImagesInsertSql = 'insert into article_image (article_id,article_image_url)values';
+	let articleImagesInsertSql = 'insert into article_image (article_id,article_image_url,createtime,image_type_id)values';
 	let params = req.body;
 	params.article_up = 0
 	params.article_support = 0
@@ -178,7 +178,7 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 	params.article_time = commonController.getDateFunc('all')
 	// 主表
 	let p = new Promise((resolve, reject)=>{
-		conn.query(articleInsertSql,[params.type_id,params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support],(err,result) => {
+		conn.query(articleInsertSql,[params.type_id,params.article_name,params.article_time,params.article_ip,params.article_click,params.sort_article_id,params.user_id,params.article_type,params.article_content,params.article_up,params.article_support,params.image_type_id],(err,result) => {
 			result ? resolve(result) : reject(err);
 		})
 	})
@@ -187,7 +187,7 @@ router.post('/insert', multer.array('img'),(req,res,next)=>{
 		if(req.files.length>0){
 			req.files.forEach((item)=>{
 				let filePath = '../../static/uploads/images/' + item.filename;
-				articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'"),'
+				articleImagesInsertSql += '((select a.article_id from article as a where a.user_id = '+params.user_id+' order by a.article_id desc limit 1),"'+filePath+'","'+params.article_time+'","'+params.image_type_id+'"),'
 			})
 			let imagesInsertSql = articleImagesInsertSql.substring(0,articleImagesInsertSql.length-1)
 			conn.query(imagesInsertSql,[],(err,result) => {

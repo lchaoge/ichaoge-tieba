@@ -1,6 +1,7 @@
 module.exports = {
 	// 用户表
 	user:{
+		queryByUserId : 'select * from user where user_id = ?', // 根据ID查询用户
 		queryAllUser : 'select * from user order by ad_id desc limit ?, ?',  //分页
 		add : 'insert into user(user_phone,user_pwd,user_image_url,user_name) values (?,?,?,?)',  //注册
 		login : 'select * from user where user_phone = ? and user_pwd = ?',  //登录
@@ -9,6 +10,7 @@ module.exports = {
 	},
 	// 用户关注
 	userAttention:{
+		queryById : 'select * from user_attention where user_id = ? and attention_id = ?', // 查询是否关注用户
 		followCount : 'select count(*) as count from user_attention where user_id = ?',
 		follow : 'select u.user_id,u.user_name,u.user_image_url,u.user_description,ua.createtime from user as u join user_attention as ua on ua.attention_id = u.user_id where ua.user_id = ? order by ua.createtime desc limit ?,?', // 我关注的
 		follow2 : 'select user_id from user_attention where attention_id = ? and user_id in (select attention_id from user_attention where user_id = ?)', // 我关注的并且关注我的用户
@@ -22,10 +24,10 @@ module.exports = {
 	article:{
 		queryCountByUserId : 'select count(*) as count from article where user_id = ?', // 查询用户发布总数
 		queryByUserId : 'select art.*,art_s.sort_article_name from article as art left join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ? order by art.article_time desc limit ?,?', // 用户帖子分页查询
-		insert : 'insert into article(type_id,article_name,article_time,article_ip,article_click,sort_article_id,user_id,article_type,article_content,article_up,article_support) values (?,?,?,?,?,?,?,?,?,?,?)', // 插入文章
-		index : 'SELECT art.article_id,art.article_name,art.article_content,art.article_time,art.article_click,art.type_id,art_s.sort_article_name,art_s.sort_article_id,u.user_image_url,u.user_name FROM article AS art JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id LEFT JOIN USER AS u ON u.user_id = art.user_id where art.type_id=0 ORDER BY art.article_time DESC LIMIT ?,?',
+		insert : 'insert into article(type_id,article_name,article_time,article_ip,article_click,sort_article_id,user_id,article_type,article_content,article_up,article_support,image_type_id) values (?,?,?,?,?,?,?,?,?,?,?,?)', // 插入文章
+		index : 'SELECT art.*,art_s.sort_article_name,art_s.sort_article_id,u.user_image_url,u.user_name FROM article AS art JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id LEFT JOIN USER AS u ON u.user_id = art.user_id where art.type_id=0 ORDER BY art.article_time DESC LIMIT ?,?',
 		count : 'select count(*) as count from article',
-		queryByArticleId : 'select art.article_id,art.article_name,art.article_content,art.article_click,art.article_time,u.user_name,u.user_id,u.user_image_url,art_s.sort_article_name,art_s.sort_article_id from article as art left join article_sort as art_s on art.sort_article_id=art_s.sort_article_id left join user as u on art.user_id=u.user_id where art.article_id = ?',
+		queryByArticleId : 'select art.image_type_id,art.article_id,art.article_name,art.article_content,art.article_click,art.article_time,u.user_name,u.user_id,u.user_image_url,art_s.sort_article_name,art_s.sort_article_id from article as art left join article_sort as art_s on art.sort_article_id=art_s.sort_article_id left join user as u on art.user_id=u.user_id where art.article_id = ?',
 		updateClickByArticleId : 'update article set article_click=article_click+1 where article_id = ?',
 		queryArticleByUserId : 'select * from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ?' // 根据用户ID查询
 	},

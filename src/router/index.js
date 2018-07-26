@@ -33,6 +33,11 @@ import ArticleSortIndex from './../components/articleSort/children/Index'
 import Setup from './../components/setup/Setup'
 import SetupIndex from './../components/setup/children/Index'
 import SetupUserInfo from './../components/setup/children/UserInfo'
+
+//demo
+import Player from './../components/common/Player'
+import Player2 from './../components/common/Player2'
+
 export const routes = [
 	{path:'/',name:'homeLink',component:Home,redirect:'/index',children:[
 		{path:'/index',name:'indexLink',component:Index},
@@ -70,5 +75,7 @@ export const routes = [
 		{path:'/setup/index',name:'setupIndexLink',component:SetupIndex},	
 		{path:'/setup/userinfo',name:'setupUserInfoLink',component:SetupUserInfo}
 	]},
+	{path:'/player',name:'playerLink',component:Player},
+	{path:'/player2',name:'player2Link',component:Player2},
 	{path:'*',redirect:'/'}
 ]

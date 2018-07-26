@@ -159,8 +159,10 @@ export default {
     left: 0;
     bottom: 0;
     right: 0;
-    height: 0;
+    height: 1px;
     border-top: 1px solid #f3f3f3;
+    background: #f3f3f3;
+    color: #f3f3f3;
     -webkit-transform-origin: 0 0;
     transform-origin: 0 0;
     -webkit-transform: scaleY(0.5);

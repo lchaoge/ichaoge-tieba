@@ -31,8 +31,11 @@
 							<div class="panel-content" @click="detailEvt(item.article_id)">
 								<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
 								<flexbox class="mb10" v-if="item.images.length>0">
-							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-							      		<div style="width:100%;height:8rem;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'100% auto'}"></div>
+							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
+							      		<div style="width:100%;padding-top: 56.25%;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'auto auto'}"></div>
+							      	</flexbox-item>
+							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
+							      		<player :video-url="img.article_image_url" :state="false"></player>
 							      	</flexbox-item>
 							    </flexbox>
 							</div>
@@ -77,12 +80,13 @@
 <script>
 import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem,Countup,LoadMore,InlineLoading } from 'vux'
 import { Spinner,Scroller,Flexbox, FlexboxItem,Panel,Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem,XImg } from 'vux'
-
+import player from '../../common/Player';
 export default {
   	directives: {
     	TransferDom
   	},
   	components: {
+  		player,
   		InlineLoading,
   		LoadMore,
   		XImg,
