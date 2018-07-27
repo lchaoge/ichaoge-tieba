@@ -10,6 +10,7 @@ const userAttentionController = require('./controller/userAttentionController');
 const articleController = require('./controller/articleController');
 const articleSortController = require('./controller/articleSortController');
 const stayMessageController = require('./controller/stayMessageController');
+const browseHistoryController = require('./controller/browseHistoryController');
 
 
 app.use(bodyParser.json({limit: '50mb'})); // 用来接收post提交的json数据
@@ -21,6 +22,7 @@ app.use('/wm/userAttention', userAttentionController);
 app.use('/wm/article', articleController);
 app.use('/wm/articleSort', articleSortController);
 app.use('/wm/stayMessage', stayMessageController);
+app.use('/wm/browseHistory', browseHistoryController);
 
 //app.use(express.static(path.join(__dirname, 'docs')))
 

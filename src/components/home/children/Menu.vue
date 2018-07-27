@@ -1,11 +1,6 @@
 <template>
 	<div class="menu">
-		<x-header :left-options="{showBack: false}" slot="header" style="background-color:#fff;">
-			<a slot="right">
-				<i class="icon iconfont icon-shezhi"></i>
-			</a>
-			进吧
-	    </x-header>
+		<x-header :left-options="{showBack: false}" slot="header">进吧</x-header>
 	    <div style="margin-top: 46px;">
 	    <scroller lock-x :scrollbar-y=false height="-96" ref="scroller">
 	    	<div class="box">

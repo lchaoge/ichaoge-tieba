@@ -22,7 +22,7 @@
 	    	</div>
 	    </div>
       	<sticky scroll-box="vux_view_box_body" ref="sticky" :offset="46" :check-sticky-support="false" :disabled="stickyDisabled">
-	        <tab :line-width="1">
+	        <tab :line-width="1" :custom-bar-width="getBarWidth">
 	          	<tab-item selected @on-item-click="essenceEvt(0)">全部</tab-item>
 	          	<tab-item @on-item-click="essenceEvt(1)">精华</tab-item>
 	        </tab>
@@ -44,8 +44,11 @@
 					<div class="panel-content" @click="detailEvt(item.article_id)">
 						<p class="panel-content-text">{{item.article_content}}</p>
 						<flexbox :gutter="0" class="mb10" v-if="item.images.length>0">
-					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3">
-					      		<img :src="img.article_image_url" default-src="../static/images/tieba.jpg" style="width:100%;height:8rem;" />
+					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
+					      		<div style="width:100%;padding-top: 56.25%;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'auto auto'}"></div>
+					      	</flexbox-item>
+					      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
+					      		<player :video-url="img.article_image_url" :state="false"></player>
 					      	</flexbox-item>
 					    </flexbox>
 					</div>
@@ -53,30 +56,30 @@
 						<flexbox :gutter="0">
 					        <flexbox-item><div class="panel-flex-button">
 					        	<i class="icon iconfont icon-fenxiang"></i>
-					        	<span>11</span>
+					        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
 					        </div></flexbox-item>
 					      	<flexbox-item><div class="panel-flex-button">
 					      		<i class="icon iconfont icon-bianji"></i>
-					        	<span>29</span>
+					        	<countup :start-val="0" :end-val="0" :duration="2"></countup>
 					      	</div></flexbox-item>
 					      	<flexbox-item><div class="panel-flex-button">
 					      		<i class="icon iconfont icon-buxing"></i>
-					        	<span>{{item.article_click}}</span>
+					      		<countup :start-val="0" :end-val="item.article_click" :duration="2"></countup>
 					      	</div></flexbox-item>
 					    </flexbox>
 					</div>
 				</div>
-		    </div>
+		    	<load-more v-show="queryObj.status.pullupStatus === 'disabled'" :show-loading="false" tip="您已经碰到我的底线了" background-color="#fbf9fe"></load-more>
+	    	</div>
 		    <div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
-		      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-		      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
-		      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		      	<p v-show="queryObj.status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+		      	<p v-show="queryObj.status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+		      	<p v-show="queryObj.status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
 		    </div>
 		    <div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
-		      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
-		      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-		      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-		      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+		      	<p v-show="queryObj.status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+		      	<p v-show="queryObj.status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+		      	<p v-show="queryObj.status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
 		    </div>
 	    </scroller>
 		<div class="insert" @click="insertEvt">
@@ -86,13 +89,17 @@
 </template>
 
 <script>
-	import {InlineLoading,Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {LoadMore,Countup,InlineLoading,Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import player from '../../common/Player';
 	export default{
 		name: 'articleIndex',
 		directives: {
 		    TransferDom
 		},
 	  	components:{
+	  		LoadMore,
+	  		Countup,
+	  		player,
 	  		InlineLoading,
 	  		Scroller,
 	  		FlexboxItem,
@@ -115,10 +122,7 @@
 			return {
 				stickyDisabled:typeof navigator !== 'undefined' && /iphone/i.test(navigator.userAgent) && /ucbrowser/i.test(navigator.userAgent),
 				pullupEnabled: true,
-		      	status: {
-			        pullupStatus: 'default',
-			        pulldownStatus: 'default'
-		      	},
+		      	
 				articleSort:{},
 				queryObj:{
 					sort_article_id:-1,
@@ -128,8 +132,15 @@
 		    		pageSize:10,
 		    		count:0,
 		    		pageCount:0,
+		    		status: {
+				        pullupStatus: 'default',
+				        pulldownStatus: 'default'
+			      	},
 					list:[]
-				}
+				},
+				getBarWidth:(index)=>{
+		        	return (1 + 1) * 22 + 'px'
+		      	}
 			}
 		},
 		created(){
@@ -140,17 +151,8 @@
 		},
 		methods:{
 			loadMore () {
-		      	setTimeout(() => {
-			        this.queryObj.currentPage++
-			        if(this.queryObj.currentPage<this.queryObj.pageCount){
-			        	this.queryEvt()
-			        	setTimeout(() => {
-				          this.$refs.scroller.donePullup()
-				        }, 10)
-			        }else{
-			        	this.$refs.scroller.disablePullup()
-			        }
-		      	}, 2000)
+			    this.queryObj.currentPage++
+			    this.queryEvt()
 		    },
 		    refresh () {
 		      	setTimeout(() => {
@@ -202,22 +204,31 @@
 					essence:this.queryObj.essence,
 					currentPage:this.queryObj.currentPage,
 		    		pageSize:this.queryObj.pageSize,
-		    		
 				}
 				this.$Axios.post(this.$Urls.POST_ARTICLESORT_INDEX,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
-						res.data.list.forEach(item=>{
-							item.article_time = this.$Apis.dateFormat("MM-dd",new Date(item.article_time).getTime())
-							this.queryObj.list.push(item)
-						})
-						this.queryObj.currentPage = res.data.currentPage
-			    		this.queryObj.pageSize = res.data.pageSize
-			    		this.queryObj.count = res.data.count
-			    		this.queryObj.pageCount = res.data.pageCount			
+		  				if(res.data.list.length>0){
+		  					res.data.list.forEach(item=>{
+								item.article_time = this.$Apis.getDateDiff(new Date(item.article_time).getTime())
+								this.queryObj.list.push(item)
+							})
+							this.queryObj.currentPage = res.data.currentPage
+				    		this.queryObj.pageSize = res.data.pageSize
+				    		this.queryObj.count = res.data.count
+				    		this.queryObj.pageCount = res.data.pageCount	
+				    		
+				    		this.queryObj.status.pullupStatus = 'default'
+						    this.$refs.scroller.reset()
+							if(this.queryObj.currentPage>=this.queryObj.pageCount){
+								this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
+							}
+		  				}else{
+		  					this.queryObj.status.pullupStatus = 'disabled' // 禁用下拉
+		  				}
 		  			}else{
-		  				this.$vux.toast.text('系统修改查看人数错误', 'bottom')
+		  				this.$vux.toast.text('查看帖子失败', 'bottom')
 		  			}
-		  		}).catch(err=>console.log("系统修改查看人数错误："+err))
+		  		}).catch(err=>console.log("查看帖子失败错误："+err))
 			},
 			detailEvt(id){
 		    	this.$router.push({
@@ -230,7 +241,7 @@
 		   	essenceEvt(essence){
 		   		this.queryObj.essence = essence
 		   		this.queryObj.list = []
-		   		this.status= {
+		   		this.queryObj.status= {
 			        pullupStatus: 'default',
 			        pulldownStatus: 'default'
 		      	}

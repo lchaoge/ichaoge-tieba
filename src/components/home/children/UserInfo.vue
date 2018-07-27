@@ -51,7 +51,7 @@
 	    			<i class="icon iconfont icon-shoucang"></i>
 	    			<span class="ml10">我的收藏</span>
 	    		</cell-box>
-	    		<cell-box is-link>
+	    		<cell-box is-link :link="{name:'userBrowseHistoryLink'}">
 	    			<i class="icon iconfont icon-shijian"></i>
 	    			<span class="ml10">浏览历史</span>
 	    		</cell-box>
@@ -233,7 +233,10 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+.weui-cells.vux-no-group-title{
+	margin-top: 0;	
+}
 .vux-scroller{
 	margin-top: 46px;
 }

@@ -226,10 +226,9 @@ router.post('/queryArticleByUserId',(req,res)=>{
 // 首页
 router.post('/index',(req,res)=>{
 	let indexSql = $sql.article.index;
-	let queryByArticleId = '' //SELECT article_image_id,article_id,article_image_url FROM article_image where article_id=? UNION ALL
+	let queryByArticleId = '';
 	let params = req.body;
 	getCount((c)=>{
-		// 获取前台页面传过来的参数
 	    let currentPage = parseInt(params.currentPage || 1);// 页码
 	    let end = parseInt(params.pageSize || 10); // 默认页数
 	    let start = (currentPage - 1) * end;
@@ -239,24 +238,37 @@ router.post('/index',(req,res)=>{
 				console.log('主表查询错误：'+err)
 			}
 			if(result){
-				result.forEach(item=>{
-					queryByArticleId+=' SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+' UNION ALL'
-				})
-				queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
-				let p = new Promise((resolve, reject)=>{
-					conn.query(queryByArticleId,[],(err,data) => {
-						data ? resolve(data) : reject(err);
-					})
-				})
-				p.then((data)=>{
+				if(result.length.length>0){
 					result.forEach(item=>{
-						item.images = []
-						data.forEach(el=>{
-							if(el.article_id == item.article_id){
-								item.images.push(el)
-							}
+						queryByArticleId+='(SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+') UNION ALL'
+					})
+					queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
+					let p = new Promise((resolve, reject)=>{
+						conn.query(queryByArticleId,[],(err,data) => {
+							data ? resolve(data) : reject(err);
 						})
-					})	
+					})
+					p.then((data)=>{
+						result.forEach(item=>{
+							item.images = []
+							data.forEach(el=>{
+								if(el.article_id == item.article_id){
+									item.images.push(el)
+								}
+							})
+						})	
+						commonController.jsonWrite(res,{
+							currentPage:params.currentPage,
+							pageSize:params.pageSize,
+							count:c[0].count,
+							pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+							list:result
+						})
+					}).catch(err=>{
+						console.log('子表查询错误：'+err)
+						commonController.jsonWrite(res)
+					})
+				}else{
 					commonController.jsonWrite(res,{
 						currentPage:params.currentPage,
 						pageSize:params.pageSize,
@@ -264,9 +276,7 @@ router.post('/index',(req,res)=>{
 						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
 						list:result
 					})
-				}).catch(err=>{
-					console.log('子表查询错误：'+err)
-				})
+				}
 				
 			}
 		})

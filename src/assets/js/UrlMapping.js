@@ -43,10 +43,17 @@ export default class UrlMapping {
 		this.POST_ARTICLE_LIKEARTNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/article/likeArtName';   // 搜索文章
 		this.POST_ARTICLE_QUERYBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/queryArticleByUserId';   // 当前用户发布的帖子
 		this.POST_ARTICLE_ARTICLEPAGEBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/articlePageByUserId';   // 当前用户发布的帖子分页
+		
+		// 帖子浏览历史
+		this.POST_BROWSEHISTORY_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/browseHistory/insert';   // 插入
+		this.POST_BROWSEHISTORY_HISTORYPAGE = (this.isLocalHost?'/apis':this.origin)+'/wm/browseHistory/historyPage';   // 分页
+		this.POST_BROWSEHISTORY_EMPTY = (this.isLocalHost?'/apis':this.origin)+'/wm/browseHistory/empty';   // 清空用户浏览
 	
 		// 评论
 		this.POST_STAYMESSAGE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/insert';   // 插入
 		this.POST_STAYMESSAGE_QUERYFLOORALL = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryFloorAll';   // 查询评论
+	
 	}
 	
 }
+

@@ -95,6 +95,7 @@
 				params.append("user_address",obj.user_address)
 				params.append("user_description",obj.user_description)
 				params.append("user_id",obj.user_id)
+				params.append("user_image_url",obj.user_image_url)
 				params.append("img",this.formDataImage)
 				let config = {
 			        headers: {'Content-Type': 'multipart/form-data'}

@@ -13,9 +13,9 @@
 				swiper1
 	        </swiper-item>
 	        <swiper-item>
-	        	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-96" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="status" ref="scroller">
+	        	<scroller lock-x :scrollbar-y=false use-pullup use-pulldown height="-96" @on-pullup-loading="loadMore" @on-pulldown-loading="refresh" v-model="indexObj.status" ref="scroller">
 			      	<div class="">
-			      		<div class="panel" v-for="item in queryObj.list" :key="item.article_id">
+			      		<div class="panel" v-for="item in indexObj.list" :key="item.article_id">
 							<div class="panel-user">
 								<div class="panel-user-photo">
 									<img :src="item.user_image_url" />
@@ -56,17 +56,17 @@
 							    </flexbox>
 							</div>
 						</div>
+			      		<load-more v-show="indexObj.status.pullupStatus === 'disabled'" :show-loading="false" tip="您已经碰到我的底线了" background-color="#fbf9fe"></load-more>
 			      	</div>
 			      	<div slot="pulldown" class="xs-plugin-pulldown-container xs-plugin-pulldown-loading" style="position: absolute; width: 100%; height: 40px;line-height: 40px; top: -40px; text-align: center;">
-				      	<p v-show="status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-				      	<p v-show="status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
-				      	<p v-show="status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+				      	<p v-show="indexObj.status.pulldownStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
+				      	<p v-show="indexObj.status.pulldownStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;下拉刷新...</span></p>
+				      	<p v-show="indexObj.status.pulldownStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
 			      	</div>
 			      	<div slot="pullup" class="xs-plugin-pullup-container xs-plugin-pullup-up" style="position: absolute; width: 100%; height: 40px;line-height: 40px; bottom: -40px; text-align: center;">
-				      	<p v-show="status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
-				      	<p v-show="status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
-				      	<p v-show="status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
-				      	<p v-show="status.pullupStatus === 'disabled'"><span style="vertical-align:middle;display:inline-block;font-size:14px;">暂无数据</span></p>
+				      	<p v-show="indexObj.status.pullupStatus === 'up'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;上拉刷新...</span></p>
+				      	<p v-show="indexObj.status.pullupStatus === 'down'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;释放刷新...</span></p>
+				      	<p v-show="indexObj.status.pullupStatus === 'loading'"><inline-loading></inline-loading><span style="vertical-align:middle;display:inline-block;font-size:14px;">&nbsp;&nbsp;正在加载...</span></p>
 			      	</div>
 			    </scroller>
 	        </swiper-item>
@@ -110,18 +110,39 @@ export default {
   	},
   	data () {
 	    return {
-	    	queryObj:{
+	    	indexObj:{
+	    		status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	},
 	    		currentPage:1,
 	    		pageSize:20,
 	    		count:0,
 	    		pageCount:0,
 	    		list:[]
 	    	},
-	      	pullupEnabled: true,
-	      	status: {
-		        pullupStatus: 'default',
-		        pulldownStatus: 'default'
-	      	},
+	    	followObj:{
+	    		status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	},
+	    		currentPage:1,
+	    		pageSize:20,
+	    		count:0,
+	    		pageCount:0,
+	    		list:[]
+	    	},
+	    	videoObj:{
+	    		status: {
+			        pullupStatus: 'default',
+			        pulldownStatus: 'default'
+		      	},
+	    		currentPage:1,
+	    		pageSize:20,
+	    		count:0,
+	    		pageCount:0,
+	    		list:[]
+	    	},
 	    	pageData:{
 				headerNav: ['关注','首页','视频'],
 		      	headerIndex: 1,
@@ -143,48 +164,51 @@ export default {
 			})
 		},
 		loadMore () {
-	      	setTimeout(() => {
-		        this.queryObj.currentPage++
-		        if(this.queryObj.currentPage<this.queryObj.pageCount){
-		        	this.queryEvt()
-		        	setTimeout(() => {
-			          this.$refs.scroller.donePullup()
-			        }, 10)
-		        }else{
-		        	this.$refs.scroller.disablePullup()
-		        }
-	        
-	      	}, 2000)
+		    this.indexObj.currentPage++
+		    this.queryEvt()
 	    },
 	    refresh () {
-	      	setTimeout(() => {
+	    	setTimeout(() => {
 		        this.queryObj.currentPage = 1
 		        this.queryObj.list = []
 		        this.queryEvt()
 		        this.$nextTick(() => {
 		          setTimeout(() => {
 		            this.$refs.scroller.donePulldown()
-		            this.pullupEnabled && this.$refs.scroller.enablePullup()
+		            this.$refs.scroller.enablePullup()
 		          }, 10)
 		        })
 	      	}, 2000)
 	    },
 	    queryEvt(){
 	    	let params = {
-	    		currentPage:this.queryObj.currentPage,
-    			pageSize:this.queryObj.pageSize
+	    		currentPage:this.indexObj.currentPage,
+    			pageSize:this.indexObj.pageSize
 	    	}
     		this.$Axios.post(this.$Urls.POST_ARTICLE_INDEX,params).then(res=>res.data).then((res)=>{
 	  			if(res.code === '0000'){
-	  				res.data.list.forEach(el=>{
-	  					el.article_time = this.$Apis.dateFormat("MM-dd",new Date(el.article_time).getTime())
-	  					this.queryObj.list.push(el)	
-	  				})
-	  				this.queryObj.currentPage = res.data.currentPage
-					this.queryObj.pageSize = res.data.pageSize
-					this.queryObj.count = res.data.count
-					this.queryObj.pageCount = res.data.pageCount
+	  				if(res.data.list.length>0){
+	  					res.data.list.forEach(el=>{
+		  					el.article_time = this.$Apis.getDateDiff(new Date(el.article_time).getTime())
+		  					this.indexObj.list.push(el)	
+		  				})
+						this.indexObj.list = res.data.list
+		  				this.indexObj.currentPage = res.data.currentPage
+						this.indexObj.pageSize = res.data.pageSize
+						this.indexObj.count = res.data.count
+						this.indexObj.pageCount = res.data.pageCount	
+						
+						this.indexObj.status.pullupStatus = 'default'
+						this.indexObj.status.pulldownStatus = 'default'
+					    this.$refs.scroller.reset()
+						if(this.indexObj.currentPage >= this.indexObj.pageCount){
+							this.indexObj.status.pullupStatus = 'disabled' // 禁用下拉
+						}
+	  				}else{
+	  					this.indexObj.status.pullupStatus = 'disabled' // 禁用下拉
+	  				}
 	  			}else{
+	  				this.indexObj.status.pullupStatus = 'default' // 禁用下拉
 	  				this.$vux.toast.text('系统错误', 'bottom')
 	  			}
 	  		}).catch(err=>console.log("系统错误："+err))

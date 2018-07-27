@@ -21,14 +21,17 @@ import UserIndex from './../components/user/children/Index'
 import UserFans from './../components/user/children/Fans'
 import UserFollow from './../components/user/children/Follow'
 import UserFollowArticleSort from './../components/user/children/FollowArticleSort'
+import UserBrowseHistory from './../components/user/children/BrowseHistory'
 
 // 帖子
 import Article from './../components/article/Article'
 import ArticleIndex from './../components/article/children/Index'
 import ArticleInsert from './../components/article/children/Insert'
+
 // 贴吧
 import ArticleSort from './../components/articleSort/ArticleSort'
 import ArticleSortIndex from './../components/articleSort/children/Index'
+
 // 设置
 import Setup from './../components/setup/Setup'
 import SetupIndex from './../components/setup/children/Index'
@@ -60,6 +63,7 @@ export const routes = [
 		{path:'/user/fans',name:'userFansLink',component:UserFans},
 		{path:'/user/follow',name:'userFollowLink',component:UserFollow},
 		{path:'/user/followArticleSort',name:'userFollowArticleSortLink',component:UserFollowArticleSort},
+		{path:'/user/browseHistory',name:'userBrowseHistoryLink',component:UserBrowseHistory},
 	]},
 	// 文章详情
 	{path:'/article',name:'articleLink',component:Article,redirect:'/article/index',children:[

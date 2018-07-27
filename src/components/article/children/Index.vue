@@ -182,6 +182,19 @@
 			this.currentUser = this.$store.getters.currentUser
 		},
 		methods:{
+			browseHistoryEvt(){
+				let params = {
+					user_id:this.queryObj.detail.user_id,
+					article_id:this.queryObj.detail.article_id
+				}
+				this.$Axios.post(this.$Urls.POST_BROWSEHISTORY_INSERT,params).then(res=>res.data).then((res)=>{
+		  			if(res.code === '0000'){
+		  				console.log('浏览历史插入成功')
+		  			}else{
+		  				this.$vux.toast.text('浏览历史插入失败', 'bottom')
+		  			}
+		  		}).catch(err=>console.log("系统错误："+err))
+			},
 			queryFloorAll(){
 				let params = {
 					article_id:this.queryObj.detail.article_id
@@ -296,7 +309,9 @@
 		  				this.queryObj.detail = obj 
 		  				this.queryFloorAll()
 		  				this.$Apis.insertLatelys(this.queryObj.detail.sort_article_id)
-		  				
+		  				if(this.$store.getters.isLogin){
+							this.browseHistoryEvt()
+						}
 		  			}else{
 		  				this.$vux.toast.text('系统错误', 'bottom')
 		  			}

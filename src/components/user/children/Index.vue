@@ -6,9 +6,9 @@
 					<blur :blur-amount=40 :url="currentUser.user_image_url"></blur>
 					<div class="userbox">
 						<div class="btn-group">
-							<x-button mini type="primary" @click.native="addEvt(currentUser.user_id)" v-if="!isCurrentUser && isFollow">
-								<i class="icon iconfont icon-zengjia" style="font-size: 13px;"></i>
-								关注
+							<x-button mini type="primary" @click.native="addEvt(currentUser.user_id)" v-if="!isCurrentUser" :disabled="isFollow">
+								<i v-if="!isFollow" class="icon iconfont icon-zengjia" style="font-size: 13px;"></i>
+								{{!isFollow?'关注':'已关注'}}
 							</x-button>
 							<x-button mini type="primary" v-if="isCurrentUser" :link="{name:'setupUserInfoLink'}">编辑资料</x-button>
 						</div>
@@ -55,7 +55,7 @@
 									<p class="panel-content-text">{{item.article_name?item.article_name:item.article_content}}</p>
 									<flexbox class="mb10" v-if="item.images.length>0">
 								      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
-								      		<div style="width:100%;height:8rem;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'100% auto'}"></div>
+								      		<div style="width:100%;padding-top: 56.25%;" :style="{background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'auto auto'}"></div>
 								      	</flexbox-item>
 								      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
 								      		<player :video-url="img.article_image_url" :state="false"></player>
@@ -393,7 +393,7 @@ export default {
 		padding-right: 10px;
 		margin-right: 5px;
 	}
-	.userIndex .weui-btn_primary{
+	.userIndex .weui-btn{
 		border-radius: 3px;
 		width: 70px;
 		padding: 0;

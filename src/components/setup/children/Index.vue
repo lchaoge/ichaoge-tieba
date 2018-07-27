@@ -1,21 +1,24 @@
 <template>
 	<view-box ref="viewBox" class="setupIndex">
-		<x-header :left-options="{backText: ''}" slot="header">设置</x-header>
+		<x-header :left-options="{showBack: false}" slot="header">
+			<router-link slot="left" class="left-arrow" :to="{name:'userinfoLink'}"></router-link>
+			设置
+		</x-header>
 		<div style="margin-top: 46px;">
-		    <group>
+		    <group class="mt10">
 		      	<cell title="个人资料" is-link :link="{name:'setupUserInfoLink'}"></cell>
 		      	<cell title="账号管理" is-link></cell>
 		    </group>
-		    <group>
+		    <group class="mt10">
 		      	<x-switch title="夜间模式"></x-switch>
 		      	<x-switch title="中英切换" :value="true"></x-switch>
 				<cell title="清除缓存"></cell>
 			</group>
-			<group>
+			<group class="mt10">
 		      	<cell title="版本信息" value="9.6.8.2"></cell>
 		      	<cell title="意见反馈" is-link></cell>
 		    </group>
-		    <group class="signout-box" v-if="!isLogin">
+		    <group class="signout-box mt10" v-if="isLogin">
 		    	<x-button type="warn" @click.native="exitLogon">退出</x-button>
 		    </group>
 		</div>
@@ -37,6 +40,14 @@
 		    return {
 		    	
 		    }
+		},
+		beforeRouteEnter:(to,from ,next)=>{
+			next((vm)=>{
+				let isLogin = vm.$store.getters.isLogin
+				if(!isLogin){
+					vm.$router.push({name:'loginLink'})
+				}
+			})
 		},
 		computed:{
 			currentUser(){

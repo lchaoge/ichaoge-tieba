@@ -62,6 +62,12 @@ export default {
 	  					this.$store.dispatch("setUser",user[0])
 	  					let routerName = this.pageData.router.name
 	  					let query = this.pageData.router.query
+	  					
+	  					if(routerName == 'loginLink'){
+	  						routerName = 'homeLink'
+	  						query = {}
+	  					}
+	  					
 	  					this.$router.push({
 	  						name:routerName,
 	  						query:query

@@ -66,10 +66,9 @@
 			})
 		},
 		created() {
-			
+			this.queryEvt()
 		},
 		mounted(){
-			this.queryEvt()
 		},
 		methods:{
 			loadMore () {

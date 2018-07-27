@@ -115,8 +115,10 @@ router.post('/queryAllUser',(req,res)=>{
 router.post('/updateUser', multer.array('img'),(req,res)=>{
 	let sql = $sql.user.updateUser;
 	let params = req.body;
-	console.log(res)
-	params.user_image_url = '../../static/uploads/images/' + req.files[0].filename;
+	console.log(req.files.length>0)
+	if(req.files.length>0){
+		params.user_image_url = '../../static/uploads/images/' + req.files[0].filename;	
+	}
 	conn.query(sql,[params.user_image_url,params.user_phone,params.user_name,params.user_sex,params.user_birthday,params.user_address,params.user_description,params.user_id],(err,result) => {
 		if(err){
 			console.log('修改个人信息错误：'+err)

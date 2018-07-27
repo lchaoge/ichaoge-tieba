@@ -4,7 +4,7 @@
 		<div style="margin-top: 46px;">
 			<scroller lock-x :scrollbar-y=false use-pullup height="-46" @on-pullup-loading="loadMore" v-model="queryObj.status" ref="scroller">
 		    	<div class="panel">
-		    		<div class="panel-user" v-for="item in queryObj.list">
+		    		<div class="panel-user" v-for="item in queryObj.list" @click.stop="userInfoEvt(item.user_id)">
 						<div class="panel-user-photo">
 							<img :src="item.user_image_url" />
 						</div>
@@ -13,8 +13,8 @@
 							<div class="panel-user-desc">{{item.user_description?item.user_description:'暂无签名'}}</div>
 						</div>
 						<div class="panel-user-right">
-							<x-button mini plain type="primary" class="btn active" v-if="item.show" @click.native="deleteEvt(item)">{{item.attention_type==1?'互相关注':'已关注'}}</x-button>
-							<x-button mini plain type="primary" class="btn"  v-if="!item.show" @click.native="addEvt(item)"><i class="icon iconfont icon-zengjia"></i>关注</x-button>
+							<x-button mini plain type="primary" class="btn active" v-if="item.show" @click.stop.native="deleteEvt(item)">{{item.attention_type==1?'互相关注':'已关注'}}</x-button>
+							<x-button mini plain type="primary" class="btn"  v-if="!item.show" @click.stop.native="addEvt(item)"><i class="icon iconfont icon-zengjia"></i>关注</x-button>
 						</div>
 					</div>
 					<load-more v-show="queryObj.status.pullupStatus === 'disabled'" :show-loading="false" tip="您已经碰到我的底线了" background-color="#fbf9fe"></load-more>
@@ -86,6 +86,15 @@
 			
 		},
 		methods:{
+			userInfoEvt(user_id){
+				this.$router.push({
+					name:'userIndexLink',
+					query:{
+						isCurrentUser:false,
+						user_id:user_id
+					}
+				})
+			},
 			actionsheetDelete () {
 				let params = {
 					user_id : this.$store.getters.currentUser.user_id,
