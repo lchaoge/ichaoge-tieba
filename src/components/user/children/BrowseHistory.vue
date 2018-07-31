@@ -8,7 +8,7 @@
 		<div style="margin-top: 46px;">
 			<scroller lock-x :scrollbar-y=false use-pullup height="-46" @on-pullup-loading="loadMore" v-model="queryObj.status" ref="scroller">
 		    	<div class="panel">
-		    		<div class="panel-user" v-for="item in queryObj.list">
+		    		<div class="panel-user" v-for="item in queryObj.list" @click="detailEvt(item.article_id)">
 						<div class="panel-user-content">
 							<div class="panel-user-name">{{item.article_name?item.article_name:item.article_content}}</div>
 							<div class="panel-user-desc">
@@ -77,6 +77,14 @@
 			
 		},
 		methods:{
+			detailEvt(article_id){
+		    	this.$router.push({
+		    		name:'articleIndexLink',
+		    		query:{
+			    		article_id:article_id
+			    	}
+		    	})
+		    },
 			loadMore () {
 		        this.queryObj.currentPage++
 		        this.queryEvt()

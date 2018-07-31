@@ -223,9 +223,23 @@ router.post('/queryArticleByUserId',(req,res)=>{
 	})
 });
 
-// 首页
-router.post('/index',(req,res)=>{
-	let indexSql = $sql.article.index;
+// 查询贴吧发布了多少帖子
+router.post('/queryCountBySortId',(req,res)=>{
+	let sql = $sql.article.queryCountBySortId;
+	let params = req.body;
+	conn.query(sql,[params.sort_article_id],(err,result) => {
+		if(err){
+			console.log('查询贴吧发布了多少帖子错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
+
+// 关注首页
+router.post('/followIndex',(req,res)=>{
+	let indexSql = $sql.article.followIndex;
 	let queryByArticleId = '';
 	let params = req.body;
 	getCount((c)=>{
@@ -233,12 +247,12 @@ router.post('/index',(req,res)=>{
 	    let end = parseInt(params.pageSize || 10); // 默认页数
 	    let start = (currentPage - 1) * end;
 	    // 主表
-		conn.query(indexSql,[start,end],(err,result) => {
+		conn.query(indexSql,[params.user_id,start,end],(err,result) => {
 			if(err){
 				console.log('主表查询错误：'+err)
 			}
 			if(result){
-				if(result.length.length>0){
+				if(result.length>0){
 					result.forEach(item=>{
 						queryByArticleId+='(SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+') UNION ALL'
 					})
@@ -277,16 +291,86 @@ router.post('/index',(req,res)=>{
 						list:result
 					})
 				}
-				
+			}else{
+				commonController.jsonWrite(res,{
+					currentPage:params.currentPage,
+					pageSize:params.pageSize,
+					count:c[0].count,
+					pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+					list:result
+				})
 			}
 		})
 		
 	})
-	
-	
-	
-	
-	
+});
+
+// 首页
+router.post('/index',(req,res)=>{
+	let indexSql = $sql.article.index;
+	let queryByArticleId = '';
+	let params = req.body;
+	getCount((c)=>{
+	    let currentPage = parseInt(params.currentPage || 1);// 页码
+	    let end = parseInt(params.pageSize || 10); // 默认页数
+	    let start = (currentPage - 1) * end;
+	    // 主表
+		conn.query(indexSql,[start,end],(err,result) => {
+			if(err){
+				console.log('主表查询错误：'+err)
+			}
+			if(result){
+				if(result.length>0){
+					result.forEach(item=>{
+						queryByArticleId+='(SELECT article_image_id,article_id,article_image_url FROM article_image where article_id='+item.article_id+') UNION ALL'
+					})
+					queryByArticleId = queryByArticleId.substring(0,queryByArticleId.length-9)
+					let p = new Promise((resolve, reject)=>{
+						conn.query(queryByArticleId,[],(err,data) => {
+							data ? resolve(data) : reject(err);
+						})
+					})
+					p.then((data)=>{
+						result.forEach(item=>{
+							item.images = []
+							data.forEach(el=>{
+								if(el.article_id == item.article_id){
+									item.images.push(el)
+								}
+							})
+						})	
+						commonController.jsonWrite(res,{
+							currentPage:params.currentPage,
+							pageSize:params.pageSize,
+							count:c[0].count,
+							pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+							list:result
+						})
+					}).catch(err=>{
+						console.log('子表查询错误：'+err)
+						commonController.jsonWrite(res)
+					})
+				}else{
+					commonController.jsonWrite(res,{
+						currentPage:params.currentPage,
+						pageSize:params.pageSize,
+						count:c[0].count,
+						pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+						list:result
+					})
+				}
+			}else{
+				commonController.jsonWrite(res,{
+					currentPage:params.currentPage,
+					pageSize:params.pageSize,
+					count:c[0].count,
+					pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+					list:result
+				})
+			}
+		})
+		
+	})
 });
 
 

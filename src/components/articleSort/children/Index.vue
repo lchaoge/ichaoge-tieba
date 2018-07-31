@@ -10,13 +10,18 @@
 	    </x-header>
 	    <div class="content">
 	    	<div class="panel">
-	    		<div class="panel-user" style="margin-bottom: 0;">
+	    		<div class="panel-user">
 					<div class="panel-user-photo" style="border: 0px none;border-radius: inherit;">
 						<x-img :src="articleSort.image_url" default-src="../static/images/tieba.jpg"></x-img>
 					</div>
 					<div class="panel-user-right">
 						<div class="panel-user-name">{{articleSort.sort_article_name}}吧</div>
 						<div class="panel-user-desc">{{articleSort.desc?articleSort.desc:'暂无签名'}}</div>	
+					</div>
+					<div class="panel-user-btn">
+						<x-button @click.native="addFollowSortEvt" v-if="!isFollowSort" mini plain type="primary" class="btn">
+							<i class="icon iconfont icon-zengjia"></i>关注
+						</x-button>
 					</div>
 				</div>
 	    	</div>
@@ -89,7 +94,7 @@
 </template>
 
 <script>
-	import {LoadMore,Countup,InlineLoading,Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
+	import {XButton,LoadMore,Countup,InlineLoading,Scroller,Flexbox,FlexboxItem,Badge,ViewBox,XHeader,XTextarea,XInput,Group,Alert,Toast,XImg,Previewer,Sticky,Tab,TabItem,TransferDom } from 'vux'
 	import player from '../../common/Player';
 	export default{
 		name: 'articleIndex',
@@ -97,6 +102,7 @@
 		    TransferDom
 		},
 	  	components:{
+	  		XButton,
 	  		LoadMore,
 	  		Countup,
 	  		player,
@@ -122,7 +128,8 @@
 			return {
 				stickyDisabled:typeof navigator !== 'undefined' && /iphone/i.test(navigator.userAgent) && /ucbrowser/i.test(navigator.userAgent),
 				pullupEnabled: true,
-		      	
+		      	isFollowSort:false,
+		      	isLogin:false,
 				articleSort:{},
 				queryObj:{
 					sort_article_id:-1,
@@ -144,8 +151,9 @@
 			}
 		},
 		created(){
+			this.isLogin = this.$store.getters.isLogin
+			this.currentUser = this.$store.getters.currentUser
 			this.queryObj.sort_article_id = this.$route.query.sort_article_id
-			this.queryObj.sort_article_name = 
 			this.$Apis.insertLatelys(this.queryObj.sort_article_id)
 			this.initFunc()
 		},
@@ -186,6 +194,41 @@
 					}
 				})
 			},
+			isFollowSortEvt(){
+				let params = {
+					user_id : this.currentUser.user_id,
+					article_sort_id:this.queryObj.sort_article_id
+				}
+				this.$Axios.post(this.$Urls.POST_ARTICLESORTUSER_ISFOLLOW,params).then(res=>res.data).then((res)=>{
+		  			if(res.code === '0000'){
+						this.isFollowSort = res.data.length>0?true:false  				
+		  			}else{
+		  				this.$vux.toast.text('查看是否关注过吧错误', 'bottom')
+		  			}
+		  		}).catch(err=>console.log("查看是否关注过吧错误："+err))
+			},
+			addFollowSortEvt(){
+				if(!this.isLogin){
+					this.$router.push({
+						name:'loginLink',
+						query:{
+							article_id:this.queryObj.sort_article_id
+						}
+					})
+				}
+				let params = {
+					user_id : this.currentUser.user_id,
+					article_sort_id:this.queryObj.sort_article_id
+				}
+				this.$Axios.post(this.$Urls.POST_ARTICLESORTUSER_INSERT,params).then(res=>res.data).then((res)=>{
+		  			if(res.code === '0000'){
+		  				this.$vux.toast.text('关注成功', 'bottom')
+						this.isFollowSortEvt()  				
+		  			}else{
+		  				this.$vux.toast.text('关注失败', 'bottom')
+		  			}
+		  		}).catch(err=>console.log("查看是否关注过吧错误："+err))
+			},
 			queryById(){
 				let params = {
 					sort_article_id:this.queryObj.sort_article_id
@@ -216,7 +259,9 @@
 				    		this.queryObj.pageSize = res.data.pageSize
 				    		this.queryObj.count = res.data.count
 				    		this.queryObj.pageCount = res.data.pageCount	
-				    		
+				    		if(this.isLogin){
+				    			this.isFollowSortEvt()	
+				    		}
 				    		this.queryObj.status.pullupStatus = 'default'
 						    this.$refs.scroller.reset()
 							if(this.queryObj.currentPage>=this.queryObj.pageCount){
@@ -278,6 +323,9 @@
 	    margin-bottom: 10px;
 	    padding: 10px;
 	}
+	.articleSortIndex .panel .panel-user{
+		display: flex;
+	}
 	.articleSortIndex .panel-user-photo {
 	    float: left;
 	    border-radius: 50px;
@@ -295,7 +343,8 @@
 	}
 	.articleSortIndex .panel-user-right {
 	    height: 50px;
-	    padding-left: 60px;
+	    padding-left: 10px;
+	    flex: 1;
 	}
 	.articleSortIndex .panel-user-name {
 	    color: #333;
@@ -325,5 +374,23 @@
 	}
 	.articleSortIndex .weui-tab__panel{
 		padding-bottom: 0 !important;
+	}
+	.articleSortIndex .panel-user-btn {
+	    line-height: 50px;
+	}
+	.articleSortIndex .panel-user-btn .btn {
+	    display: inline-block;
+	    vertical-align: middle;
+	    width: 50px;
+	    padding: 0;
+	    line-height: 30px;
+	    height: 30px;
+	    background: #3385ff;
+	    border: 1px solid #3385ff;
+	    color: #fff;
+	    border-radius: 3px;
+	}
+	.articleSortIndex .panel-user-btn .btn .iconfont {
+	    font-size: 12px;
 	}
 </style>

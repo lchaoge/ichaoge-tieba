@@ -26,10 +26,12 @@ module.exports = {
 		queryByUserId : 'select art.*,art_s.sort_article_name from article as art left join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ? order by art.article_time desc limit ?,?', // 用户帖子分页查询
 		insert : 'insert into article(type_id,article_name,article_time,article_ip,article_click,sort_article_id,user_id,article_type,article_content,article_up,article_support,image_type_id) values (?,?,?,?,?,?,?,?,?,?,?,?)', // 插入文章
 		index : 'SELECT art.*,art_s.sort_article_name,art_s.sort_article_id,u.user_image_url,u.user_name FROM article AS art JOIN article_sort AS art_s ON art.sort_article_id = art_s.sort_article_id LEFT JOIN USER AS u ON u.user_id = art.user_id where art.type_id=0 ORDER BY art.article_time DESC LIMIT ?,?',
+		followIndex : 'select art.*,art_s.sort_article_name,art_s.sort_article_id,u.user_image_url,u.user_name from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id join user as u on u.user_id = art.user_id where art.user_id in (select ua.attention_id from user_attention as ua where ua.user_id = ?) ORDER BY art.article_time DESC LIMIT ?,?', // 首页-关注
 		count : 'select count(*) as count from article where type_id = 0',
-		queryByArticleId : 'select art.image_type_id,art.article_id,art.article_name,art.article_content,art.article_click,art.article_time,u.user_name,u.user_id,u.user_image_url,art_s.sort_article_name,art_s.sort_article_id from article as art left join article_sort as art_s on art.sort_article_id=art_s.sort_article_id left join user as u on art.user_id=u.user_id where art.article_id = ?',
+		queryByArticleId : 'select art.image_type_id,art.article_id,art.article_name,art.article_content,art.article_click,art.article_time,u.user_name,u.user_id,u.user_image_url,art_s.sort_article_name,art_s.image_url,art_s.sort_article_id from article as art left join article_sort as art_s on art.sort_article_id=art_s.sort_article_id left join user as u on art.user_id=u.user_id where art.article_id = ?',
 		updateClickByArticleId : 'update article set article_click=article_click+1 where article_id = ?',
-		queryArticleByUserId : 'select * from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ?' // 根据用户ID查询
+		queryArticleByUserId : 'select * from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id where art.user_id = ?', // 根据用户ID查询
+		queryCountBySortId : 'select count(*) as count from article where sort_article_id = ?', // 查询贴吧发布了多少帖子
 	},
 	// 贴吧表
 	articleSort:{
@@ -39,6 +41,12 @@ module.exports = {
 		follow : 'select * from article_sort as art_s where art_s.sort_article_id in (select art_s_u.article_sort_id from article_sort_user as art_s_u where art_s_u.user_id = ?)', // 用户关注的
 		followPage : 'select art_s.*,art_s_u.createtime from article_sort as art_s join article_sort_user art_s_u on art_s.sort_article_id = art_s_u.article_sort_id where art_s_u.user_id = ?  order by art_s_u.createtime limit ?,?', // 用户关注的吧分页 
 		likeArtsName : 'select * from article_sort where article_sort.sort_article_name like "?%"', // 搜索贴吧名
+	},
+	// 用户关注的吧
+	articleSortUser:{
+		queryCountBySortId : 'select count(*) as count from article_sort_user where article_sort_id = ?', // 查询多少人关注了吧
+		queryIsFollow : 'select * from article_sort_user where user_id = ? and article_sort_id = ?', // 查看用户是否关注某个吧
+		insert : 'insert into article_sort_user (user_id,article_sort_id,createtime)values(?,?,?)',
 	},
 	// 帖子图片表
 	articleImages:{
@@ -57,7 +65,7 @@ module.exports = {
 		isExist : 'select * from browse_history where user_id = ? and article_id = ?', // 查看是不是存在这条记录
 		update : 'update browse_history as b set b.user_id = ?,b.article_id = ?,b.createtime = ? where b.b_id = ?',
 		insert : 'insert into browse_history (user_id,article_id,createtime)values(?,?,?)',
-		historyPage : 'select art.*,art_s.sort_article_name,b.createtime from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id join browse_history as b on b.article_id = art.article_id where b.user_id = ? order by b.createtime limit ?,?',
+		historyPage : 'select art.*,art_s.sort_article_name,b.createtime from article as art join article_sort as art_s on art.sort_article_id = art_s.sort_article_id join browse_history as b on b.article_id = art.article_id where b.user_id = ? order by b.createtime desc limit ?,?',
 		countByUserId : 'select count(*) as count from browse_history where user_id = ?',
 		empty : 'delete from browse_history where user_id = ?',
 	}

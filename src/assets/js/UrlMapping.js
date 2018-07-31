@@ -39,10 +39,13 @@ export default class UrlMapping {
 		this.POST_ARTICLE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/article/insert';   // 插入
 		this.POST_ARTICLE_DETAIL = (this.isLocalHost?'/apis':this.origin)+'/wm/article/detail';   // 详情
 		this.POST_ARTICLE_INDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/article/index';   // 首页
+		this.POST_ARTICLE_FOLLOWINDEX = (this.isLocalHost?'/apis':this.origin)+'/wm/article/followIndex';   // 首页-关注
+		
 		this.POST_ARTICLE_UPDATECLICK = (this.isLocalHost?'/apis':this.origin)+'/wm/article/updateClickByArticleId';   // 修改查看人数
 		this.POST_ARTICLE_LIKEARTNAME = (this.isLocalHost?'/apis':this.origin)+'/wm/article/likeArtName';   // 搜索文章
 		this.POST_ARTICLE_QUERYBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/queryArticleByUserId';   // 当前用户发布的帖子
 		this.POST_ARTICLE_ARTICLEPAGEBYUSERID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/articlePageByUserId';   // 当前用户发布的帖子分页
+		this.POST_ARTICLE_QUERYCOUNTBYSORTID = (this.isLocalHost?'/apis':this.origin)+'/wm/article/queryCountBySortId';   // 查询贴吧发布了多少帖子
 		
 		// 帖子浏览历史
 		this.POST_BROWSEHISTORY_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/browseHistory/insert';   // 插入
@@ -53,6 +56,11 @@ export default class UrlMapping {
 		this.POST_STAYMESSAGE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/insert';   // 插入
 		this.POST_STAYMESSAGE_QUERYFLOORALL = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryFloorAll';   // 查询评论
 	
+		// 用户关注的吧
+		this.POST_ARTICLESORTUSER_QUERYCOUNTBYSORTID = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSortUser/queryCountBySortId';   // 查询多少人关注了吧
+		this.POST_ARTICLESORTUSER_ISFOLLOW = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSortUser/isFollow';   // 查看用户是否关注贴吧
+		this.POST_ARTICLESORTUSER_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSortUser/insert';   // 插入
+		
 	}
 	
 }

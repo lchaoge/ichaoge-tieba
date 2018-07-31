@@ -61,7 +61,7 @@ export default {
   			this.pageData.searchList = []
   			if(window.localStorage.getItem("searchList")!=null){
   				let obj = window.localStorage.getItem("searchList").split(',')
-  				obj.forEach(item=>{
+  				obj.reverse().forEach(item=>{
   					this.pageData.searchList.push({
 	  					sort_article_name:item
 	  				})	
@@ -80,11 +80,7 @@ export default {
 	    	let params = {
 	    		name:this.pageData.search.value
 	    	}
-	      	console.log('on-change', val)
 	      	if(this.pageData.search.value !=''){
-	    		// @todo记录本地缓存
-	    		
-	    		// ajax
 	    		this.$Axios.post(this.$Urls.POST_ARTICLESORT_LIKEARTSNAME,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
 		  				if(res.data.length>0){

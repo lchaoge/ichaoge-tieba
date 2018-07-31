@@ -9,6 +9,7 @@ const userController = require('./controller/userController');
 const userAttentionController = require('./controller/userAttentionController');
 const articleController = require('./controller/articleController');
 const articleSortController = require('./controller/articleSortController');
+const articleSortUserController = require('./controller/articleSortUserController');
 const stayMessageController = require('./controller/stayMessageController');
 const browseHistoryController = require('./controller/browseHistoryController');
 
@@ -21,6 +22,7 @@ app.use('/wm/user', userController);
 app.use('/wm/userAttention', userAttentionController);
 app.use('/wm/article', articleController);
 app.use('/wm/articleSort', articleSortController);
+app.use('/wm/articleSortUser', articleSortUserController);
 app.use('/wm/stayMessage', stayMessageController);
 app.use('/wm/browseHistory', browseHistoryController);
 

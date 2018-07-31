@@ -194,7 +194,7 @@
 		    	this.$Axios.post(this.$Urls.POST_ARTICLESORT_LIKEARTSNAME,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
 		  				if(res.data.length>0){
-		  					this.pageData.search.articleSprtlist = res.data	
+		  					this.pageData.search.articleSortList = res.data	
 		  				}
 		  			}else{
 		  				this.$vux.toast.text('系统错误', 'bottom')
@@ -229,10 +229,10 @@
 	.searchIndex .weui-search-bar__label{
 		top: 5px !important;
 	}
-	.searchIndex .searchIndex .weui-search-bar{
+	.searchIndex .weui-search-bar{
 		background: #fff !important;	
 	}
-	.searchIndex .searchIndex .content{
+	.searchIndex .content{
 		margin-top: 44px;
 	}
 	.searchIndex .weui-cells{
@@ -256,44 +256,44 @@
 	  border-color: rgb(55, 174, 252) !important;
 	}
 	.searchIndex .panel {
-    background: #fff;
-    margin-bottom: 10px;
-    padding: 10px;
-}
-.searchIndex .panel-user {
-    margin-bottom: 10px;
-}
-.searchIndex .panel-user-photo {
-    float: left;
-    border-radius: 50px;
-    border: 1px solid #A3A3A3;
-    overflow: hidden;
-    width: 50px;
-    height: 50px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.searchIndex .panel-user-photo img {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-.searchIndex .panel-user-right {
-    height: 50px;
-    padding-left: 60px;
-}
-.searchIndex .panel-user-name {
-    color: #333;
-    line-height: 22px;
-    margin-bottom: 6px;
-}
-.searchIndex .panel-user-right .panel-user-more {
-    color: #a3a3a3;
-}
-.searchIndex .panel-content-text {
-    margin: 0 0 10px;
-}
-.searchIndex .panel-flex-button {
-    text-align: center;
-}
+	    background: #fff;
+	    margin-bottom: 10px;
+	    padding: 10px;
+	}
+	.searchIndex .panel-user {
+	    margin-bottom: 10px;
+	}
+	.searchIndex .panel-user-photo {
+	    float: left;
+	    border-radius: 50px;
+	    border: 1px solid #A3A3A3;
+	    overflow: hidden;
+	    width: 50px;
+	    height: 50px;
+	    -webkit-box-sizing: border-box;
+	    box-sizing: border-box;
+	}
+	.searchIndex .panel-user-photo img {
+	    display: block;
+	    width: 100%;
+	    height: 100%;
+	}
+	.searchIndex .panel-user-right {
+	    height: 50px;
+	    padding-left: 60px;
+	}
+	.searchIndex .panel-user-name {
+	    color: #333;
+	    line-height: 22px;
+	    margin-bottom: 6px;
+	}
+	.searchIndex .panel-user-right .panel-user-more {
+	    color: #a3a3a3;
+	}
+	.searchIndex .panel-content-text {
+	    margin: 0 0 10px;
+	}
+	.searchIndex .panel-flex-button {
+	    text-align: center;
+	}
 </style>

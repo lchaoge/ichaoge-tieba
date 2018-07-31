@@ -43,11 +43,14 @@ router.post('/insert',(req,res)=>{
 	let insertSql = $sql.stayMessage.insert;
 	queryByFloorEvt(params.article_id,(data)=>{
 		params.message_stay_time = commonController.getDateFunc('all');
-		console.log(data[0])
-		if(data[0]){
-			params.floor = parseInt(data[0].floor)+1;	
+		if(params.parent_id){
+			// 子评论
 		}else{
-			params.floor = 1
+			if(data[0]){
+				params.floor = parseInt(data[0].floor)+1;	
+			}else{
+				params.floor = 1
+			}
 		}
 		conn.query(insertSql,[params.article_id,params.user_id,params.stay_user_id,params.parent_id,params.floor,params.message_content,params.stay_user_ip,params.message_stay_time],(err,result) => {
 			if(err){
