@@ -55,6 +55,9 @@ export default class UrlMapping {
 		// 评论
 		this.POST_STAYMESSAGE_INSERT = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/insert';   // 插入
 		this.POST_STAYMESSAGE_QUERYFLOORALL = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryFloorAll';   // 查询评论
+		this.POST_STAYMESSAGE_QUERYONEFLOOR = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryOneFloor';   // 查询单个楼层
+		this.POST_STAYMESSAGE_QUERYONEFLOORLIST = (this.isLocalHost?'/apis':this.origin)+'/wm/stayMessage/queryOneFloorList';   // 查看单个楼层的子评论
+		
 	
 		// 用户关注的吧
 		this.POST_ARTICLESORTUSER_QUERYCOUNTBYSORTID = (this.isLocalHost?'/apis':this.origin)+'/wm/articleSortUser/queryCountBySortId';   // 查询多少人关注了吧

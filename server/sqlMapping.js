@@ -58,7 +58,9 @@ module.exports = {
 		queryByFloor :'select floor from stay_message where article_id = ? order by floor desc limit 1', // 查询最后一个插入的楼层
 		insert : 'insert into stay_message (article_id,user_id,stay_user_id,parent_id,floor,message_content,stay_user_ip,message_stay_time)values(?,?,?,?,?,?,?,?)', // 插入评论
 		queryFloorAll : 'select sm.*,u.user_name,u.user_image_url from `user` as u join stay_message as sm on u.user_id = sm.stay_user_id where sm.article_id = ? group by sm.floor order by sm.floor',  // 楼层查询
-//		queryFloorByParentId : 'select s.*,u.user_name,u.user_image_url from stay_message as s join user as u on s.stay_user_id = u.user_id where s.article_id = ? and s.parent_id = ? order by s.stay_id', // 楼层评论
+		queryOneFloor : 'SELECT sm.*, u.user_name,u.user_image_url FROM `user` AS u JOIN stay_message AS sm ON u.user_id = sm.stay_user_id WHERE sm.article_id = ? and sm.floor=? GROUP BY sm.floor ORDER BY sm.floor', // 查询单个楼层
+		queryOneFloorListCount : 'SELECT count(*) as count FROM stay_message WHERE article_id = ? AND floor = ? AND parent_id != ""', 
+		queryOneFloorList : 'select sm.*,(select u.user_name from user as u where u.user_id = sm.user_id) as user_name,(select u.user_name from user as u where u.user_id = sm.stay_user_id) as stay_user_name from stay_message as sm where sm.article_id = ? and sm.floor = ? and sm.parent_id !="" order by sm.message_stay_time limit ?,?', // 查看单个楼层的子评论
 	},
 	// 浏览帖子历史
 	browseHistory:{

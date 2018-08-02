@@ -27,6 +27,7 @@ import UserBrowseHistory from './../components/user/children/BrowseHistory'
 import Article from './../components/article/Article'
 import ArticleIndex from './../components/article/children/Index'
 import ArticleInsert from './../components/article/children/Insert'
+import ArticleFloor from './../components/article/children/Floor'
 
 // 贴吧
 import ArticleSort from './../components/articleSort/ArticleSort'
@@ -66,7 +67,8 @@ export const routes = [
 	]},
 	// 文章详情
 	{path:'/article',name:'articleLink',component:Article,redirect:'/article/index',children:[
-		{path:'/article/index',name:'articleIndexLink',component:ArticleIndex},	
+		{path:'/article/index',name:'articleIndexLink',component:ArticleIndex},
+		{path:'/article/floor',name:'articleFloorLink',component:ArticleFloor},	
 		{path:'/article/insert',name:'articleInsertLink',component:ArticleInsert},	
 	]},
 	// 贴吧

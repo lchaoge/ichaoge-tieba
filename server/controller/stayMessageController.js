@@ -35,7 +35,57 @@ let queryFloorAllEvt = (article_id,callback)=>{
 		}
 	})
 }
+// 查看总数
+let queryOneFloorListCountEvt = (article_id,floor,callback)=>{
+	let queryFloorAllSql = $sql.stayMessage.queryOneFloorListCount;
+	conn.query(queryFloorAllSql,[article_id,floor],(err,result) => {
+		if(err){
+			console.log('楼层查询总数错误：'+err)
+		}
+		if(result){
+			callback(result)
+		}
+	})
+}
 
+// 查询单个楼层
+router.post('/queryOneFloor',(req,res)=>{
+	let params = req.body;
+	let sql = $sql.stayMessage.queryOneFloor;
+	conn.query(sql,[params.article_id,params.floor],(err,result) => {
+		if(err){
+			console.log('查询单个楼层错误：'+err)
+		}
+		if(result){
+			commonController.jsonWrite(res,result)
+		}
+	})
+});
+
+// 查看单个楼层的子评论
+router.post('/queryOneFloorList',(req,res)=>{
+	let params = req.body;
+	queryOneFloorListCountEvt(params.article_id,params.floor,(c)=>{
+		let sql = $sql.stayMessage.queryOneFloorList;
+		let currentPage = parseInt(params.currentPage || 1);// 页码
+	    let end = parseInt(params.pageSize || 10); // 默认页数
+	    let start = (currentPage - 1) * end;
+		conn.query(sql,[params.article_id,params.floor,start,end],(err,result) => {
+			if(err){
+				console.log('查看单个楼层的子评论错误：'+err)
+			}
+			if(result){
+				commonController.jsonWrite(res,{
+					currentPage:params.currentPage,
+					pageSize:params.pageSize,
+					count:c[0].count,
+					pageCount:Math.ceil(c[0].count/(params.currentPage*params.pageSize)),
+					list:result
+				})
+			}
+		})
+	})
+});
 
 // 插入评论
 router.post('/insert',(req,res)=>{
@@ -70,7 +120,7 @@ router.post('/queryFloorAll',(req,res)=>{
 		if(data.length>0){
 			let queryFloorByParentIdSql = ''
 			data.forEach(stayMessage=>{
-				queryFloorByParentIdSql += '(select s.*,u.user_name,u.user_image_url from stay_message as s join user as u on s.stay_user_id = u.user_id where s.article_id = '+stayMessage.article_id+' and s.parent_id = '+stayMessage.stay_id+' order by s.stay_id)UNION ALL'					
+				queryFloorByParentIdSql += '(select s.*,u.user_name,u.user_image_url,(select uu.user_name from user as uu where uu.user_id = s.user_id) as stay_user_name from stay_message as s join user as u on s.stay_user_id = u.user_id where s.article_id = '+stayMessage.article_id+' and s.parent_id = '+stayMessage.stay_id+' order by s.stay_id)UNION ALL'					
 			})
 			queryFloorByParentIdSql = queryFloorByParentIdSql.substring(0,queryFloorByParentIdSql.length-9)
 			conn.query(queryFloorByParentIdSql,[],(err,result) => {

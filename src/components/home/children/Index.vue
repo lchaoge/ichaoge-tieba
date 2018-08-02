@@ -36,7 +36,10 @@
 							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
 							      		<div style="width:100%;" :style="{paddingTop:item.images.length==1?'56.25%':'100%',background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'auto auto'}"></div>
 							      	</flexbox-item>
-							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
+							      	<flexbox-item v-if="item.images.length==2 && item.image_type_id==1">
+							      		<div style="width:100%;padding-top: 100%;"></div>
+							      	</flexbox-item>
+							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="item.image_type_id==0">
 							      		<player :video-url="img.article_image_url" :state="false"></player>
 							      	</flexbox-item>
 							    </flexbox>
@@ -94,6 +97,9 @@
 								<flexbox class="mb10" v-if="item.images.length>0">
 							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-if="index<3 && item.image_type_id==1">
 							      		<div style="width:100%;" :style="{paddingTop:item.images.length==1?'56.25%':'100%',background:'url(' + img.article_image_url + ') no-repeat center center',backgroundSize:'auto auto'}"></div>
+							      	</flexbox-item>
+							      	<flexbox-item v-if="item.images.length==2 && item.image_type_id==1">
+							      		<div style="width:100%;padding-top: 100%;"></div>
 							      	</flexbox-item>
 							      	<flexbox-item v-for="(img, index) in item.images" :key="index" v-else-if="item.image_type_id==0">
 							      		<player :video-url="img.article_image_url" :state="false"></player>

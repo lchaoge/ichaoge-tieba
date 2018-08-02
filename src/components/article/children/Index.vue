@@ -72,21 +72,21 @@
 		        	<a @click="userInfoEvt(item.stay_user_id)"><img :src="item.user_image_url" /></a>
 		        </div>
 		        <div class="m-box">
-		          	<h3 @click="userInfoEvt(item.stay_user_id)">{{item.user_name}}</h3>
+		          	<h3 @click.stop="userInfoEvt(item.stay_user_id)" style="display: inline-block;">{{item.user_name}}</h3>
 		          	<div class="m-desc">
 		          		<span class="m-floor">第{{item.floor}}楼</span>
 		          		<span class="vux-1px-l ml10 mr10"></span>
 		          		<span class="m-time">{{item.message_stay_time}}</span>
 		          	</div>
-		          	<div class="m-content" @click="replyEvt(item,true)">{{item.message_content}}</div>
+		          	<div class="m-content" @click.stop="replyEvt(item,true)">{{item.message_content}}</div>
 			        <cell-box v-if="item.children.length>0">
 			        	<div class="item" v-for="(el,index) in item.children" :key="el.stay_id" v-if="index<2">
-			        		<a  @click="userInfoEvt(el.stay_user_id)">{{el.user_name}}:</a>
+			        		<a @click.stop="userInfoEvt(el.stay_user_id)">{{el.user_name}}:</a>
 			        		<span v-if="item.user_id != el.user_id">回复</span>
-			        		<a v-if="item.user_id != el.user_id">{{el.user_id}}:</a>
+			        		<a @click.stop="userInfoEvt(el.stay_user_id)" v-if="item.user_id != el.user_id">{{el.stay_user_name}}:</a>
 			        		<span  @click="replyEvt(el,false)">{{el.message_content}}</span>
 						</div>
-						<div class="item" style="color: #999;" v-if="item.children.length>2">
+						<div class="item" style="color: #999;" v-if="item.children.length>2" @click.stop="queryFloor(item.floor,item.article_id)">
 			        		查看全部{{item.children.length}}条评论
 			        		<i class="icon iconfont icon-xiayibu"></i>
 			        	</div>
@@ -220,6 +220,15 @@
 			this.$Apis.getIntnetIP()
 		},
 		methods:{
+			queryFloor(floor,article_id){
+				this.$router.push({
+					name:'articleFloorLink',
+					query:{
+						floor,
+						article_id
+					}
+				})
+			},
 			popupHide(){
 				this.stayMessage.form.user_id = ''
 				this.stayMessage.form.floor = ''
@@ -344,9 +353,9 @@
 				let params = {
 					article_id:this.queryObj.detail.article_id
 				}
-				this.stayMessageList = []
 				this.$Axios.post(this.$Urls.POST_STAYMESSAGE_QUERYFLOORALL,params).then(res=>res.data).then((res)=>{
 		  			if(res.code === '0000'){
+		  				this.stayMessageList = []
 		  				res.data.forEach(item=>{
 		  					item.message_stay_time = dateFormat(new Date(item.message_stay_time), 'MM-DD')
 		  					this.stayMessageList.push(item)	
@@ -357,6 +366,14 @@
 		  		}).catch(err=>console.log("系统错误："+err))
 			},
 			replyEvt(item,isTwo){
+				if(!this.isLogin){
+					this.$router.push({
+						name:'loginLink',
+						query:{
+							article_id:this.queryObj.article_id
+						}
+					})
+				}
 				this.stayMessage.show = true
 				if(isTwo){
 					this.stayMessage.form.parent_id = item.stay_id	
