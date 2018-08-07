@@ -1,7 +1,7 @@
 // 数据库连接配置
 module.exports = {
     mysql: {
-        host: 'localhost',
+        host: '47.105.121.106',
         database: 'blog',
         port: '3306',
         user: 'root',

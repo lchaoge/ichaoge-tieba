@@ -7,9 +7,9 @@
 export default class UrlMapping {
 	constructor(){
 		this.isLocalHost = window.location.host.toLowerCase() == 'localhost:8080';
-		console.log(this.isLocalHost)
+		this.isLocalHost = true
 //		this.origin = window.location.origin;
-		this.origin = 'http://10.111.86.193:3000';
+		this.origin = 'http://47.105.121.106:3000';
 		
 		// 用户
 		this.POST_USER_LOGIN = (this.isLocalHost?'/apis':this.origin)+'/wm/user/login';   // 登录               

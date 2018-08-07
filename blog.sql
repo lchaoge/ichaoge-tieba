@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50528
 File Encoding         : 65001
 
-Date: 2018-07-31 17:59:57
+Date: 2018-08-06 16:47:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -86,7 +86,7 @@ CREATE TABLE `article` (
 INSERT INTO `article` VALUES ('65', '', '2018-07-10 16:49:41', '111.203.188.110', '1', '1', '19', '1', '1', '万能的贴吧，谁能告诉我那只大的蛋龟到底是什么品种。 公的腹甲有十厘米，大JJ，想给他找个老婆。', '0', '0', '0', '1');
 INSERT INTO `article` VALUES ('63', '', '2018-07-10 16:43:35', '111.203.188.110', '0', '1', '19', '1', '1', '手把手教你简洁巨蛋缸的规划设计与制作', '0', '0', '0', '1');
 INSERT INTO `article` VALUES ('64', '', '2018-07-10 16:48:09', '111.203.188.110', '0', '1', '19', '1', '1', '4只大亚成窄桥出售！2公2母！', '0', '0', '0', '1');
-INSERT INTO `article` VALUES ('70', '太搞笑了！用啊这个姿势看球 无敌了', '2018-07-11 13:07:50', '111.203.188.110', '149', '1', '19', '0', '1', '老兄独一无二的观赛姿势，本以为是个真汉子，没想到振兴竟然是......', '0', '0', '0', '1');
+INSERT INTO `article` VALUES ('70', '太搞笑了！用啊这个姿势看球 无敌了', '2018-07-11 13:07:50', '111.203.188.110', '150', '1', '19', '0', '1', '老兄独一无二的观赛姿势，本以为是个真汉子，没想到振兴竟然是......', '0', '0', '0', '1');
 INSERT INTO `article` VALUES ('69', '今年剃刀苗子什么行情', '2018-07-10 17:13:43', '111.203.188.110', '1', '1', '19', '1', '1', '兰州本地出一只墨蛋700剃刀200蛇颈180只限自提', '0', '0', '0', '1');
 INSERT INTO `article` VALUES ('68', '', '2018-07-10 17:02:03', '111.203.188.110', '0', '1', '19', '1', '1', '**是买不起的，这辈子都不可能的。也就养养wc才能维持的了爱好。想问wc天天喂催肥好吗', '0', '0', '1', '1');
 INSERT INTO `article` VALUES ('67', '甲壳虫', '2018-07-10 16:53:49', '111.203.188.110', '2', '1', '19', '0', '1', '上海同城出售个精品果核蛋龟状态好的不行蛋龟和龟 从小养大的蛋龟状态好只限自提明码450 本交易支持自', '0', '0', '1', '1');
@@ -120,10 +120,10 @@ INSERT INTO `article` VALUES ('90', '', '2018-07-26 13:48:25', '111.203.188.110'
 INSERT INTO `article` VALUES ('91', '', '2018-07-26 13:50:10', '111.203.188.110', '0', '-1', '19', '1', '1', '奥术大师多', '0', '0', '0', '0');
 INSERT INTO `article` VALUES ('92', '', '2018-07-26 13:50:39', '111.203.188.110', '2', '-1', '28', '1', '1', '测试', '0', '0', '0', '0');
 INSERT INTO `article` VALUES ('93', '', '2018-07-26 13:52:35', '111.203.188.110', '1', '-1', '28', '1', '1', '测试', '0', '0', '0', '0');
-INSERT INTO `article` VALUES ('94', '', '2018-07-26 14:28:51', '111.203.188.110', '13', '1', '19', '0', '1', '测试，发布到甲壳虫吧视频', '0', '0', '0', '0');
+INSERT INTO `article` VALUES ('94', '', '2018-07-26 14:28:51', '111.203.188.110', '14', '1', '19', '0', '1', '测试，发布到甲壳虫吧视频', '0', '0', '0', '0');
 INSERT INTO `article` VALUES ('95', '', '2018-07-26 14:33:10', '111.203.188.110', '78', '1', '19', '0', '1', '测试视频', '0', '0', '0', '0');
-INSERT INTO `article` VALUES ('96', '', '2018-07-27 17:03:51', '111.203.188.110', '153', '10', '19', '0', '1', 'sdasdasdasdadasdasdasdasd', '0', '0', '0', '0');
-INSERT INTO `article` VALUES ('97', '', '2018-07-30 14:10:33', '111.203.188.110', '54', '24', '29', '0', '1', '50发布帖子', '0', '0', '0', null);
+INSERT INTO `article` VALUES ('96', '', '2018-07-27 17:03:51', '111.203.188.110', '195', '10', '19', '0', '1', 'sdasdasdasdadasdasdasdasd', '0', '0', '0', '0');
+INSERT INTO `article` VALUES ('97', '', '2018-07-30 14:10:33', '111.203.188.110', '58', '24', '29', '0', '1', '50发布帖子', '0', '0', '0', null);
 
 -- ----------------------------
 -- Table structure for article_image
@@ -253,7 +253,7 @@ CREATE TABLE `article_sort_user` (
   `article_sort_id` int(8) DEFAULT NULL COMMENT '贴吧分类id',
   `createtime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`art_s_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='关注的吧';
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COMMENT='关注的吧';
 
 -- ----------------------------
 -- Records of article_sort_user
@@ -292,6 +292,7 @@ INSERT INTO `article_sort_user` VALUES ('31', '19', '33', null);
 INSERT INTO `article_sort_user` VALUES ('32', '19', '35', null);
 INSERT INTO `article_sort_user` VALUES ('36', '21', '24', '2018-07-30 15:55:24');
 INSERT INTO `article_sort_user` VALUES ('37', '21', '1', '2018-07-30 16:27:46');
+INSERT INTO `article_sort_user` VALUES ('38', '29', '24', '2018-08-02 18:07:35');
 
 -- ----------------------------
 -- Table structure for browse_history
@@ -303,7 +304,7 @@ CREATE TABLE `browse_history` (
   `article_id` int(8) DEFAULT NULL COMMENT '文章ID',
   `createtime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`b_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of browse_history
@@ -320,8 +321,14 @@ INSERT INTO `browse_history` VALUES ('9', '21', '97', '2018-07-31 13:12:07');
 INSERT INTO `browse_history` VALUES ('10', '21', '95', '2018-07-30 16:31:16');
 INSERT INTO `browse_history` VALUES ('11', '21', '75', '2018-07-31 12:59:30');
 INSERT INTO `browse_history` VALUES ('12', '21', '79', '2018-07-31 13:10:29');
-INSERT INTO `browse_history` VALUES ('13', '29', '96', '2018-07-31 16:40:59');
+INSERT INTO `browse_history` VALUES ('13', '29', '96', '2018-08-02 18:09:13');
 INSERT INTO `browse_history` VALUES ('14', '30', '96', '2018-07-31 16:47:45');
+INSERT INTO `browse_history` VALUES ('15', '31', '94', '2018-08-01 13:29:49');
+INSERT INTO `browse_history` VALUES ('16', '31', '96', '2018-08-01 13:29:53');
+INSERT INTO `browse_history` VALUES ('17', '39', '96', '2018-08-01 14:12:21');
+INSERT INTO `browse_history` VALUES ('18', '38', '96', '2018-08-01 14:30:30');
+INSERT INTO `browse_history` VALUES ('19', '37', '96', '2018-08-01 15:28:37');
+INSERT INTO `browse_history` VALUES ('20', '29', '97', '2018-08-02 18:09:08');
 
 -- ----------------------------
 -- Table structure for friend
@@ -482,7 +489,7 @@ CREATE TABLE `stay_message` (
   `stay_user_ip` varchar(15) DEFAULT NULL COMMENT '评论用户的IP地址',
   `message_stay_time` datetime NOT NULL COMMENT '评论时间',
   PRIMARY KEY (`stay_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13167 DEFAULT CHARSET=utf8 COMMENT='用户评论表';
+) ENGINE=MyISAM AUTO_INCREMENT=13170 DEFAULT CHARSET=utf8 COMMENT='用户评论表';
 
 -- ----------------------------
 -- Records of stay_message
@@ -521,6 +528,9 @@ INSERT INTO `stay_message` VALUES ('13163', '96', '19', '29', '13147', '4', '位
 INSERT INTO `stay_message` VALUES ('13164', '96', '29', '29', '13147', '4', '去外地阿萨德阿萨德阿萨德大萨达阿萨德阿萨德阿萨德阿萨德阿萨德', '111.203.188.110', '2018-07-31 16:36:29');
 INSERT INTO `stay_message` VALUES ('13165', '96', '21', '30', '13155', '10', 'WD ASD QD ASD ASD QDASD R AS', '111.203.188.110', '2018-07-31 16:48:03');
 INSERT INTO `stay_message` VALUES ('13166', '96', '19', '30', '13147', '4', '12312314123SDFASSD QDW ', '111.203.188.110', '2018-07-31 16:48:44');
+INSERT INTO `stay_message` VALUES ('13167', '96', '21', '31', '13154', '9', '3123123123', '111.203.188.110', '2018-08-01 13:40:02');
+INSERT INTO `stay_message` VALUES ('13168', '96', '19', '39', '13144', '1', '最新评论', '111.203.188.110', '2018-08-01 14:10:41');
+INSERT INTO `stay_message` VALUES ('13169', '96', '39', '39', '13144', '1', '评论', '111.203.188.110', '2018-08-01 14:10:49');
 
 -- ----------------------------
 -- Table structure for system_message
@@ -577,33 +587,33 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('19', null, '朝歌', 'e10adc3949ba59abbe56e057f20f883e', '13260094140', '1', null, null, '', null, null, null, '2018-07-31', '我就是我,不一样的', '../../static/uploads/images/img-1532507819260.png', null, '2010-07-24 15:32:51', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('20', null, '甲壳虫', 'e10adc3949ba59abbe56e057f20f883e', '13260094141', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-06-26 15:32:54', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('21', null, '13260094142', 'e10adc3949ba59abbe56e057f20f883e', '13260094142', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-18 15:33:01', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('22', null, '13260094143', 'e10adc3949ba59abbe56e057f20f883e', '13260094143', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-07-20 15:33:05', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('23', null, '13260094144', 'e10adc3949ba59abbe56e057f20f883e', '13260094144', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-24 15:33:09', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('24', null, '13260094145', 'e10adc3949ba59abbe56e057f20f883e', '13260094145', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2011-06-24 15:33:13', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('25', null, '13260094146', 'e10adc3949ba59abbe56e057f20f883e', '13260094146', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-07-06 15:33:17', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('26', null, '13260094147', 'e10adc3949ba59abbe56e057f20f883e', '13260094147', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-11 15:33:24', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('27', null, '13260094148', 'e10adc3949ba59abbe56e057f20f883e', '13260094148', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('28', null, '朝歌朝', 'e10adc3949ba59abbe56e057f20f883e', '13260094149', '0', null, null, 'null', null, null, null, '2018-07-26', '朝歌个性签名', '../../static/uploads/images/img-1532601437572.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('29', null, '13260094150', 'e10adc3949ba59abbe56e057f20f883e', '13260094150', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('30', null, '13260094151', 'e10adc3949ba59abbe56e057f20f883e', '13260094151', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('31', null, '13260094152', 'e10adc3949ba59abbe56e057f20f883e', '13260094152', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('32', null, '13260094153', 'e10adc3949ba59abbe56e057f20f883e', '13260094153', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('33', null, '13260094154', 'e10adc3949ba59abbe56e057f20f883e', '13260094154', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('34', null, '13260094155', 'e10adc3949ba59abbe56e057f20f883e', '13260094155', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('35', null, '13260094156', 'e10adc3949ba59abbe56e057f20f883e', '13260094156', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('36', null, '13260094157', 'e10adc3949ba59abbe56e057f20f883e', '13260094157', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('37', null, '13260094158', 'e10adc3949ba59abbe56e057f20f883e', '13260094158', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('38', null, '13260094159', 'e10adc3949ba59abbe56e057f20f883e', '13260094159', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('39', null, '13260094160', 'e10adc3949ba59abbe56e057f20f883e', '13260094160', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('40', null, '13260094161', 'e10adc3949ba59abbe56e057f20f883e', '13260094161', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('41', null, '13260094162', 'e10adc3949ba59abbe56e057f20f883e', '13260094162', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('42', null, '13260094163', 'e10adc3949ba59abbe56e057f20f883e', '13260094163', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('43', null, '13260094164', 'e10adc3949ba59abbe56e057f20f883e', '13260094164', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('44', null, '13260094165', 'e10adc3949ba59abbe56e057f20f883e', '13260094165', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('45', null, '13260094166', 'e10adc3949ba59abbe56e057f20f883e', '13260094166', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('46', null, '13260094167', 'e10adc3949ba59abbe56e057f20f883e', '13260094167', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('20', null, '澄邈', 'e10adc3949ba59abbe56e057f20f883e', '13260094141', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-06-26 15:32:54', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('21', null, '德泽', 'e10adc3949ba59abbe56e057f20f883e', '13260094142', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-18 15:33:01', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('22', null, '海超', 'e10adc3949ba59abbe56e057f20f883e', '13260094143', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-07-20 15:33:05', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('23', null, '海阳', 'e10adc3949ba59abbe56e057f20f883e', '13260094144', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-24 15:33:09', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('24', null, '海荣', 'e10adc3949ba59abbe56e057f20f883e', '13260094145', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2011-06-24 15:33:13', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('25', null, '鸿卓', 'e10adc3949ba59abbe56e057f20f883e', '13260094146', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2012-07-06 15:33:17', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('26', null, '德昌', 'e10adc3949ba59abbe56e057f20f883e', '13260094147', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2013-07-11 15:33:24', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('27', null, '范明', 'e10adc3949ba59abbe56e057f20f883e', '13260094148', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('28', null, '飞昂', 'e10adc3949ba59abbe56e057f20f883e', '13260094149', '0', null, null, '', null, null, null, '2018-07-26', '朝歌个性签名', '../../static/uploads/images/img-1532601437572.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('29', null, '昆鹏', 'e10adc3949ba59abbe56e057f20f883e', '13260094150', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('30', null, '高朗', 'e10adc3949ba59abbe56e057f20f883e', '13260094151', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('31', null, '景平', 'e10adc3949ba59abbe56e057f20f883e', '13260094152', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('32', null, '鑫鹏', 'e10adc3949ba59abbe56e057f20f883e', '13260094153', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('33', null, '振翱', 'e10adc3949ba59abbe56e057f20f883e', '13260094154', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('34', null, '安寒', 'e10adc3949ba59abbe56e057f20f883e', '13260094155', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('35', null, '笑卉', 'e10adc3949ba59abbe56e057f20f883e', '13260094156', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('36', null, '盼菡', 'e10adc3949ba59abbe56e057f20f883e', '13260094157', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('37', null, '秋荷', 'e10adc3949ba59abbe56e057f20f883e', '13260094158', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('38', null, '元冬', 'e10adc3949ba59abbe56e057f20f883e', '13260094159', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('39', null, '妙绿', 'e10adc3949ba59abbe56e057f20f883e', '13260094160', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('40', null, '初之', 'e10adc3949ba59abbe56e057f20f883e', '13260094161', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('41', null, '恨蕊', 'e10adc3949ba59abbe56e057f20f883e', '13260094162', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('42', null, '痴柏', 'e10adc3949ba59abbe56e057f20f883e', '13260094163', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('43', null, '恨蕊', 'e10adc3949ba59abbe56e057f20f883e', '13260094164', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('44', null, '宛丝', 'e10adc3949ba59abbe56e057f20f883e', '13260094165', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('45', null, '沛白', 'e10adc3949ba59abbe56e057f20f883e', '13260094166', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
+INSERT INTO `user` VALUES ('46', null, '雁山', 'e10adc3949ba59abbe56e057f20f883e', '13260094167', '0', null, null, null, null, null, null, null, null, '../../static/images/user.jpg', null, '2018-07-28 15:33:29', null, null, null, null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for user_attention
@@ -615,7 +625,7 @@ CREATE TABLE `user_attention` (
   `attention_id` int(8) NOT NULL COMMENT '关注ID',
   `createtime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`a_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COMMENT='用户关注表';
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COMMENT='用户关注表';
 
 -- ----------------------------
 -- Records of user_attention
@@ -650,11 +660,12 @@ INSERT INTO `user_attention` VALUES ('44', '19', '43', null);
 INSERT INTO `user_attention` VALUES ('45', '19', '44', null);
 INSERT INTO `user_attention` VALUES ('58', '19', '24', '2018-07-24 10:26:07');
 INSERT INTO `user_attention` VALUES ('66', '19', '41', '2018-07-27 16:39:41');
-INSERT INTO `user_attention` VALUES ('67', '19', '29', '2018-07-30 14:22:53');
 INSERT INTO `user_attention` VALUES ('68', '19', '21', '2018-07-30 14:34:23');
 INSERT INTO `user_attention` VALUES ('69', '21', '29', '2018-07-30 16:10:36');
 INSERT INTO `user_attention` VALUES ('71', '21', '19', '2018-07-30 16:30:25');
 INSERT INTO `user_attention` VALUES ('72', '30', '19', '2018-07-31 16:47:49');
+INSERT INTO `user_attention` VALUES ('73', '38', '19', '2018-08-01 14:23:40');
+INSERT INTO `user_attention` VALUES ('76', '29', '19', '2018-08-02 18:09:14');
 
 -- ----------------------------
 -- Table structure for user_comment
