@@ -7,7 +7,6 @@
 export default class UrlMapping {
 	constructor(){
 		this.isLocalHost = window.location.host.toLowerCase() == 'localhost:8080';
-		this.isLocalHost = true
 //		this.origin = window.location.origin;
 		this.origin = 'http://47.105.121.106:3000';
 		
