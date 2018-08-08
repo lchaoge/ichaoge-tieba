@@ -6,7 +6,7 @@ import News from './../components/home/children/News' // 消息
 import UserInfo from './../components/home/children/UserInfo' // 我的
 
 // 搜索
-import Searchs from './../components/search/Search'
+import SearchBox from './../components/search/SearchBox'
 import Search from './../components/search/children/Search'
 import SearchIndex from './../components/search/children/Index'
 
@@ -49,7 +49,7 @@ export const routes = [
 		{path:'/userinfo',name:'userinfoLink',component:UserInfo}	
 	]},
 	// 搜索
-	{path:'/searchs',name:'searchsLink',component:Searchs,redirect:'/searchs/search',children:[
+	{path:'/searchs',name:'searchsLink',component:SearchBox,redirect:'/searchs/search',children:[
 		{path:'/searchs/search',name:'SearchLink',component:Search},	
 		{path:'/searchs/index',name:'SearchIndexLink',component:SearchIndex},	
 	]},
