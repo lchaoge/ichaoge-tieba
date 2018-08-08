@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
     	'/apis': {
-        target: 'http://10.111.86.91:3000', // 接口的域名 
+        target: 'http://47.105.121.106:3000', // 接口的域名 
 //      secure: true,  // 如果是https接口，需要配置这个参数
         changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         pathRewrite: {
@@ -47,10 +47,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../docs/index.html'),
+    index: path.resolve(__dirname, '../views/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../docs'),
+    assetsRoot: path.resolve(__dirname, '../views'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',
 

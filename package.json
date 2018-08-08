@@ -11,6 +11,7 @@
     "start": "node server/index.js"
   },
   "dependencies": {
+    "ejs-mate": "^2.3.0",
     "vue": "^2.5.2"
   },
   "devDependencies": {

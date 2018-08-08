@@ -26,10 +26,58 @@ app.use('/wm/articleSortUser', articleSortUserController);
 app.use('/wm/stayMessage', stayMessageController);
 app.use('/wm/browseHistory', browseHistoryController);
 
-//app.use(express.static(path.join(__dirname, 'docs')))
+// view engine setup
+app.set('../views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', require('ejs-mate'));
+
+app.use(express.static(path.join(__dirname, '../views')));
+
+//路由设置
+app.get('*',function(req,res){
+    res.render('index',{});
+});
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = {status:404};
+    next(err);
+});
+
+// error handlers
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    console.log(err);
+    if(!err.status){
+        err.status=500;
+    }
+    switch(err.status){
+        case 403:
+        err.message = '没有权限访问';
+        break;
+        case 404:
+        err.message = '找不到这个页面';
+        break;
+        case 500:
+        err.message='系统出错了';
+        break;
+    }
+    res.status(err.status);
+    res.render('error', {
+        title: '出错拉',
+        error:err
+    });
+});
+
 
 // 监听端口
-app.listen(3000,()=>{
-	console.log('Your api is running here: http://localhost:3000');	
+let server = app.listen(3000,()=>{
+	let host = server.address().address;
+    let port = server.address().port;
+
+    console.log('Example app listening at http://%s:%s', host, port);
 });
 
